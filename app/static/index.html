@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Sephiria 背包求解器</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">S</span>
+      <div><h1>Sephiria</h1><p>背包构筑求解器</p></div>
+    </div>
+    <div class="header-actions">
+      <button id="readGameBtn" class="button header-button" type="button">读取游戏</button>
+      <button id="resetBtn" class="icon-button" type="button" title="清空构筑" aria-label="清空构筑">×</button>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <aside class="catalog-pane" aria-label="物品目录">
+      <div class="pane-heading"><div><h2>物品目录</h2><span id="catalogCount" class="count"></span></div></div>
+      <div class="tabs" role="tablist" aria-label="物品类型">
+        <button id="artifactTab" class="tab active" role="tab" aria-selected="true">神器</button>
+        <button id="tabletTab" class="tab" role="tab" aria-selected="false">石板</button>
+      </div>
+      <label class="search"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="搜索名称或类别"></label>
+      <div id="catalogList" class="catalog-list" aria-live="polite"></div>
+    </aside>
+
+    <section class="board-pane" aria-labelledby="boardTitle">
+      <div class="board-toolbar">
+        <div>
+          <h2 id="boardTitle">最优排布</h2>
+          <div class="grid-size">
+            <label>背包格数 <input id="cellCountInput" type="number" min="1" max="60" value="30"></label>
+            <span>固定 6 列</span>
+          </div>
+        </div>
+        <div class="solve-actions">
+          <label class="time-limit">线程
+            <select id="workerCount"><option value="0" selected>自动</option><option value="8">8</option><option value="16">16</option><option value="32">32</option></select>
+          </label>
+          <label class="time-limit">时限
+            <select id="timeLimit"><option value="3000">3 秒</option><option value="10000" selected>10 秒</option><option value="30000">30 秒</option><option value="60000">60 秒</option></select>
+          </label>
+          <button id="stopBtn" class="button danger" type="button" hidden>停止</button>
+          <button id="applyBtn" class="button secondary" type="button" hidden>应用到游戏</button>
+          <button id="solveBtn" class="button primary" type="button">自动求解</button>
+        </div>
+      </div>
+
+      <div id="statusBar" class="status-bar idle" role="status" aria-live="polite">
+        <span id="statusDot" class="status-dot"></span>
+        <div><strong id="statusTitle">等待构筑</strong><span id="statusDetail">0 件物品</span></div>
+      </div>
+
+      <div class="metrics" aria-label="求解指标">
+        <div><span>加权得分</span><strong id="primaryMetric">—</strong></div>
+        <div><span>等级合计</span><strong id="secondaryMetric">—</strong></div>
+        <div><span>加权特殊效果</span><strong id="specialMetric">—</strong></div>
+        <div><span>副作用惩罚</span><strong id="tertiaryMetric">—</strong></div>
+        <div><span>空闲格等级</span><strong id="emptyCellMetric">—</strong></div>
+        <div><span>最优差距</span><strong id="gapMetric">—</strong></div>
+        <div><span>求解耗时</span><strong id="timeMetric">—</strong></div>
+      </div>
+
+      <div id="boardWrap" class="board-wrap">
+        <div id="board" class="board" aria-label="背包棋盘"></div>
+      </div>
+      <div class="legend" aria-label="棋盘图例">
+        <span><i class="legend-artifact"></i>神器</span><span><i class="legend-tablet"></i>石板</span><span><i class="legend-unlock"></i>解锁</span>
+      </div>
+
+      <section id="resultSection" class="result-section" hidden>
+        <div class="section-heading"><h3>神器明细</h3><span id="activeSummary"></span></div>
+        <div class="result-table-wrap">
+          <table class="result-table"><thead><tr><th>神器</th><th>位置</th><th>加成</th><th>等级</th><th>权重</th><th>贡献</th><th>状态</th></tr></thead><tbody id="resultBody"></tbody></table>
+        </div>
+      </section>
+    </section>
+
+    <aside class="owned-pane" aria-label="已拥有物品与约束">
+      <div class="pane-heading"><div><h2>当前构筑</h2><span id="ownedCount" class="count">0 件</span></div><button id="combineTabletBtn" class="button secondary compact" type="button" disabled>合成石板</button></div>
+      <div class="owned-summary"><span>神器 <strong id="artifactOwned">0</strong></span><span>石板 <strong id="tabletOwned">0</strong></span><span>空格 <strong id="emptyCells">30</strong></span></div>
+      <div id="ownedList" class="owned-list"></div>
+    </aside>
+  </main>
+
+  <dialog id="composeDialog" class="compose-dialog" aria-labelledby="composeTitle">
+    <form id="composeForm">
+      <header><h2 id="composeTitle">合成自定义石板</h2><p>选择两块当前构筑中的石板和它们参与合成时的方向。</p></header>
+      <div class="compose-fields">
+        <label>自定义名称<input id="composeName" type="text" maxlength="40" required></label>
+        <fieldset>
+          <legend>第一块源石板</legend>
+          <label>石板<select id="composeFirst" required></select></label>
+          <label>合成旋转<select id="composeFirstRotation"></select></label>
+        </fieldset>
+        <fieldset>
+          <legend>第二块源石板</legend>
+          <label>石板<select id="composeSecond" required></select></label>
+          <label>合成旋转<select id="composeSecondRotation"></select></label>
+        </fieldset>
+      </div>
+      <footer><button id="composeCancelBtn" class="button secondary" type="button">取消</button><button id="composeConfirmBtn" class="button primary" type="submit">合成并替换</button></footer>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="alert" hidden></div>
+  <script src="/app.js" defer></script>
+</body>
+</html>

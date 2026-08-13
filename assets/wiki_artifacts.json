@@ -1,0 +1,4513 @@
+{
+  "source": "https://www.sephiria.wiki/artifact",
+  "generatedAt": "2026-08-05T04:26:33.454411+00:00",
+  "count": 267,
+  "artifacts": [
+    {
+      "id": 1,
+      "value": "reinforced_potion_lid",
+      "label_kor": "강화 포션 뚜껑",
+      "label_eng": "reinforced_potion_lid",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "alchemy"
+        ],
+        "content": "[고유] 현재 HP가 30% 이하일 때 HP 포션 효과가 +30% 증가"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/reinforced_potion_lid.webp",
+      "description": "약사의 피로와 새벽의 감성이 만든 특이한 물건",
+      "level": 0,
+      "created_at": "2025-07-14T10:12:34.52703+00:00"
+    },
+    {
+      "id": 2,
+      "value": "eye_crystal_necklace",
+      "label_kor": "눈 결정 목걸이",
+      "label_eng": "eye_crystal_necklace",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "glacier"
+        ],
+        "content": "[고유] 동상에 걸린 대상의 이동 속도를 5/10/15% 추가로 감소\n얼음속성 피해 +1/3/5\n이동 속도 +1/3/5%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/eye_crystal_necklace.png",
+      "description": "싸락눈 중 가장 단순한 결정을 모티브로 했습니다.",
+      "level": 2,
+      "created_at": "2025-07-14T10:14:24.374777+00:00"
+    },
+    {
+      "id": 3,
+      "value": "mast_model",
+      "label_kor": "돛대 모형",
+      "label_eng": "mast_model",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "extrium"
+        ],
+        "content": "먹구름의 소모 속도 +20/40/60%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/mast_model.png",
+      "description": "과거 커다란 홍수가 생겼을 때 배를 묶어서 살아남기를 도모한 자들이 있었다.",
+      "level": 2,
+      "created_at": "2025-07-22T09:17:38.506935+00:00"
+    },
+    {
+      "id": 4,
+      "value": "lightning_bolt",
+      "label_kor": "라이트닝 볼트",
+      "label_eng": "lightning_bolt",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "magic_engineering"
+        ],
+        "content": "[고유] 라이트닝 볼트 획득"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/lightning_bolt.png",
+      "description": "라이트닝 볼트 마법이 적혀있는 책.",
+      "level": 1,
+      "created_at": "2025-07-22T09:20:29.598819+00:00"
+    },
+    {
+      "id": 5,
+      "value": "wizard",
+      "label_kor": "마법사의 동전",
+      "label_eng": "wizard",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "academy"
+        ],
+        "content": "[고유] 보상에서 마법서가 등장할 확률 50% 증가\n마법서 가속 +15/20/30"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/wizard.png",
+      "description": "그들이 놀이용으로 사용하던 것.\n자신의 마법을 쏟아내어 원하는 면으로 떨어지게 한다.",
+      "level": 2,
+      "created_at": "2025-07-22T09:25:20.576241+00:00"
+    },
+    {
+      "id": 6,
+      "value": "dried_flower",
+      "label_kor": "말라버린 꽃",
+      "label_eng": "dried_flower",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "lake"
+        ],
+        "content": "치명타 확률 +2/4/6%\n최대 MP +2/4/6"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/dried_flower.png",
+      "description": "어디서든 씩씩하게 자라는 꽃을 정갈하게 말린 것.",
+      "level": 2,
+      "created_at": "2025-07-22T09:46:10.380579+00:00"
+    },
+    {
+      "id": 7,
+      "value": "amulet",
+      "label_kor": "명석함의 부적",
+      "label_eng": "amulet",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "glacier"
+        ],
+        "content": "[고유] 얼음 속성 피해 +3/4/6/8"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/amulet.webp",
+      "description": "지닌 자의 잡념을 지워준다.",
+      "level": 3,
+      "created_at": "2025-07-22T09:47:46.285396+00:00"
+    },
+    {
+      "id": 8,
+      "value": "windpool_shawl",
+      "label_kor": "바람풀 목도리",
+      "label_eng": "windpool_shawl",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "spring_song"
+        ],
+        "content": "[고유] 대시 공격 피해 +30/45/60/80%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/windpool_shawl.png",
+      "description": "더 멋진 동물이 된 것 같은 기분을 주는 치장용 목도리.",
+      "level": 3,
+      "created_at": "2025-07-28T11:22:51.369507+00:00"
+    },
+    {
+      "id": 9,
+      "value": "shield_technique_manual",
+      "label_kor": "방패술 교본",
+      "label_eng": "shield_technique_manual",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "특수 공격 피해 +5/8%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/shield_technique_manual.png",
+      "description": "'어린 동물에게 보여주지 마시오'라고 쓰여있다.",
+      "level": 1,
+      "created_at": "2025-07-28T11:32:31.011+00:00"
+    },
+    {
+      "id": 10,
+      "value": "begonia_flavor_pocket",
+      "label_kor": "베고니아 향 주머니",
+      "label_eng": "begonia_flavor_pocket",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "일반 공격 피해 +5/10%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/begonia_flavor_pocket.png",
+      "description": "가방에 넣어두면 자연스러운 꽃향기가 납니다.",
+      "level": 1,
+      "created_at": "2025-08-04T05:10:54.297843+00:00"
+    },
+    {
+      "id": 11,
+      "value": "shield",
+      "label_kor": "보호막",
+      "label_eng": "shield",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "guardian"
+        ],
+        "content": "[고유] 보호막 획득"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/shield.webp",
+      "description": "보호막 마법이 적혀있는 책.",
+      "level": 1,
+      "created_at": "2025-08-04T06:27:31.655349+00:00"
+    },
+    {
+      "id": 12,
+      "value": "unclean_bandage",
+      "label_kor": "부정한 붕대",
+      "label_eng": "unclean_bandage",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "precision"
+        ],
+        "content": "[고유] 치명타 확률 +1/3/6/9%\n물리 피해 +1/2/3/3"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/unclean_bandage.png",
+      "description": "춤추는 그을은 연기처럼.",
+      "level": 3,
+      "created_at": "2025-08-05T09:54:42.306613+00:00"
+    },
+    {
+      "id": 13,
+      "value": "ice_bolt",
+      "label_kor": "아이스 볼트",
+      "label_eng": "ice_bolt",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "glacier"
+        ],
+        "content": "[고유] 아이스 볼트 획득"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/ice_bolt.png",
+      "description": "아이스 볼트 마법이 적혀있는 책.",
+      "level": 1,
+      "created_at": "2025-08-05T09:56:36.517258+00:00"
+    },
+    {
+      "id": 14,
+      "value": "compression_band",
+      "label_kor": "압박 밴드",
+      "label_eng": "compression_band",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "spring_song"
+        ],
+        "content": "[고유] 대시 회복 속도 +10/15/30%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/compression_band.png",
+      "description": "털을 감춰 더 빠르게 움직일 수 있게 한다…는 인식을 심어준다.",
+      "level": 2,
+      "created_at": "2025-08-05T09:57:59.218589+00:00"
+    },
+    {
+      "id": 15,
+      "value": "endodits_questionnaire",
+      "label_kor": "엔도디토의 문진",
+      "label_eng": "endodits_questionnaire",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "lake"
+        ],
+        "content": "MP 재생 +3/6/9\n최대 MP +3/6/9"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/endodits_questionnaire.png",
+      "description": "양피지가 있으면 자동으로 펴주는 마법 도구.",
+      "level": 2,
+      "created_at": "2025-08-05T09:59:38.756352+00:00"
+    },
+    {
+      "id": 16,
+      "value": "smoke_screen",
+      "label_kor": "연막",
+      "label_eng": "smoke_screen",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "shadow"
+        ],
+        "content": "[고유] 연막 획득"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/smoke_screen.png",
+      "description": "연막 마법이 적혀있는 책.",
+      "level": 0,
+      "created_at": "2025-08-05T10:01:51.643932+00:00"
+    },
+    {
+      "id": 17,
+      "value": "amulet_of_aspiration",
+      "label_kor": "열망의 부적",
+      "label_eng": "amulet_of_aspiration",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "precision"
+        ],
+        "content": "[고유] 무기 공격의 치명타 확률 +3/6/10/14% 증가"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/amulet_of_aspiration.png",
+      "description": "바라건대 이 몸에 강인한 영혼을.",
+      "level": 3,
+      "created_at": "2025-08-05T10:03:41.560721+00:00"
+    },
+    {
+      "id": 18,
+      "value": "ohia_lehua",
+      "label_kor": "오히아 레후아",
+      "label_eng": "ohia_lehua",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "yinggalbul"
+        ],
+        "content": "[고유] 무기 공격이나 마법서로 피해를 주면 대상에게 10/20/30 화염속성 피해를 가함 (재사용 대기시간 2초)"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/ohia_lehua.webp",
+      "description": "이 꽃을 꺾으면 비가 내린다.",
+      "level": 2,
+      "created_at": "2025-08-05T10:05:09.692538+00:00"
+    },
+    {
+      "id": 19,
+      "value": "silver_plate",
+      "label_kor": "은접시",
+      "label_eng": "silver_plate",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "<제약> 인벤토리 가장 아래 칸에 있을 때 효과 발동\n[고유] 일반 공격 피해 +3/6/10%\n특수 공격 피해 +3/6/10%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/silver_plate.png",
+      "description": "피가 그 열쇠다.",
+      "level": 2,
+      "created_at": "2025-08-05T10:08:43.315984+00:00"
+    },
+    {
+      "id": 20,
+      "value": "straw",
+      "label_kor": "지푸라기 인형",
+      "label_eng": "straw",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "lake"
+        ],
+        "content": "MP 재생 +3/6/9\n치명타 피해 +2/3/5%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/straw.png",
+      "description": "마사지를 해주면 자신도 시원해지는 기분입니다.",
+      "level": 2,
+      "created_at": "2025-08-05T10:10:22.660136+00:00"
+    },
+    {
+      "id": 21,
+      "value": "chiri",
+      "label_kor": "찌릿 슈크림빵",
+      "label_eng": "chiri",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "extrium"
+        ],
+        "content": "적 처치 시 33% 확률로 전기 빵이 바닥에 떨어짐\n전기 빵을 먹으면 먹구름 1/2/3 획득"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/chiri.png",
+      "description": "커스터드로 속을 채워넣은 빵.\n빠르게 먹지 않으면 흘러내린다.",
+      "level": 2,
+      "created_at": "2025-08-05T10:15:20.985706+00:00"
+    },
+    {
+      "id": 22,
+      "value": "cloth_armor",
+      "label_kor": "천 갑옷",
+      "label_eng": "cloth_armor",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "guardian"
+        ],
+        "content": "방어력 +3/6"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/cloth_armor.png",
+      "description": "두꺼운 재질이 보온이 필요 없는 동물에게도 따뜻함을 줍니다.",
+      "level": 1,
+      "created_at": "2025-08-05T10:19:09.719123+00:00"
+    },
+    {
+      "id": 23,
+      "value": "green_tooth",
+      "label_kor": "초록색 톱니",
+      "label_eng": "green_tooth",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "precision"
+        ],
+        "content": "[고유] 전투 중 MP 소모 15당 치명타 확률 +3% 버프 획득 (20초간, 최대 3중첩 누적)"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/green_tooth.png",
+      "description": "어딘가에 부착하면 스스로 돌아가는 마법이 걸려있다.",
+      "level": 0,
+      "created_at": "2025-08-05T10:21:09.533409+00:00"
+    },
+    {
+      "id": 24,
+      "value": "blessing",
+      "label_kor": "축복",
+      "label_eng": "blessing",
+      "tier": "common",
+      "effect": {
+        "content": "[고유] 축복 획득"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/blessing.png",
+      "description": "축복 마법이 적혀있는 책.",
+      "level": 2,
+      "created_at": "2025-08-05T10:34:42.736663+00:00"
+    },
+    {
+      "id": 25,
+      "value": "calges",
+      "label_kor": "캘세더니 열쇠",
+      "label_eng": "calges",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "magic_engineering"
+        ],
+        "content": "[고유] 위치한 가로줄에 따라 견고, 잉걸불, 빙하, 마법공학 중 하나의 콤보가 부여됨\n부여된 콤보와 관련된 속성 피해 +2/4/6/8"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/calges_2.png",
+      "description": "어딘가를 여는 것이 아닌 의식을 위해 만들어졌다.",
+      "level": 3,
+      "created_at": "2025-08-05T10:42:14.877831+00:00"
+    },
+    {
+      "id": 26,
+      "value": "criton",
+      "label_kor": "크리톤의 인장",
+      "label_eng": "criton",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "bargaining"
+        ],
+        "content": "잎 획득량 +10/25/50%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/criton.png",
+      "description": "탑에서 남용되어 화폐가 될 뻔한 물건.",
+      "level": 2,
+      "created_at": "2025-08-05T10:43:31.404029+00:00"
+    },
+    {
+      "id": 27,
+      "value": "fire_bolt",
+      "label_kor": "파이어 볼트",
+      "label_eng": "fire_bolt",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "yinggalbul"
+        ],
+        "content": "[고유] 파이어 볼트 획득"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/fire_bolt.png",
+      "description": "파이어 볼트 마법이 적혀있는 책.",
+      "level": 1,
+      "created_at": "2025-08-05T10:44:45.182837+00:00"
+    },
+    {
+      "id": 28,
+      "value": "pro",
+      "label_kor": "프로슘 반지",
+      "label_eng": "pro",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "glacier"
+        ],
+        "content": "[고유] 무기 공격이나 마법서로 피해를 주면 대상에게 10/20/30 얼음속성 피해를 가함 (재사용 대기시간 2초)"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/pro.png",
+      "description": "얼음 협곡 중심부에서 채취한 물질을 가공한 반지",
+      "level": 2,
+      "created_at": "2025-08-05T10:46:26.537552+00:00"
+    },
+    {
+      "id": 29,
+      "value": "golden_leaf",
+      "label_kor": "황금 단풍잎",
+      "label_eng": "golden_leaf",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "bargaining"
+        ],
+        "content": "[고유] 경험치 드롭 +10%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/golden_leaf.png",
+      "description": "상인 협회에서 만든 기념주화.",
+      "level": 0,
+      "created_at": "2025-08-05T10:47:36.25524+00:00"
+    },
+    {
+      "id": 30,
+      "value": "amulet_of_power",
+      "label_kor": "힘의 부적",
+      "label_eng": "amulet_of_power",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "[고유] 물리 피해 +2/3/4/6"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/amulet_of_power.webp",
+      "description": "믿음직스럽지 않게 '힘'이라 적혀 있다.",
+      "level": 3,
+      "created_at": "2025-08-05T10:48:46.210845+00:00"
+    },
+    {
+      "id": 31,
+      "value": "thornbush",
+      "label_kor": "가시덤불",
+      "label_eng": "thornbush",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "spring_song"
+        ],
+        "content": "<제약> 인벤토리 안쪽에 있을 때 효과 발동\n[고유] 대시 중 닿은 적을 물리 피해의 30/45/60/75/100%로 공격\n대시 횟수 소모시 2배 피해"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/thornbush.png",
+      "description": "다가오지 말아요.",
+      "level": 4,
+      "created_at": "2025-08-05T10:50:26.522573+00:00"
+    },
+    {
+      "id": 32,
+      "value": "thorn_shell",
+      "label_kor": "가시 등껍질",
+      "label_eng": "thorn_shell",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "guardian"
+        ],
+        "content": "[고유] 가시 +150/300/450%\n방어력 +1/2/3"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/thorn_shell.png",
+      "description": "스스로가 찔리지 않도록 팔을 잘 조절해야 합니다.",
+      "level": 2,
+      "created_at": "2025-08-05T10:57:41.496918+00:00"
+    },
+    {
+      "id": 33,
+      "value": "viscosity",
+      "label_kor": "가시 부적",
+      "label_eng": "viscosity",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "[고유] 치명타 확률 +2/4/6/10%\n물리 피해 +1/1/2/3"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/viscosity.png",
+      "description": "가방에 넣어두면 가시가 삐져나올 것 같다.",
+      "level": 3,
+      "created_at": "2025-08-05T11:00:44.450183+00:00"
+    },
+    {
+      "id": 34,
+      "value": "simple_contract",
+      "label_kor": "간이 계약서",
+      "label_eng": "simple_contract",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "colleague"
+        ],
+        "content": "[고유] 동료들의 최대 HP +25/55/88/120/150%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/simple_contract.png",
+      "description": "주로 소환 마법에 사용되는, 마법을 담아둘 수 있는 신비한 종이.",
+      "level": 5,
+      "created_at": "2025-08-05T11:03:20.013563+00:00"
+    },
+    {
+      "id": 35,
+      "value": "craving",
+      "label_kor": "갈망의 보주",
+      "label_eng": "craving",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "academy"
+        ],
+        "content": "[고유] MP를 15 점유하여 마법서로 주는 피해량이 10/12/15/18% 증가"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/craving.png",
+      "description": "쳐다보고 있으면 눈이 해롱해롱해집니다.",
+      "level": 3,
+      "created_at": "2025-08-05T11:04:39.398508+00:00"
+    },
+    {
+      "id": 36,
+      "value": "cloud_bottle",
+      "label_kor": "구름 병",
+      "label_eng": "cloud_bottle",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "extrium"
+        ],
+        "content": "대시 공격 성공 시 먹구름 1/2/3/5/7/10 획득 (재사용 대기시간 3.5초)\n먹구름의 소모 속도 +5/10/15/20/25/30%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/cloud_bottle.png",
+      "description": "먹구름을 담아둔 특별한 마법 주머니.",
+      "level": 5,
+      "created_at": "2025-08-05T11:06:33.318468+00:00"
+    },
+    {
+      "id": 37,
+      "value": "cloud_seed_arrowhead",
+      "label_kor": "구름씨 화살촉",
+      "label_eng": "cloud_seed_arrowhead",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "extrium"
+        ],
+        "content": "먹구름의 벼락이 5/10/15/23/35/50% 확률로 강화되어 발사됨"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/cloud_seed_arrowhead.png",
+      "description": "구름에 쏘면 비가 내린다고 한다.",
+      "level": 5,
+      "created_at": "2025-08-05T11:09:07.842882+00:00"
+    },
+    {
+      "id": 38,
+      "value": "gold_cloak",
+      "label_kor": "금빛 망토",
+      "label_eng": "gold_cloak",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "spring_song"
+        ],
+        "content": "[고유] 대시 횟수 +1/1/2\n공격 속도 +3/6/9%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/gold_cloak.png",
+      "description": "이 망토는 왜 안쪽까지 금빛일까?",
+      "level": 2,
+      "created_at": "2025-08-05T11:10:11.591121+00:00"
+    },
+    {
+      "id": 39,
+      "value": "golden_hand_bell",
+      "label_kor": "금빛 핸드벨",
+      "label_eng": "golden_hand_bell",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "colleague"
+        ],
+        "content": "[고유] 함께 싸워주는 동료 소환"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/golden_hand_bell.png",
+      "description": "금빛 핸드벨.",
+      "level": 4,
+      "created_at": "2025-08-05T11:11:37.706543+00:00"
+    },
+    {
+      "id": 40,
+      "value": "broken_mirror",
+      "label_kor": "깨진 거울",
+      "label_eng": "broken_mirror",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "guardian"
+        ],
+        "content": "[고유] 장소 이동시 내구도 +5/12의 보호막 획득\n방어력 +4/8"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/broken_mirror.png",
+      "description": "고쳐줄 수 있는 사람이 어딘가에 있을지도 몰라.",
+      "level": 1,
+      "created_at": "2025-08-05T11:12:46.046649+00:00"
+    },
+    {
+      "id": 41,
+      "value": "yellow_planet",
+      "label_kor": "노란 행성",
+      "label_eng": "yellow_planet",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "planet"
+        ],
+        "content": "[고유] 피해량 20/26/32/38/45/52/60의 튕기는 물리 탄환을 발사하는 노란 행성 소환"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/yellow_planet.png",
+      "description": "도서관에 전시되어 있던 노란 행성.\n과거 하늘 밖을 보던 자들이 만들었다.",
+      "level": 6,
+      "created_at": "2025-08-05T11:13:50.903469+00:00"
+    },
+    {
+      "id": 42,
+      "value": "snowborne",
+      "label_kor": "눈보라 망치",
+      "label_eng": "snowborne",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "ice_weapon"
+        ],
+        "content": "[고유] 전투 중 7초마다 충전. 충전 이후 대시 시 아래 효과 발동\n주변 적에게 망치를 날려 얼음 피해를 가함\n(피해량: 14 + 얼음 속성 피해 50/100/150/200/250/300%)"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/snowborne.png",
+      "description": "푸른 불을 사용하던 용광로 옆에 놓여있었다 전해지고 있습니다.",
+      "level": 5,
+      "created_at": "2025-08-05T11:16:07.21643+00:00"
+    },
+    {
+      "id": 43,
+      "value": "great_blessing",
+      "label_kor": "대축복",
+      "label_eng": "great_blessing",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "mystery"
+        ],
+        "content": "[고유] 대축복 획득"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/great_blessing.png",
+      "description": "대축복 마법이 적혀있는 책.",
+      "level": 2,
+      "created_at": "2025-08-05T11:17:23.964707+00:00"
+    },
+    {
+      "id": 44,
+      "value": "ray_known",
+      "label_kor": "레이에 별조각",
+      "label_eng": "ray_known",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "academy"
+        ],
+        "content": "왼쪽 칸의 마법서 MP 소모 30/35/42/55% 감소"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/ray_known.png",
+      "description": "아주 뜨겁고 밝은 별에서 나온 조각.",
+      "level": 3,
+      "created_at": "2025-08-05T11:18:57.001348+00:00"
+    },
+    {
+      "id": 45,
+      "value": "lip",
+      "label_kor": "리포스테 봉 파편",
+      "label_eng": "lip",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "[고유] 카운터: 가드 시 전방으로 짧은 근접 공격 생성함 (물리 피해의 100/200/310/440/580/720%)\n봉 전용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/lip.png",
+      "description": "소유자의 움직임을 방해하지 않는 정교한 봉 파편.",
+      "level": 5,
+      "created_at": "2025-08-05T11:20:21.438951+00:00"
+    },
+    {
+      "id": 46,
+      "value": "magma_bead",
+      "label_kor": "마그마 구슬",
+      "label_eng": "magma_bead",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "yinggalbul"
+        ],
+        "content": "[고유] 화상 부여 시 0/1/1/2회 추가 부여\n화상 중첩 +1/1/1/2"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/magma_bead.png",
+      "description": "마그마의 기운을 머금은 구슬.",
+      "level": 3,
+      "created_at": "2025-08-05T11:21:41.843045+00:00"
+    },
+    {
+      "id": 47,
+      "value": "magic_carrot",
+      "label_kor": "마법 당근",
+      "label_eng": "magic_carrot",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "element"
+        ],
+        "content": "<제약> 인벤토리 최상단에 있을 때 효과 발동\n[고유] 가장 높은 속성 피해 +2/3/4/6/8\n이동 속도 +2/4/6/8/10%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/magic_carrot.png",
+      "description": "가끔 발견되는 특별한 당근.\n썩지 않지만 먹을 수 없다.",
+      "level": 4,
+      "created_at": "2025-08-05T11:23:32.123329+00:00"
+    },
+    {
+      "id": 48,
+      "value": "kaleidoscope",
+      "label_kor": "만화경",
+      "label_eng": "kaleidoscope",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "precision"
+        ],
+        "content": "대상의 슈퍼 아머에 추가 피해 +15/25/35/45/55%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/kaleidoscope.png",
+      "description": "작은 알알들의 변화무쌍.",
+      "level": 4,
+      "created_at": "2025-08-05T11:24:43.693077+00:00"
+    },
+    {
+      "id": 49,
+      "value": "fascinating_lure",
+      "label_kor": "매혹하는 루어",
+      "label_eng": "fascinating_lure",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "lake",
+          "element"
+        ],
+        "content": "[고유] MP 재생 +3/5/8\n화염속성 피해 +1/1/2\n얼음속성 피해 +1/1/2\n번개속성 피해 +1/1/2\n물리 피해 +1/1/2"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/fascinating_lure.webp",
+      "description": "물고기 사역마를 부리고 싶은 괴짜 마법사가 만들었습니다.",
+      "level": 2,
+      "created_at": "2025-08-05T11:25:48.679931+00:00"
+    },
+    {
+      "id": 50,
+      "value": "water_bag",
+      "label_kor": "물주머니",
+      "label_eng": "water_bag",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "lake"
+        ],
+        "content": "[고유] MP를 소모할 때마다 최대 MP 1 증가 (최대 10/15/20/25, 재사용 대기시간: 5초)"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/water_bag.png",
+      "description": "밤 사이 이슬이 차오르고, 낮에는 봉오리가 닫힌다.",
+      "level": 3,
+      "created_at": "2025-08-05T11:27:03.476058+00:00"
+    },
+    {
+      "id": 51,
+      "value": "mini_balista",
+      "label_kor": "미니 발리스타",
+      "label_eng": "mini_balista",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "extrium",
+          "colleague"
+        ],
+        "content": "[고유] 함께 싸워주는 동료 소환\n전기 화살에 적이 맞으면 20/34/48/61/75% 확률로 먹구름 1 획득"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/mini_balista.png",
+      "description": "누군가는 대형화를 꿈꾸듯, 소형화를 꿈꾸는 자도 있었다.",
+      "level": 4,
+      "created_at": "2025-08-05T11:29:12.433292+00:00"
+    },
+    {
+      "id": 52,
+      "value": "vane",
+      "label_kor": "바람개비",
+      "label_eng": "vane",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "spring_song",
+          "shadow"
+        ],
+        "content": "[고유] 회피 +2/4/6\n공격 속도 +3/6/9%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/vane.png",
+      "description": "언령을 외우면 바람이 없어도 돌아가기 시작한다.",
+      "level": 2,
+      "created_at": "2025-08-05T11:30:52.046714+00:00"
+    },
+    {
+      "id": 53,
+      "value": "firefly",
+      "label_kor": "반딧불이",
+      "label_eng": "firefly",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "magic_engineering"
+        ],
+        "content": "[고유] 번개 속성 피해 +4/8/12\n피격 시 6초간 비활성화"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/firefly.webp",
+      "description": "차가운 빛을 뿜어내는 벌레.\n만지면 찌릿하다.",
+      "level": 2,
+      "created_at": "2025-08-06T10:00:01.34117+00:00"
+    },
+    {
+      "id": 54,
+      "value": "balisong",
+      "label_kor": "발리송",
+      "label_eng": "balisong",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "precision"
+        ],
+        "content": "[고유] 2.5타일 이내 거리의 적에게 주는 피해량 +6/8/11/14%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/balisong.png",
+      "description": "어느 마을의 이름을 따온 특이한 모양의 칼.",
+      "level": 3,
+      "created_at": "2025-08-06T10:03:11.484791+00:00"
+    },
+    {
+      "id": 55,
+      "value": "ignition",
+      "label_kor": "발화 기름",
+      "label_eng": "ignition",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "yinggalbul"
+        ],
+        "content": "[고유] 대검 소용돌이 시전 시 2.5타일 반경 내 불길 생성\n화염 속성 피해 +3/6/9/12\n얼음 속성 피해 -2/2/4/4\n대검 전용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/ignition.png",
+      "description": "발화 기름이 들어있는 통.",
+      "level": 3,
+      "created_at": "2025-08-06T10:05:55.437941+00:00"
+    },
+    {
+      "id": 56,
+      "value": "shield_earring",
+      "label_kor": "방패 귀고리",
+      "label_eng": "shield_earring",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "guardian"
+        ],
+        "content": "[고유] 최대 HP +5/10/15/20\n회피 -5/4/3/2"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/shield_earring.webp",
+      "description": "검과 방패로 한 쌍의 귀고리가 완성된다.",
+      "level": 3,
+      "created_at": "2025-08-06T10:09:37.256334+00:00"
+    },
+    {
+      "id": 57,
+      "value": "discarded_gold_ring",
+      "label_kor": "버려진 금반지",
+      "label_eng": "discarded_gold_ring",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "[고유] 소용돌이 범위 +10/20/30%\n특수공격으로 적을 40명 처치 시 절대반지로 변함\n대검 전용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/discarded_gold_ring.png",
+      "description": "한 때엔 누군가를 축복하기에 충분했던 반지.",
+      "level": 2,
+      "created_at": "2025-08-06T10:14:37.747164+00:00"
+    },
+    {
+      "id": 58,
+      "value": "lightning_boomerang",
+      "label_kor": "번개 부메랑",
+      "label_eng": "lightning_boomerang",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "magic_engineering"
+        ],
+        "content": "[고유] 번개 부메랑 획득"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/lightningboomerang.png",
+      "description": "번개 부메랑 마법이 적혀있는 책.",
+      "level": 4,
+      "created_at": "2025-08-06T11:01:21.303432+00:00"
+    },
+    {
+      "id": 59,
+      "value": "phoenix",
+      "label_kor": "봉황의 날개깃",
+      "label_eng": "phoenix",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "yinggalbul"
+        ],
+        "content": "전투 중 주변 1/2/3명의 적에게 날아가 화상 디버프를 가하는 깃털 소환 (쿨다운 3.5초)\n화염속성 피해 +2/3/5"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/phoenix.png",
+      "description": "탑 밖에 세상이 있던 시절에도 특별했던 동물의 깃털. 열기가 사라지지 않는다.",
+      "level": 2,
+      "created_at": "2025-08-06T11:16:07.280223+00:00"
+    },
+    {
+      "id": 60,
+      "value": "red_snake_eye",
+      "label_kor": "붉은 뱀의 눈",
+      "label_eng": "red_snake_eye",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "yinggalbul"
+        ],
+        "content": "[고유] 플레이어 주변에 화염 속성 피해 130/150/150/170/170/170%의 운석을 1/1/2/2/3/4개 떨어트림\n운석에 맞은 적은 화상 디버프 부여\n재사용 대기시간: 5초"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/red_snake_eye.png",
+      "description": "뜨거운 기운을 머금은 보석.\n어두운 곳에서도 길잡이가 되어준다.",
+      "level": 5,
+      "created_at": "2025-08-06T11:29:38.82491+00:00"
+    },
+    {
+      "id": 61,
+      "value": "red_dew",
+      "label_kor": "붉은 이슬",
+      "label_eng": "red_dew",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "precision"
+        ],
+        "content": "[고유] 치명타 적중 시, 주변 적에게 가장 높은 속성 수치의 10/14/21/30%만큼 피해를 입힘"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/red_dew.webp",
+      "description": "그들의 죄를 두고 가게 하자.",
+      "level": 3,
+      "created_at": "2025-08-06T11:30:44.399754+00:00"
+    },
+    {
+      "id": 62,
+      "value": "piece_of_red_cloth",
+      "label_kor": "붉은 천 조각",
+      "label_eng": "piece_of_red_cloth",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "curse"
+        ],
+        "content": "[고유] 적에게 피해를 가할 때 대상에게 부여된 디버프 하나당 4/5/7/10%의 추가 피해를 가함"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/piece_of_red_cloth.webp",
+      "description": "광신도들이 소지하고 있는 붉은 천 조각.",
+      "level": 3,
+      "created_at": "2025-08-06T11:31:56.737549+00:00"
+    },
+    {
+      "id": 63,
+      "value": "red_planet",
+      "label_kor": "붉은 행성",
+      "label_eng": "red_planet",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "planet"
+        ],
+        "content": "[고유] 피해량 26/31/36/42/48/54/60의 화염 미사일을 발사하는 붉은 행성 소환"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/red_planet.webp",
+      "description": "도서관에 전시되어 있던 붉은 행성.\n과거 하늘 밖을 보던 자들이 만들었다.",
+      "level": 6,
+      "created_at": "2025-08-06T11:33:13.73452+00:00"
+    },
+    {
+      "id": 64,
+      "value": "ice_snow",
+      "label_kor": "빙설덩굴",
+      "label_eng": "ice_snow",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "glacier"
+        ],
+        "content": "[고유] 특수 공격 사용시 전방으로 1줄기 얼음 가시 생성 (피해량: 10 + 얼음속성 피해 50/90/140%)\n가시가 적에게 적중 시 동상 부여\n재사용 대기시간 : 0.8초"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/ice_snow.png",
+      "description": "인공적으로 만들어진 꽃.\n따뜻한 곳에 있어도 녹지 않는다.",
+      "level": 2,
+      "created_at": "2025-08-06T11:34:53.482818+00:00"
+    },
+    {
+      "id": 65,
+      "value": "glacier",
+      "label_kor": "빙하의 메아리",
+      "label_eng": "glacier",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "glacier"
+        ],
+        "content": "[고유] 5/4/3/2.5초마다 주변 적에게 동상 부여\n방어력 +3/6/10/10"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/glacier.png",
+      "description": "어느 눈덮인 섬에는 아직도 조상님들이 잠들어 있다죠.",
+      "level": 3,
+      "created_at": "2025-08-06T11:36:04.89132+00:00"
+    },
+    {
+      "id": 66,
+      "value": "point",
+      "label_kor": "뾰족 도토리",
+      "label_eng": "point",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "extrium"
+        ],
+        "content": "[고유] 전투 중 먹구름 회복 속도 +3/6/9/12%\n회피 +3/3/6/6"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/point.webp",
+      "description": "번개를 다루는 일족이 좋아하는 열매.",
+      "level": 3,
+      "created_at": "2025-08-11T09:27:18.811224+00:00"
+    },
+    {
+      "id": 67,
+      "value": "storm",
+      "label_kor": "뾰족 부싯돌",
+      "label_eng": "storm",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "element"
+        ],
+        "content": "[고유] 치명타 확률 +2/4/6/8%\n가장 높은 속성 피해 +1/2/3/4"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/storm.webp",
+      "description": "마을에서는 잘 사용하지 않는 물건.",
+      "level": 3,
+      "created_at": "2025-08-11T09:29:02.18312+00:00"
+    },
+    {
+      "id": 68,
+      "value": "sapote",
+      "label_kor": "사포테 열매",
+      "label_eng": "sapote",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "extrium"
+        ],
+        "content": "먹구름 용량 +4/8/12/16\nMP 재생 +1/2/3/4"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/sapote.png",
+      "description": "갈증이 날 때 씹으면 왜인지 모르게 괜찮아진다.",
+      "level": 3,
+      "created_at": "2025-08-11T09:30:42.712953+00:00"
+    },
+    {
+      "id": 69,
+      "value": "sharp_eye",
+      "label_kor": "샤프 아이",
+      "label_eng": "sharp_eye",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "precision"
+        ],
+        "content": "[고유] 샤프 아이 획득"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/sharp_eye.png",
+      "description": "샤프 아이 마법이 적혀있는 책.",
+      "level": 2,
+      "created_at": "2025-08-11T09:31:57.015649+00:00"
+    },
+    {
+      "id": 70,
+      "value": "frost_dagger",
+      "label_kor": "서리 단검",
+      "label_eng": "frost_dagger",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "glacier"
+        ],
+        "content": "[고유] 서리 단검 획득"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/frost_dagger.png",
+      "description": "서리 단검 마법이 적혀있는 책.",
+      "level": 4,
+      "created_at": "2025-08-11T09:32:58.378156+00:00"
+    },
+    {
+      "id": 71,
+      "value": "crossbow_quiver",
+      "label_kor": "석궁 화살통",
+      "label_eng": "crossbow_quiver",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "[고유] 석궁 재장전 속도 +20/40/65/100\n석궁 전용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/crossbow_quiver.webp",
+      "description": "가볍고 튼튼한 나무를 덧대어 만들어졌습니다.",
+      "level": 3,
+      "created_at": "2025-08-11T09:36:43.759976+00:00"
+    },
+    {
+      "id": 72,
+      "value": "pure_cloak",
+      "label_kor": "순백의 망토",
+      "label_eng": "pure_cloak",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "mystery"
+        ],
+        "content": "자신이 부여한 모든 버프의 지속시간 +30/60/100/130/160/200%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/pure_cloak.png",
+      "description": "마법에 따라 색이 변하는 망토.\n부드러운 천으로 만들었다.",
+      "level": 5,
+      "created_at": "2025-08-11T09:45:52.537688+00:00"
+    },
+    {
+      "id": 73,
+      "value": "star_ruby",
+      "label_kor": "스타 루비",
+      "label_eng": "star_ruby",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "lake"
+        ],
+        "content": "최대 HP +10/20/33%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/star_ruby.png",
+      "description": "새로운 삶을 위하여.",
+      "level": 2,
+      "created_at": "2025-08-11T09:47:03.06727+00:00"
+    },
+    {
+      "id": 74,
+      "value": "star_aqua_marine",
+      "label_kor": "스타 아쿠아마린",
+      "label_eng": "star_aqua_marine",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "lake"
+        ],
+        "content": "최대 MP +10/20/33%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/star_aqua_marine.png",
+      "description": "장렬한 복수를 위하여.",
+      "level": 2,
+      "created_at": "2025-08-11T09:48:15.40486+00:00"
+    },
+    {
+      "id": 75,
+      "value": "single_tree_charcoal",
+      "label_kor": "신갈나무 숯",
+      "label_eng": "single_tree_charcoal",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "yinggalbul"
+        ],
+        "content": "화상 공격 속도 +10/20/30/40/50%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/single_tree_charcoal.webp",
+      "description": "나무는 연료로, 잎은 깔창으로.",
+      "level": 4,
+      "created_at": "2025-08-11T09:49:31.49437+00:00"
+    },
+    {
+      "id": 76,
+      "value": "agbae_tree_fruit",
+      "label_kor": "아그배나무 열매",
+      "label_eng": "agbae_tree_fruit",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "academy"
+        ],
+        "content": "마법 가속 +6/10/14%\n대시 회복 속도 +5/8/12%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/agbae_tree_fruit.png",
+      "description": "작고 신맛이 강해서 마법 시약의 재료로 사용한다.",
+      "level": 2,
+      "created_at": "2025-08-11T09:50:37.024653+00:00"
+    },
+    {
+      "id": 77,
+      "value": "ice_star",
+      "label_kor": "아이스 스타",
+      "label_eng": "ice_star",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "ice_weapon"
+        ],
+        "content": "[고유] 얼음무구 아티팩트가 0/0/0/0/0/1회 추가 발동\n얼음무구의 피해량 -0/0/0/0/0/10%\n행운 +0/0/1/1/2/2"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/ice_star.png",
+      "description": "눈 덮인 땅에서만 자란다고 전해지는 꽃.",
+      "level": 5,
+      "created_at": "2025-08-11T09:52:33.871656+00:00"
+    },
+    {
+      "id": 78,
+      "value": "sheet_music_bree",
+      "label_kor": "악보 '바람'",
+      "label_eng": "sheet_music_bree",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "spring_song"
+        ],
+        "content": "[고유] 근접 공격의 범위 +10/20/30/40/50% 증가"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/sheet_music_bree.png",
+      "description": "느껴진다, 선율이. 불어온다, 하늘이.",
+      "level": 4,
+      "created_at": "2025-08-11T09:54:56.893871+00:00"
+    },
+    {
+      "id": 80,
+      "value": "obruss_blood",
+      "label_kor": "오브러스의 피",
+      "label_eng": "obruss_blood",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "lake"
+        ],
+        "content": "[고유] MP 흡수 +3/6/9/12"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/obruss_blood.png",
+      "description": "이 피를 마시면 흐르는 물을 건널 수 없는 병에 걸린다고 한다.",
+      "level": 3,
+      "created_at": "2025-08-11T10:00:11.159405+00:00"
+    },
+    {
+      "id": 82,
+      "value": "keel_fragment",
+      "label_kor": "용골 파편",
+      "label_eng": "keel_fragment",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "mystery"
+        ],
+        "content": "<제약> 아이템이 인벤토리 가장자리에 있을 때 효과 발동\n[고유] 최대 HP +5/10/15/20"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/keel_fragment.png",
+      "description": "튼튼하고 무거워!",
+      "level": 3,
+      "created_at": "2025-08-11T10:03:44.205881+00:00"
+    },
+    {
+      "id": 83,
+      "value": "ambergris",
+      "label_kor": "용연향",
+      "label_eng": "ambergris",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "yinggalbul"
+        ],
+        "content": "화염 속성 피해 +2/4/6/8/10"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/ambergris.webp",
+      "description": "용의 타액이 굳어져 생긴 덩어리.",
+      "level": 4,
+      "created_at": "2025-08-11T10:13:18.102906+00:00"
+    },
+    {
+      "id": 84,
+      "value": "glass_hammer",
+      "label_kor": "유리 망치",
+      "label_eng": "glass_hammer",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "[고유] 최종 무기 공격력 +3/6/9/12%\n최대 HP -3/6/9/12%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/glass_hammer.png",
+      "description": "누군가를 기린다고 쓰여 있지만 잘 보이지 않습니다.",
+      "level": 3,
+      "created_at": "2025-08-11T10:14:27.876121+00:00"
+    },
+    {
+      "id": 85,
+      "value": "silver_bracelet",
+      "label_kor": "은팔찌",
+      "label_eng": "silver_bracelet",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "spring_song"
+        ],
+        "content": "공격 속도 +4/8/12/16%\n이동 속도 -4/6/8/10%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/silver_bracelet.png",
+      "description": "우리들의 유대를 위하여.\n-도서관 사서 21기-",
+      "level": 3,
+      "created_at": "2025-08-11T10:15:56.082766+00:00"
+    },
+    {
+      "id": 86,
+      "value": "leafy_leather",
+      "label_kor": "잎새 가죽",
+      "label_eng": "leafy_leather",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "extrium"
+        ],
+        "content": "일반 공격, 대시 공격 적중 시 16.5/28.9/45.4/66% 확률로 먹구름을 즉시 1 소모 (재사용 대기시간: 1.2/0.9/0.8/0.6초)\n먹구름의 추가 피해량 +2/2/3/4%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/leafy_leather.png",
+      "description": "알 수 없는 생명체의 가죽.\n특이한 문양이 그려져 있다.",
+      "level": 3,
+      "created_at": "2025-08-11T10:19:42.840649+00:00"
+    },
+    {
+      "id": 87,
+      "value": "small_magic",
+      "label_kor": "작은 마법 고둥",
+      "label_eng": "small_magic",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "ice_weapon"
+        ],
+        "content": "얼음 무구의 피해량 +3/6/10%\n치명타 피해 +5/8/12%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/small_magic.png",
+      "description": "고둥이 원하는 때 마법을 들려준다.",
+      "level": 2,
+      "created_at": "2025-08-11T10:21:16.424139+00:00"
+    },
+    {
+      "id": 88,
+      "value": "mark_of_warrior",
+      "label_kor": "전사의 증표",
+      "label_eng": "mark_of_warrior",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "[고유] 물리 피해 +1/2/3/4/6/8\n공격 속도 +5/5/5/10/10/10%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/mark_of_warrior.png",
+      "description": "어린 도마뱀들이 첫 사냥을 나갈 때 수여하는 특별한 증표.",
+      "level": 5,
+      "created_at": "2025-08-11T10:22:35.511185+00:00"
+    },
+    {
+      "id": 89,
+      "value": "rat_pendant",
+      "label_kor": "쥐 마법사의 펜던트",
+      "label_eng": "rat_pendant",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "academy"
+        ],
+        "content": "[고유] 볼트 마법이 적을 향해 유도\nMP 재생 +2/5"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/rat_pendant.png",
+      "description": "마법사임을 증명하는 목걸이.\n조금씩 모양이 달라서 증명하기 힘들다.",
+      "level": 1,
+      "created_at": "2025-08-11T10:25:07.063891+00:00"
+    },
+    {
+      "id": 90,
+      "value": "pearl_powder",
+      "label_kor": "진주 가루",
+      "label_eng": "pearl_powder",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "academy"
+        ],
+        "content": "마법서 피해량 +8/10/12%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/pearl_powder.png",
+      "description": "인공적으로 만드는 데 성공했지만, 여전히 가품이 많다.",
+      "level": 2,
+      "created_at": "2025-08-11T10:26:31.02909+00:00"
+    },
+    {
+      "id": 91,
+      "value": "cold_lock",
+      "label_kor": "차가운 자물쇠",
+      "label_eng": "cold_lock",
+      "tier": "advanced",
+      "effect": {
+        "content": "<제약> 인벤토리 양쪽 칸이 모두 비어 있을 때 효과 발동\n모든 피해 증폭 +8/12/16/20/25%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/cold_lock.png",
+      "description": "여닫는 것을 목적으로 만들어진 것이 아니다.",
+      "level": 4,
+      "created_at": "2025-08-11T10:27:34.679437+00:00"
+    },
+    {
+      "id": 92,
+      "value": "chakram",
+      "label_kor": "차크람",
+      "label_eng": "chakram",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "precision"
+        ],
+        "content": "[고유] 주기적으로 주변을 공격하는 차크람 1/2/2/3/3개 발사(피해량: 15/15/22/22/30)"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/chakram.png",
+      "description": "사탕수수 정도는 베어낼 수 있다.",
+      "level": 4,
+      "created_at": "2025-08-11T10:29:14.909237+00:00"
+    },
+    {
+      "id": 94,
+      "value": "gap",
+      "label_kor": "축사의 검집",
+      "label_eng": "gap",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "ice_weapon"
+        ],
+        "content": "<제약> 아이템이 인벤토리 가장자리에 있을 때 효과 발동\n[고유] 6초마다 충전, 일반 공격 시 얼음 속성 검기 발사\n[피해량: 24 (24 + 얼음속성 피해 100/150/200/260/320/380/460%)]"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/gap.png",
+      "description": "달랠 수 없는 영혼을 끌어내는 데 사용되는 검집.",
+      "level": 6,
+      "created_at": "2025-08-11T10:31:40.569593+00:00"
+    },
+    {
+      "id": 95,
+      "value": "kunai",
+      "label_kor": "쿠나이",
+      "label_eng": "kunai",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "precision"
+        ],
+        "content": "[고유] 일반 공격 시 16.5/20.6/24.8% 확률로 쿠나이를 발사\n[피해량: 10 (10+치명타 피해 20/25/30%)]"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/kunai.png",
+      "description": "원예용으로 쓰기 참 좋지.\n-켄-",
+      "level": 2,
+      "created_at": "2025-08-11T10:32:43.916675+00:00"
+    },
+    {
+      "id": 96,
+      "value": "terros_soul_powder",
+      "label_kor": "테로의 영혼 가루",
+      "label_eng": "terros_soul_powder",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "yinggalbul",
+          "colleague"
+        ],
+        "content": "[고유] 화염 투사체를 발사하는 해파리 소환\n투사체에 적중한 적은 화상 디버프 적용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/terros_soul_powder.png",
+      "description": "고요 속에서 함께 춤추던 작은 나의 친구여.",
+      "level": 5,
+      "created_at": "2025-08-11T10:34:49.70871+00:00"
+    },
+    {
+      "id": 97,
+      "value": "fire_arrow",
+      "label_kor": "파이어 애로우",
+      "label_eng": "fire_arrow",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "yinggalbul"
+        ],
+        "content": "[고유] 파이어 애로우 획득"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/fire_arrow.png",
+      "description": "파이어 애로우 마법이 적혀있는 책.",
+      "level": 2,
+      "created_at": "2025-08-11T10:38:41.820426+00:00"
+    },
+    {
+      "id": 98,
+      "value": "palas_card",
+      "label_kor": "팔라스의 카드",
+      "label_eng": "palas_card",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "spring_song"
+        ],
+        "content": "[고유] 일반 공격 시 12% 확률로 카드를 발사\n행운 1마다 발사 확률 0/0.6/1.2/1.8/2.4% 증가\n[피해량: 24]"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/palas_card.png",
+      "description": "어떻게 섞어도 스페이드가 맨 위로 올라온다.",
+      "level": 4,
+      "created_at": "2025-08-11T10:40:21.816323+00:00"
+    },
+    {
+      "id": 99,
+      "value": "blue_pearl",
+      "label_kor": "푸른 진주",
+      "label_eng": "blue_pearl",
+      "tier": "advanced",
+      "effect": {
+        "content": "[고유] MP 흡수 +1/2/3/4\n3타일 밖의 피해를 준 적에게 침식 부여"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/blue_pearl.png",
+      "description": "과거에 짠물이 가득하던 장소가 있었다.",
+      "level": 3,
+      "created_at": "2025-08-11T10:41:39.167614+00:00"
+    },
+    {
+      "id": 100,
+      "value": "blue_planet",
+      "label_kor": "푸른 행성",
+      "label_eng": "blue_planet",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "planet"
+        ],
+        "content": "[고유] 피해량 10/14/18/22/26/30의 물리 탄환을 발사하는 푸른 행성 소환"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/blue_planet.png",
+      "description": "도서관에 전시되어 있던 푸른 행성 모형.\n과거 하늘 밖을 보던 자들이 만들었다.",
+      "level": 5,
+      "created_at": "2025-08-11T10:42:54.747688+00:00"
+    },
+    {
+      "id": 101,
+      "value": "sky_blue_planet",
+      "label_kor": "하늘색 행성",
+      "label_eng": "sky_blue_planet",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "planet"
+        ],
+        "content": "[고유] 피해량 30/40/45/50/55/60의 번개 레이저를 발사하는 하늘색 행성 소환"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/sky_blue_planet.png",
+      "description": "도서관에 전시되어 있던 하늘색 행성.\n과거 하늘 밖을 보던 자들이 만들었다.",
+      "level": 5,
+      "created_at": "2025-08-11T10:44:13.611292+00:00"
+    },
+    {
+      "id": 102,
+      "value": "haste",
+      "label_kor": "헤이스트",
+      "label_eng": "haste",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "spring_song"
+        ],
+        "content": "[고유] 헤이스트 획득"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/haste.png",
+      "description": "헤이스트 마법이 적혀있는 책.",
+      "level": 2,
+      "created_at": "2025-08-11T10:45:19.734337+00:00"
+    },
+    {
+      "id": 103,
+      "value": "helenas_staircase",
+      "label_kor": "헬레나의 계단 모형",
+      "label_eng": "helenas_staircase",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "spring_song"
+        ],
+        "content": "[고유] 장소 이동 시 90초간 이동 속도 10/14/18/22/26/30%, 공격 속도 10/14/18/22/26/30% 증가 버프 획득"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/helenas_staircase.png",
+      "description": "탑을 두르는 계단이 있어야 고립되지 않을 거야.",
+      "level": 5,
+      "created_at": "2025-08-11T10:46:40.861453+00:00"
+    },
+    {
+      "id": 104,
+      "value": "fluorescence",
+      "label_kor": "형광 부적",
+      "label_eng": "fluorescence",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "[고유] 가드 성공 시 25.5초간 물리 피해 +2/4/6/8/10\n검과 방패 전용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/fluorescence.png",
+      "description": "어두운 곳에서 빛을 내는 물질로 수호자의 염원을 담았다.",
+      "level": 4,
+      "created_at": "2025-08-11T10:47:44.790989+00:00"
+    },
+    {
+      "id": 105,
+      "value": "amber",
+      "label_kor": "호박석",
+      "label_eng": "amber",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "mystery"
+        ],
+        "content": "[고유] 피해를 입지 않은 적 공격 시 +10/20/40/80% 추가 피해"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/amber.png",
+      "description": "빠져나오기 위해 발버둥 치는 무언가가 들어있다.",
+      "level": 3,
+      "created_at": "2025-08-11T10:49:05.09557+00:00"
+    },
+    {
+      "id": 106,
+      "value": "flame",
+      "label_kor": "화염 가리개",
+      "label_eng": "flame",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "yinggalbul"
+        ],
+        "content": "[고유] 화염 속성 공격의 치명타 피해 +11/22/33% (동료 피해에도 적용)\n공격 속도 +2/4/6%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/flame.png",
+      "description": "불꽃 밖의 어둠을 보기 위한 안대.",
+      "level": 2,
+      "created_at": "2025-08-11T10:50:21.776806+00:00"
+    },
+    {
+      "id": 107,
+      "value": "flame_sword",
+      "label_kor": "화염 이극검",
+      "label_eng": "flame_sword",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "yinggalbul"
+        ],
+        "content": "화상 상태의 적이 죽을 때 폭발하여 주변 3타일 범위에 7/14/21/28/35/42 피해"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/flame_sword.png",
+      "description": "정령의 환심을 사기 위해 비효율적으로 제작되었습니다.",
+      "level": 5,
+      "created_at": "2025-08-11T10:51:38.401914+00:00"
+    },
+    {
+      "id": 108,
+      "value": "waters",
+      "label_kor": "회복의 물줄기",
+      "label_eng": "waters",
+      "tier": "advanced",
+      "effect": {
+        "content": "[고유] 회복의 물줄기 획득"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/waters.png",
+      "description": "회복의 물줄기 마법이 적혀있는 책.",
+      "level": 0,
+      "created_at": "2025-08-11T10:52:38.353117+00:00"
+    },
+    {
+      "id": 109,
+      "value": "sword_earring",
+      "label_kor": "검 귀고리",
+      "label_eng": "sword_earring",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "precision"
+        ],
+        "content": "[고유] 치명타 피해 +10/16/24/33%\n최대 MP -16/13/10/7"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/sword_earring.webp",
+      "description": "검과 방패로 한 쌍의 귀고리가 완성된다.",
+      "level": 3,
+      "created_at": "2025-08-11T10:53:56.142625+00:00"
+    },
+    {
+      "id": 110,
+      "value": "swordsmanship_textbook",
+      "label_kor": "검술 교본",
+      "label_eng": "swordsmanship_textbook",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "spring_song"
+        ],
+        "content": "<제약> 인벤토리 최상단에 있을 때 효과 발동\n[고유] 공격 속도 +7/14/26%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/swordsmanship_textbook.png",
+      "description": "'어린 동물에게 보여주지 마시오'라고 쓰여있다.",
+      "level": 2,
+      "created_at": "2025-08-11T10:55:33.833344+00:00"
+    },
+    {
+      "id": 111,
+      "value": "flag_of_encouragement",
+      "label_kor": "격려의 깃발",
+      "label_eng": "flag_of_encouragement",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "spring_song"
+        ],
+        "content": "[고유] 발동형 아티팩트 (재사용 대기시간: 30초)\n지정 위치에 깃발을 소환, 깃발 범위 내 아군은 공격 속도가 10/20/30% 증가"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/flag_of_encouragement.png",
+      "description": "우리는 이렇게나 강하다.",
+      "level": 2,
+      "created_at": "2025-08-11T10:57:29.467478+00:00"
+    },
+    {
+      "id": 112,
+      "value": "warning",
+      "label_kor": "경고 문서",
+      "label_eng": "warning",
+      "tier": "rare",
+      "effect": {
+        "content": "[고유] 이동 속도 +4/8%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/warning.webp",
+      "description": "상인연합 긴급 공문: 최근 동료가 의문의 동물에게 죽임을 당한 끔찍한 일이 일어났음. [닉네임]라는 이름의 동물을 조심하기를 바람.",
+      "level": 1,
+      "created_at": "2025-08-11T11:00:53.075501+00:00"
+    },
+    {
+      "id": 113,
+      "value": "employment_sentence_coline",
+      "label_kor": "고용 문장 '콜린'",
+      "label_eng": "employment_sentence_coline",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "colleague"
+        ],
+        "content": "[고유] NPC를 동료로 영입함"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/employment_sentence_coline.png",
+      "description": "스승님에게 받은 거야.\n계약이 종료되면 자동으로 이름이 지워지게 되어 있지.\n-콜린-",
+      "level": 2,
+      "created_at": "2025-08-13T09:35:30.555364+00:00"
+    },
+    {
+      "id": 114,
+      "value": "pride",
+      "label_kor": "교만의 금관",
+      "label_eng": "pride",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "precision"
+        ],
+        "content": "[고유] 일반 공격 마지막 연격의 치명타 확률 +15/30/50/75/100%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/pride.png",
+      "description": "중앙의 보석에선 불길한 빛이 흘러나온다.",
+      "level": 4,
+      "created_at": "2025-08-13T09:36:48.877278+00:00"
+    },
+    {
+      "id": 115,
+      "value": "giraffe_horns",
+      "label_kor": "기린의 뿔",
+      "label_eng": "giraffe_horns",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "magic_engineering"
+        ],
+        "content": "[고유] 번개 속성 공격의 치명타 확률 +10/20/30% (동료 피해에도 적용)\n얼음 속성 피해 -2/4/6"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/giraffe_horns.png",
+      "description": "다른 동물을 해칠 수 없게 가죽에 덮여져 있었습니다.",
+      "level": 2,
+      "created_at": "2025-08-13T09:38:02.624596+00:00"
+    },
+    {
+      "id": 116,
+      "value": "pot_lid",
+      "label_kor": "냄비 뚜껑",
+      "label_eng": "pot_lid",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "guardian"
+        ],
+        "content": "[고유] MP 재생 +2/4/6/8/11/15\n회피 +1/2/3/4/5/6\n적에게 물리 치명타를 가할 때마다 '인내' 버프 획득\n인내: 6초간 방어력 3 증가(최대 3중첩)"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/pot_lid.png",
+      "description": "급할 때 방패로 사용하곤 합니다.",
+      "level": 5,
+      "created_at": "2025-08-13T09:39:45.648654+00:00"
+    },
+    {
+      "id": 117,
+      "value": "green_clothes",
+      "label_kor": "녹색 도복",
+      "label_eng": "green_clothes",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "shadow"
+        ],
+        "content": "[고유] 회피 성공 시 전방으로 '호격권' 시전\n[피해량: 70/90/120/160 (30 + 물리 피해 200/300/450/650%)]\n회피 +2/3/4/5\n이동 속도 +5/7/9/12%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/green_clothes.png",
+      "description": "지키는 자들은 녹색 옷을 입는다.",
+      "level": 3,
+      "created_at": "2025-08-13T09:42:16.48715+00:00"
+    },
+    {
+      "id": 118,
+      "value": "brain",
+      "label_kor": "뇌운추적 나침반",
+      "label_eng": "brain",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "magic_engineering"
+        ],
+        "content": "[고유] 감전 부여 시 15/30/45/60% 확률로 강화 감전 부여\n번개속성 피해 +2/4/6/8"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/brain.png",
+      "description": "뇌운을 쫒기 위해 만들어진 공학 도구.",
+      "level": 3,
+      "created_at": "2025-08-13T09:43:46.260638+00:00"
+    },
+    {
+      "id": 119,
+      "value": "multi_use_belt",
+      "label_kor": "다용도 벨트",
+      "label_eng": "multi_use_belt",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "mystery"
+        ],
+        "content": "<제약> 인벤토리 최하단에 있을 때 효과 발동\n[고유] 인벤토리 맨 윗칸에 위치한 아티팩트 하나당 아래 효과를 중복 획득\n화염속성 피해 +1/1/1/2\n번개속성 피해 +1/1/1/2\n얼음속성 피해 +1/1/1/2"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/multi_use_belt.png",
+      "description": "곳곳을 떠도는 여러분들의 필수 아이템!\n색깔별로 구분해 쉽게 보관하세요!\n-키키-",
+      "level": 3,
+      "created_at": "2025-08-13T09:45:10.634828+00:00"
+    },
+    {
+      "id": 120,
+      "value": "libra",
+      "label_kor": "대립의 천칭",
+      "label_eng": "libra",
+      "tier": "solid",
+      "effect": {
+        "sets": [
+          "yinggalbul",
+          "glacier"
+        ],
+        "content": "[고유] 인벤토리 왼편에선 화염 속성, 오른편에선 얼음 속성이 부여됨\n부여된 속성 피해 +2/4/6/9/11/15\n반대 속성 피해 +0/1/2/3/4/5"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/libra.png",
+      "description": "절대로 균형을 맞출 수 없다.",
+      "level": 5,
+      "created_at": "2025-08-13T09:46:31.884504+00:00"
+    },
+    {
+      "id": 121,
+      "value": "lizard_sheet",
+      "label_kor": "도마뱀 판금 갑옷",
+      "label_eng": "lizard_sheet",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "guardian"
+        ],
+        "content": "[고유] 방어력 +14/16/18/21/24\n이동 속도 -2/4/6/8/10%\n공격 속도 -2/4/6/8/10%\n마법서 가속 -2/4/6/8/10"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/lizard_sheet.png",
+      "description": "실력 좋은 도마뱀 장인이 만든 판금 갑옷.\n뛰어난 보호력을 자랑한다.",
+      "level": 4,
+      "created_at": "2025-08-13T09:47:48.838114+00:00"
+    },
+    {
+      "id": 122,
+      "value": "library_miniature",
+      "label_kor": "도서관 분침 미니어처",
+      "label_eng": "library_miniature",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "precision"
+        ],
+        "content": "[고유] 퓨리 시 무적시간 +0.1/0.2/0.3초\n단검 전용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/library_miniature.png",
+      "description": "한때에는 탑에 살던 모든 동물이 도서관의 종소리를 들을 수 있었다.",
+      "level": 2,
+      "created_at": "2025-08-13T09:49:29.177292+00:00"
+    },
+    {
+      "id": 123,
+      "value": "warm_stone",
+      "label_kor": "따뜻한 돌",
+      "label_eng": "warm_stone",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "precision"
+        ],
+        "content": "<제약> 인벤토리 안쪽에 있을 때 효과 발동\n[고유] 치명타 피해 +10/20/30/40%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/warm_stone.png",
+      "description": "따뜻하게 해 주지 않으면 원래 능력을 잃어버린다.",
+      "level": 3,
+      "created_at": "2025-08-13T09:50:52.012708+00:00"
+    },
+    {
+      "id": 124,
+      "value": "magic_glasses",
+      "label_kor": "마법의 안경",
+      "label_eng": "magic_glasses",
+      "tier": "rare",
+      "effect": {
+        "content": "[고유] 최대 MP +7/14/22/30\n회피 +3/6/9/12"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/magic_glasses.png",
+      "description": "안경을 쓰면 현자 강아지가 보이게 됩니다.\n도움이 되지는 않습니다.",
+      "level": 3,
+      "created_at": "2025-08-13T09:52:08.541778+00:00"
+    },
+    {
+      "id": 125,
+      "value": "magic_gem",
+      "label_kor": "마법의 정석",
+      "label_eng": "magic_gem",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "element"
+        ],
+        "content": "[고유] 가장 높은 속성 피해 +2/4/6/8/10\n마법서 피해량 +3/6/9/12/15%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/magic_gem.png",
+      "description": "공격 마법에 대한 책.\n앞페이지만 읽은 흔적이 있다.",
+      "level": 4,
+      "created_at": "2025-08-13T09:54:42.158602+00:00"
+    },
+    {
+      "id": 126,
+      "value": "model_beak",
+      "label_kor": "모형 부리",
+      "label_eng": "model_beak",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "shadow"
+        ],
+        "content": "[고유] 물리 피해 +1/2/3/5/8\n회피 +2/3/4/5/6"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/model_beak.png",
+      "description": "겁 많은 새가 과시용으로 사용하던 것.",
+      "level": 4,
+      "created_at": "2025-08-13T09:58:21.411874+00:00"
+    },
+    {
+      "id": 127,
+      "value": "dull_drop",
+      "label_kor": "무뎌진 방울",
+      "label_eng": "dull_drop",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "curse"
+        ],
+        "content": "[고유] 직접 공격 시 +1/2/4% 확률로 기절을 가함"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/dull_drop.png",
+      "description": "끝에 방울이 달린 칼.\n의식용으로 사용되었다.",
+      "level": 2,
+      "created_at": "2025-08-13T09:59:32.33784+00:00"
+    },
+    {
+      "id": 128,
+      "value": "colorless_cube",
+      "label_kor": "무색 큐브",
+      "label_eng": "colorless_cube",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "spring_song"
+        ],
+        "content": "고정 피해 +1/1/2/2/3\n이동 속도 +5/6/7/9/12%\n공격 속도 +5/6/7/9/12%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/colorless_cube.png",
+      "description": "장비를 재료로 다시 분해할 때 땅바닥에 떨어지곤 합니다. 누군가는 기억의 결정이라고 부르기도 해요.",
+      "level": 4,
+      "created_at": "2025-08-13T10:01:06.639876+00:00"
+    },
+    {
+      "id": 129,
+      "value": "lightstone",
+      "label_kor": "번갯돌",
+      "label_eng": "lightstone",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "extrium"
+        ],
+        "content": "먹구름의 추가 피해량 +25/30/35/40/45/50/60%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/lightstone.png",
+      "description": "금속과 부딪히면 번개가 떨어지는 사실을 발견했지만, 위험하여 아무도 사용하지 않는다.",
+      "level": 6,
+      "created_at": "2025-08-13T10:02:14.046896+00:00"
+    },
+    {
+      "id": 130,
+      "value": "jewelry_armor",
+      "label_kor": "보석 갑옷",
+      "label_eng": "jewelry_armor",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "academy"
+        ],
+        "content": "[고유] 마법서의 치명타 확률 +10/20/30%\nMP 재생 +4/6/8\n물리 피해 -3/5/7"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/jewelry_armor.png",
+      "description": "의식용으로 사용되던 것.\n크기가 상당히 작다.",
+      "level": 2,
+      "created_at": "2025-08-13T10:13:40.496451+00:00"
+    },
+    {
+      "id": 131,
+      "value": "voluspa",
+      "label_kor": "볼루스파",
+      "label_eng": "voluspa",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "ice_weapon"
+        ],
+        "content": "[고유] 전투 중 6초마다 충전됨. 충전 이후 주변에 적이 있다면 아래 효과 발동\n얼음 창이 날아와 적들을 1/1/1/1/1/2회 공격\n[피해량: 40/48/56/64/72/51x2 (20+얼음속성 피해 100/140/180/220/260/155%)]"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/voluspa.png",
+      "description": "한 때 이 귀걸이는 여러가지 질문을 주었다.",
+      "level": 5,
+      "created_at": "2025-08-13T10:16:22.374181+00:00"
+    },
+    {
+      "id": 132,
+      "value": "broken_root",
+      "label_kor": "부서진 나무뿌리",
+      "label_eng": "broken_root",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "lake"
+        ],
+        "content": "[고유] 최대 MP +5/10/20/35/60"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/broken.png",
+      "description": "부서졌음에도 마르지 않았다.",
+      "level": 4,
+      "created_at": "2025-08-13T10:17:49.359261+00:00"
+    },
+    {
+      "id": 133,
+      "value": "fire_circus",
+      "label_kor": "불 서커스",
+      "label_eng": "fire_circus",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "yinggalbul"
+        ],
+        "content": "[고유] 불 서커스 획득"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/fire_circus.png",
+      "description": "불 서커스 마법이 적혀있는 책.",
+      "level": 3,
+      "created_at": "2025-08-13T10:32:01.038012+00:00"
+    },
+    {
+      "id": 134,
+      "value": "red_thread",
+      "label_kor": "붉은 실뭉치",
+      "label_eng": "red_thread",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "yinggalbul"
+        ],
+        "content": "[고유] 화상 디버프 추가 피해량 +20/40/60/80/100%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/red_thread.png",
+      "description": "하나의 입구. 그리고 출구.",
+      "level": 4,
+      "created_at": "2025-08-13T10:34:57.902426+00:00"
+    },
+    {
+      "id": 135,
+      "value": "freezing_bug",
+      "label_kor": "빙결충",
+      "label_eng": "freezing_bug",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "glacier"
+        ],
+        "content": "[고유] 빙결 디버프 피해량 +10/15/20/25/30/40%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/freezing_bug.png",
+      "description": "만지면 정말 차가운 벌레.\n조련이 가능하다.",
+      "level": 5,
+      "created_at": "2025-08-13T10:39:32.05593+00:00"
+    },
+    {
+      "id": 136,
+      "value": "pointed_bat",
+      "label_kor": "뾰족한 방망이",
+      "label_eng": "pointed_bat",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "precision"
+        ],
+        "content": "[고유] 공격 시 10% 확률로 빗나감 발동(피해량 -20% 감소)\n치명타 피해 +20/40/60%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/pointed_bat.png",
+      "description": "효과는 확실하지만, 휘두르는 동물의 망설임을 만든다.",
+      "level": 2,
+      "created_at": "2025-08-13T10:40:37.209325+00:00"
+    },
+    {
+      "id": 137,
+      "value": "touch_of_life",
+      "label_kor": "생명의 손길",
+      "label_eng": "touch_of_life",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "[고유] 직접 공격 시 HP 1만큼 회복\n재사용 대기시간: 1초\n최종 HP -55/48/40/33%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/touch_of_life.png",
+      "description": "얻는 것은 곧 무언가를 잃는다는 뜻이기도 하지.",
+      "level": 3,
+      "created_at": "2025-08-13T10:41:48.43736+00:00"
+    },
+    {
+      "id": 138,
+      "value": "serens_wanging_letter",
+      "label_kor": "세렌의 휘갈긴 편지",
+      "label_eng": "serens_wanging_letter",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "guardian"
+        ],
+        "content": "[고유] 전투 중 MP 40을 소모할 때마다 보호막 5/10/15 획득"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/serens_wanging_letter.png",
+      "description": "다급함이 느껴진다.\n그리고 알아볼 수 없어.",
+      "level": 2,
+      "created_at": "2025-08-13T10:42:57.584482+00:00"
+    },
+    {
+      "id": 139,
+      "value": "agma_projection_sword",
+      "label_kor": "아그마 투영검 190,191번",
+      "label_eng": "agma_projection_sword",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "[고유] 물리 피해 +2/3/4/6/8/10/12/14"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/agma_projection_sword.png",
+      "description": "190번 째.\n형체는 검과 흡사하다.\n에너지는 대칭적인 형태로만 드러난다.\n칼날 자체는 나타나지 않는다.\n-아그마",
+      "level": 7,
+      "created_at": "2025-08-13T10:44:18.297963+00:00"
+    },
+    {
+      "id": 140,
+      "value": "academy_brigendin",
+      "label_kor": "아카데미 브리건딘",
+      "label_eng": "academy_brigendin",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "guardian",
+          "academy"
+        ],
+        "content": "[고유] 방어력 +2/3/4/6/8/10\n마법 가속 +14/18/20/24/29/35%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/academy_brigendin.png",
+      "description": "아카데미 경비병들이 착용하는 갑옷.",
+      "level": 5,
+      "created_at": "2025-08-13T10:45:30.515783+00:00"
+    },
+    {
+      "id": 141,
+      "value": "alfonsos_horn",
+      "label_kor": "알폰소의 뿔",
+      "label_eng": "alfonsos_horn",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "colleague"
+        ],
+        "content": "[고유] 회피 +1/2/3/4/5/6/8/10\n동료가 입히는 피해량 +10/20/30/40/50/60/70/80%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/alfonsos_horn.webp",
+      "description": "위대한 전사의 흔적에 스러진 혼들이 몰려온다.",
+      "level": 7,
+      "created_at": "2025-08-13T10:46:49.512187+00:00"
+    },
+    {
+      "id": 142,
+      "value": "arrow_lane",
+      "label_kor": "애로우 레인",
+      "label_eng": "arrow_lane",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "glacier"
+        ],
+        "content": "[고유] 애로우 레인 획득"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/arrow_lane.png",
+      "description": "애로우 레인 마법이 적혀있는 책.",
+      "level": 3,
+      "created_at": "2025-08-13T10:47:50.383886+00:00"
+    },
+    {
+      "id": 143,
+      "value": "thin_cushion",
+      "label_kor": "얇은 방석",
+      "label_eng": "thin_cushion",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "colleague"
+        ],
+        "content": "[고유] 동료들이 +20/25/30/35/40/50/60% 더 자주 공격\n동료 부활 시간 가속 +5/10/15/20/30/40/50%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/thin_cushion.png",
+      "description": "스스로의 힘으로 원하는 바를 얻으리라.",
+      "level": 6,
+      "created_at": "2025-08-13T10:49:34.59261+00:00"
+    },
+    {
+      "id": 144,
+      "value": "frozen_egg",
+      "label_kor": "얼어버린 알",
+      "label_eng": "frozen_egg",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "glacier"
+        ],
+        "content": "[고유] 얼음 속성 공격의 치명타 확률 +5/10/15/20%\nMP 재생 -9/6/3/0"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/frozen_egg.png",
+      "description": "아무도 얼기 전 모습을 본 적이 없다.",
+      "level": 3,
+      "created_at": "2025-08-13T10:51:04.356534+00:00"
+    },
+    {
+      "id": 145,
+      "value": "frozen_heart",
+      "label_kor": "얼어붙은 심장",
+      "label_eng": "frozen_heart",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "ice_weapon"
+        ],
+        "content": "얼음무구 아티팩트 충전 속도 +10/18/26/40/55/70/85/100%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/frozen_heart.png",
+      "description": "때가 되면, 심장 속에서 박동이 시작됩니다.",
+      "level": 7,
+      "created_at": "2025-08-13T10:53:02.366554+00:00"
+    },
+    {
+      "id": 146,
+      "value": "ice_seagull",
+      "label_kor": "얼음갈매기의 발",
+      "label_eng": "ice_seagull",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "glacier"
+        ],
+        "content": "[고유] 대상에게 동상을 입힐 때마다 얼음 손길 버프를 획득\n얼음 손길: 7초 동안 얼음 속성 피해 1 증가(최대 5/10/15/20중첩)"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/ice_seagull.png",
+      "description": "물, 바람, 공기가 이 으스스한 작품을 만들었습니다.",
+      "level": 3,
+      "created_at": "2025-08-13T10:54:15.707387+00:00"
+    },
+    {
+      "id": 147,
+      "value": "oink_shaman_necklace",
+      "label_kor": "오잉크 주술사의 목걸이",
+      "label_eng": "oink_shaman_necklace",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "curse"
+        ],
+        "content": "적에게 가하는 모든 디버프의 지속시간 +20/40/60/80/100%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/oink_shaman_necklace.png",
+      "description": "엄니, 뼈, 원석 등을 투박하게 엮은 목걸이.",
+      "level": 4,
+      "created_at": "2025-08-13T10:55:31.490873+00:00"
+    },
+    {
+      "id": 148,
+      "value": "bishopric",
+      "label_kor": "이각수 관",
+      "label_eng": "bishopric",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "academy"
+        ],
+        "content": "[고유] 볼트 마법을 3갈래로 발사함\n각 마법의 위력 69/63/57/51/45/39% 감소\n마나 소모량 0/25/50/75/100/125% 증가"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/bishopric.png",
+      "description": "전설로 내려오던 종족의 뿔을 본떠 만들었다.",
+      "level": 5,
+      "created_at": "2025-08-13T10:56:48.125191+00:00"
+    },
+    {
+      "id": 149,
+      "value": "artificial_spirit",
+      "label_kor": "인공정령 이피엘",
+      "label_eng": "artificial_spirit",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "lake"
+        ],
+        "content": "[고유] 가드 중 MP 재생 5/10/15/20/30/50를 획득하지만 이동 속도가 90% 감소함\n검과 방패 전용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/artificial_spirit.png",
+      "description": "마법사를 도와주기 위해 만들어졌다.\n집중해야 소통할 수 있다.",
+      "level": 5,
+      "created_at": "2025-08-13T10:58:17.863633+00:00"
+    },
+    {
+      "id": 150,
+      "value": "combat_wizard_gloves",
+      "label_kor": "전투 마법사의 장갑",
+      "label_eng": "combat_wizard_gloves",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "academy"
+        ],
+        "content": "[고유] 마법서 피해량 +10/12/15/20%\n이동 속도 +3/4/5/6%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/combat_wizard_gloves.png",
+      "description": "무겁고 두텁습니다.\n전투 마법사가 아니라 마법 전사의 물건이 아니었을까요?",
+      "level": 3,
+      "created_at": "2025-08-13T10:59:30.918697+00:00"
+    },
+    {
+      "id": 151,
+      "value": "reloaded_wooden_box",
+      "label_kor": "재장전용 나무 상자",
+      "label_eng": "reloaded_wooden_box",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "[고유] 탄창 갯수 +0/1/1/1/2\n석궁 전용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/reloaded_wooden_box.png",
+      "description": "빠르게 재장전 하기 위해 미리 화살을 채워둔 도구.",
+      "level": 4,
+      "created_at": "2025-08-13T11:09:11.241433+00:00"
+    },
+    {
+      "id": 152,
+      "value": "thunder",
+      "label_kor": "천둥 갑옷",
+      "label_eng": "thunder",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "magic_engineering"
+        ],
+        "content": "[고유] 천둥 갑옷 획득"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/thunder.png",
+      "description": "천둥 갑옷 마법이 적혀있는 책.",
+      "level": 4,
+      "created_at": "2025-08-13T11:11:14.886367+00:00"
+    },
+    {
+      "id": 153,
+      "value": "bronze_mirror",
+      "label_kor": "청동거울 파편",
+      "label_eng": "bronze_mirror",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "특수 공격 비용 감소 +20/30/40/50%\n대검 전용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/bronze_mirror.png",
+      "description": "과거의 염원이 강하게 남아있다.\n부서진 채로 보자기에 싸여 전해진다.",
+      "level": 3,
+      "created_at": "2025-08-13T11:12:32.353186+00:00"
+    },
+    {
+      "id": 154,
+      "value": "rabbit_village_guard_helm",
+      "label_kor": "토끼 마을 경비병 투구",
+      "label_eng": "rabbit_village_guard_helm",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "[고유] 최종 무기 공격력 +4/8/12/16%\n회피 -4/4/8/8"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/rabbit_village_guard_helm.webp",
+      "description": "평균 크기 토끼의 얼굴에만 맞습니다.",
+      "level": 3,
+      "created_at": "2025-08-13T11:13:50.371183+00:00"
+    },
+    {
+      "id": 155,
+      "value": "blue_ring",
+      "label_kor": "푸른 고리",
+      "label_eng": "blue_ring",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "mystery"
+        ],
+        "content": "[고유] 현재 HP가 70% 이상이면 모든 피해 증폭 +6/8/10/15%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/blue_ring.png",
+      "description": "가방에서 꺼낼 때 가방 안을 보면 안 됩니다.",
+      "level": 3,
+      "created_at": "2025-08-13T11:14:55.148941+00:00"
+    },
+    {
+      "id": 156,
+      "value": "fluffy",
+      "label_kor": "푹신한 털장갑",
+      "label_eng": "fluffy",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "glacier"
+        ],
+        "content": "[고유] 동상에 걸린 대상은 얼음 속성 피해에 +5/10/15/20/25% 더 피해를 입음 (동료 피해에도 적용)"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/fluffy.png",
+      "description": "따뜻한 곳에 살던 친구들을 위해서야.\n색이 섞인 것도 이쁘지?\n-살론-",
+      "level": 4,
+      "created_at": "2025-08-13T11:15:52.751432+00:00"
+    },
+    {
+      "id": 157,
+      "value": "white_twig",
+      "label_kor": "하얀 나뭇가지",
+      "label_eng": "white_twig",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "lake"
+        ],
+        "content": "[고유] MP 재생 +5/9/15/22/30"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/white_twig.webp",
+      "description": "희귀한 병에 걸려 색이 변했다.",
+      "level": 4,
+      "created_at": "2025-08-13T11:16:54.799501+00:00"
+    },
+    {
+      "id": 158,
+      "value": "white_egg_shell",
+      "label_kor": "하얀 알 껍질",
+      "label_eng": "white_egg_shell",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "mystery"
+        ],
+        "content": "[고유] 공격한 대상의 HP가 4/8/12/16/20% 이하라면 즉시 처치 (보스에게는 발동되지 않음)"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/white_egg_shell.png",
+      "description": "아주 오래되어 바스락거린다.",
+      "level": 4,
+      "created_at": "2025-08-13T11:17:59.410898+00:00"
+    },
+    {
+      "id": 159,
+      "value": "white_planet",
+      "label_kor": "하얀 행성",
+      "label_eng": "white_planet",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "planet"
+        ],
+        "content": "[고유] 피해량 30/36/42/48/54/60/66/72의 얼음 탄환을 발사하는 하얀 행성 소환"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/white_planet.png",
+      "description": "도서관에 전시되어 있던 하얀 행성 모형.\n과거 하늘 밖을 보던 자들이 만들었다.",
+      "level": 7,
+      "created_at": "2025-08-13T11:18:57.511723+00:00"
+    },
+    {
+      "id": 160,
+      "value": "heart_shaped_carrot",
+      "label_kor": "하트모양 당근",
+      "label_eng": "heart_shaped_carrot",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "lake"
+        ],
+        "content": "[고유] 최대 HP +5/10/15/20/30\n최대 MP +5/10/15/20/30"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/heart_shaped_carrot.webp",
+      "description": "특이한 모양의 당근으로 만든 아티팩트.",
+      "level": 4,
+      "created_at": "2025-08-13T11:20:11.373645+00:00"
+    },
+    {
+      "id": 161,
+      "value": "bloodstone_ring",
+      "label_kor": "혈석 반지",
+      "label_eng": "bloodstone_ring",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "mystery"
+        ],
+        "content": "[고유] 15/13/10회 처치 시 HP 5 회복"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/bloodstone_ring.png",
+      "description": "생명의 고동이 전해진다.",
+      "level": 2,
+      "created_at": "2025-08-13T11:21:15.8624+00:00"
+    },
+    {
+      "id": 162,
+      "value": "black_tea",
+      "label_kor": "홍차 잎 주머니",
+      "label_eng": "black_tea",
+      "tier": "rare",
+      "effect": {
+        "content": "[고유] 미니보스로부터 받는 피해 +30%, 미니보스 처치할 때 모든 피해 증폭 +4/8/12% (최대 3 스택)"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/black_tea.png",
+      "description": "찻잎 빼기 귀찮다고 주머니 통째로 물에 넣으면 안 돼요!",
+      "level": 2,
+      "created_at": "2025-08-13T11:22:21.347024+00:00"
+    },
+    {
+      "id": 163,
+      "value": "flame_root",
+      "label_kor": "화염초 뿌리",
+      "label_eng": "flame_root",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "yinggalbul"
+        ],
+        "content": "[고유] 퓨리 적중 시 주변에 화염 속성 피해의 200/400/600% 피해를 줌\n최대 MP +6/12/20\n단검 전용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/flame_root.png",
+      "description": "발화 작용을 하는 신기한 풀의 뿌리.",
+      "level": 2,
+      "created_at": "2025-08-13T11:23:36.772363+00:00"
+    },
+    {
+      "id": 164,
+      "value": "flame_insect",
+      "label_kor": "화염충",
+      "label_eng": "flame_insect",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "yinggalbul"
+        ],
+        "content": "[고유] 화상 디버프 중첩 +0/1/1/2/3/4"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/flame_insect.png",
+      "description": "스스로 발화하는 능력을 가진 벌레.\n조련이 가능하다.",
+      "level": 5,
+      "created_at": "2025-08-13T11:24:42.257474+00:00"
+    },
+    {
+      "id": 165,
+      "value": "giant_telescope",
+      "label_kor": "거대 망원경",
+      "label_eng": "giant_telescope",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "planet"
+        ],
+        "content": "행성 공격 속도 +5/10%\n주변 8칸에 위치한 행성을 거대화 (거대화 된 행성은 투사체가 커지고 피해량이 50% 증가)"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/giant_telescope.png",
+      "description": "하늘에 떠 있는 무언가를 보기 위해 발명된 도구.",
+      "level": 1,
+      "created_at": "2025-08-13T11:29:51.575037+00:00"
+    },
+    {
+      "id": 166,
+      "value": "black_scales",
+      "label_kor": "검은 비늘",
+      "label_eng": "black_scales",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "precision"
+        ],
+        "content": "[고유] 인벤토리 내 석판 개수만큼 치명타 확률 1/1.5/2/2.5% 증가"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/black_scales.png",
+      "description": "어느 동물의 비늘인지 알 수 없다.",
+      "level": 3,
+      "created_at": "2025-08-18T09:19:22.039399+00:00"
+    },
+    {
+      "id": 167,
+      "value": "humility_crown",
+      "label_kor": "겸손의 왕관",
+      "label_eng": "humility_crown",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "[고유] 일반 공격 마지막 연격의 피해량 +10/22/40/60/84%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/humility_crown.png",
+      "description": "중앙의 보석에서 편안한 빛이 흘러나온다.",
+      "level": 4,
+      "created_at": "2025-08-18T09:20:48.386182+00:00"
+    },
+    {
+      "id": 168,
+      "value": "clay_tablet",
+      "label_kor": "뇌문 점토판",
+      "label_eng": "clay_tablet",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "extrium"
+        ],
+        "content": "[고유] 먹구름이 10/20/30/40/50% 확률로 소모되지 않음"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/clay_tablet.webp",
+      "description": "만물의 연속을 담아서.",
+      "level": 4,
+      "created_at": "2025-08-18T09:23:23.112844+00:00"
+    },
+    {
+      "id": 169,
+      "value": "riley_congregation_clock",
+      "label_kor": "라일리의 회중시계",
+      "label_eng": "riley_congregation_clock",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "academy"
+        ],
+        "content": "<제약> 인벤토리 가장 아래 칸에 있을 때 효과 발동\n[고유] 마법서 가속 +40/60/80\n치명타 피해 +8/14/20%\n마법서 소모 MP +5/5/10%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/riley_congregation_clock.png",
+      "description": "오른쪽으로 저항감이 느껴질 때까지 천천히 태엽을 돌려야 합니다.",
+      "level": 2,
+      "created_at": "2025-08-18T09:25:14.006677+00:00"
+    },
+    {
+      "id": 170,
+      "value": "ruby_brooch",
+      "label_kor": "루비 브로치",
+      "label_eng": "ruby_brooch",
+      "tier": "solid",
+      "effect": {
+        "sets": [
+          "yinggalbul",
+          "extrium"
+        ],
+        "content": "[고유] 먹구름의 벼락이 적중한 적에게 화상 디버프 부여\n번개 속성 피해 +3/5/7/10\n화염 속성 피해 +3/5/7/10"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/ruby_brooch.png",
+      "description": "뜨겁다. 빛난다. 그리고 쏜다.",
+      "level": 3,
+      "created_at": "2025-08-18T09:26:59.563716+00:00"
+    },
+    {
+      "id": 171,
+      "value": "meteor_shower",
+      "label_kor": "메테오 샤워",
+      "label_eng": "meteor_shower",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "yinggalbul"
+        ],
+        "content": "[고유] 메테오 샤워 획득"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/meteor_shower.png",
+      "description": "메테오 샤워 마법이 적혀있는 책.",
+      "level": 3,
+      "created_at": "2025-08-18T09:28:40.013627+00:00"
+    },
+    {
+      "id": 172,
+      "value": "walter_work_monocle",
+      "label_kor": "발터의 작업용 단안경",
+      "label_eng": "walter_work_monocle",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "precision"
+        ],
+        "content": "[고유] 치명타 확률 +10/19/28/35/45%\n적이 3타일 내에 근접해 있는 경우, 치명타 피해 -30%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/walter_work_monocle.png",
+      "description": "가끔 마법용품의 완성도가 실제 마법에 영향을 줄 때가 있지.\n도수가 높으니까 사용할 때 반대쪽 눈은 꼭 감도록 해.",
+      "level": 4,
+      "created_at": "2025-08-18T09:30:22.581831+00:00"
+    },
+    {
+      "id": 173,
+      "value": "berut_sickle",
+      "label_kor": "베루트의 낫",
+      "label_eng": "berut_sickle",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "precision"
+        ],
+        "content": "[고유] 공격의 치명타 확률이 100%를 초과한 경우, 초과한 확률이 처형 발생 확률로 전환\n치명타 확률 +2.5/5/7.5/10%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/berut_sickle.png",
+      "description": "악은 없다.\n무지함에서 오는 행동만이 존재한다.",
+      "level": 3,
+      "created_at": "2025-08-18T09:33:08.783697+00:00"
+    },
+    {
+      "id": 174,
+      "value": "empty_handle",
+      "label_kor": "비어 있는 검 손잡이",
+      "label_eng": "empty_handle",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "academy"
+        ],
+        "content": "[고유] 마법서 피해량 +5/10/15/20/25/30%\n최종 MP +7/9/11/13/15/20%\nMP 재생 +2/2/2/4/4/6"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/empty_handle.png",
+      "description": "위험에 대비하라.",
+      "level": 5,
+      "created_at": "2025-08-18T09:34:23.802684+00:00"
+    },
+    {
+      "id": 175,
+      "value": "shining_hourglass",
+      "label_kor": "빛나는 모래시계",
+      "label_eng": "shining_hourglass",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "academy"
+        ],
+        "content": "오른쪽 칸의 마법서 마법서 가속 +60/100/140%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/shining_hourglass.png",
+      "description": "모래에서 은은한 빛이 흘러나온다.",
+      "level": 2,
+      "created_at": "2025-08-18T09:35:45.280384+00:00"
+    },
+    {
+      "id": 176,
+      "value": "shield_mate",
+      "label_kor": "실드 메이트",
+      "label_eng": "shield_mate",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "[고유]휩쓸기 MP 소모 -15/30/45/60/70/80/100%\n무기 피해량 +2/4/6/9/12/15/20%\n공격 속도 -20/20/20/10/5/5/0%\n검과 방패 전용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/shield_mate.png",
+      "description": "방패를 더 안정적으로 사용할 수 있도록 설계된 건틀릿.",
+      "level": 6,
+      "created_at": "2025-08-18T09:37:07.487514+00:00"
+    },
+    {
+      "id": 177,
+      "value": "ice_wings",
+      "label_kor": "얼음 날개",
+      "label_eng": "ice_wings",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "ice_weapon"
+        ],
+        "content": "[고유] 얼음무구 아티팩트가 0/0/0/1/1/1/2회 추가 발동\n얼음무구의 피해량 -0/0/0/10/10/10/20%\n치명타 피해 +2/4/6/8/10/12/20%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/ice_wings.png",
+      "description": "과거 얼음 정령의 날개 모양입니다.\n양 날개는 서로 멀어지지도 가까워지지도 않습니다.",
+      "level": 6,
+      "created_at": "2025-08-18T09:38:31.924584+00:00"
+    },
+    {
+      "id": 178,
+      "value": "six_leaf_clover",
+      "label_kor": "여섯 잎 클로버",
+      "label_eng": "six_leaf_clover",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "shadow"
+        ],
+        "content": "[고유] 회피 +3/6/9/12\n행운 +3/3/6/6\n치명타 확률 +2/4/6/8%\n고정 피해 +1/1/2/2"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/six_leaf_clover.png",
+      "description": "커다란 은방울 꽃 아래 수많은 클로버들 중 특별한 하나라고 전해진다.",
+      "level": 3,
+      "created_at": "2025-08-18T09:40:24.665508+00:00"
+    },
+    {
+      "id": 179,
+      "value": "absolute_ring",
+      "label_kor": "절대반지",
+      "label_eng": "absolute_ring",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "[고유] 소용돌이 범위 +30/45/60%\n소용돌이 피해 +10/20/45%\n대검 전용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/absolute_ring.png",
+      "description": "과거의 찬란하던 그 때처럼 가진 자를 축복해주고 있다.",
+      "level": 2,
+      "created_at": "2025-08-18T09:42:13.784756+00:00"
+    },
+    {
+      "id": 180,
+      "value": "chintamani_stone",
+      "label_kor": "친타마니 돌",
+      "label_eng": "chintamani_stone",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "mystery"
+        ],
+        "content": "죽음에 이르는 피해를 받으면 아이템이 파괴되며 아래 효과가 발동됨\nHP +50% 회복 후 잠깐동안 무적\n부서진 곳의 인벤토리 레벨 +3"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/chintamani_stone.png",
+      "description": "삿된 일이여, 돌아가라.\n삿된 기운이여, 물럿거라.",
+      "level": 0,
+      "created_at": "2025-08-18T09:43:43.302795+00:00"
+    },
+    {
+      "id": 181,
+      "value": "blue_claws",
+      "label_kor": "푸른 발톱",
+      "label_eng": "blue_claws",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "glacier"
+        ],
+        "content": "동상 부여 시 30/40/50/60% 확률로 1회 추가 부여\n얼음속성 피해 +2/4/6/9\n최대 MP +5/10/15/20"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/blue_claws.png",
+      "description": "과거 신을 차갑게 할 수 있었던 용의 발톱.\n사냥감을 사냥할수록 붉어진다.",
+      "level": 3,
+      "created_at": "2025-08-18T09:44:47.600991+00:00"
+    },
+    {
+      "id": 182,
+      "value": "blue_wrist_guard",
+      "label_kor": "푸른 손목 보호대",
+      "label_eng": "blue_wrist_guard",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "[고유] 특수 공격 피해 +7/14/21/28/35/42%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/blue_wrist_guard.png",
+      "description": "시간을 느리게 만들기 위해서 만들어진 수많은 실패작 중 하나.",
+      "level": 5,
+      "created_at": "2025-08-18T09:45:52.080161+00:00"
+    },
+    {
+      "id": 183,
+      "value": "lightning_rod",
+      "label_kor": "피뢰침",
+      "label_eng": "lightning_rod",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "extrium"
+        ],
+        "content": "[고유] 먹구름 용량 +5/10/15/20/25\n전투 중 먹구름 회복 속도 +3/6/9/12/15%\n번개속성 피해 +1/2/3/4/5"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/lightning_rod.png",
+      "description": "검의 모양을 하고 있지만, 부서지기 쉬운 재질로 만들어졌습니다.",
+      "level": 4,
+      "created_at": "2025-08-18T09:47:31.039984+00:00"
+    },
+    {
+      "id": 184,
+      "value": "bloodstone_earrings",
+      "label_kor": "혈석 귀걸이",
+      "label_eng": "bloodstone_earrings",
+      "tier": "legend",
+      "effect": {
+        "content": "[고유] HP 흡수 +8\n방어력 -30/25/20/10"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/bloodstone_earrings.png",
+      "description": "어제 집 가는 길에 로브 쓴 분이 선물이라고 주더라고.\n이쁘지?",
+      "level": 3,
+      "created_at": "2025-08-18T09:48:29.753037+00:00"
+    },
+    {
+      "id": 185,
+      "value": "white_bread",
+      "label_kor": "흰 테두리 빵",
+      "label_eng": "white_bread",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "guardian"
+        ],
+        "content": "[고유] 피격 시 무적 시간 +0.4/0.8/1.2초"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/white_bread.png",
+      "description": "바깥은 촉촉하고 안쪽은 바삭해요.",
+      "level": 2,
+      "created_at": "2025-08-18T09:49:32.640647+00:00"
+    },
+    {
+      "id": 186,
+      "value": "iridescent_feathers",
+      "label_kor": "무지갯빛 깃털",
+      "label_eng": "iridescent_feathers",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "spring_song"
+        ],
+        "content": "[고유] 몰입 획득 시 0/0/1 추가 획득\n특수 공격 피해 +10/16/22%\n대시 회복 속도 +5/5/10%\n단검 전용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/iridescent_feathers.png",
+      "description": "무지개가 뜰 때 가끔 바람이 날려 온다.",
+      "level": 2,
+      "created_at": "2025-09-05T14:07:20.474054+00:00"
+    },
+    {
+      "id": 187,
+      "value": "heitas_soul_powder",
+      "label_kor": "헤이타의 영혼 가루",
+      "label_eng": "heitas_soul_powder",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "glacier",
+          "colleague"
+        ],
+        "content": "[고유] 얼음 투사체를 발사하는 해파리 소환\n투사체에 적중한 적은 동상 디버프 적용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/heitas_soul_powder.png",
+      "description": "세상이 요동치던 밤에 헤어진 나의 동지들아.",
+      "level": 4,
+      "created_at": "2025-09-05T14:13:56.585038+00:00"
+    },
+    {
+      "id": 188,
+      "value": "meditation_books",
+      "label_kor": "명상 서적",
+      "label_eng": "meditation_books",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "academy"
+        ],
+        "content": "[고유] 모든 마법서를 동작 없이 즉시 시전\n마법서 피해량 +6/8/11/14%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/meditation_books.png",
+      "description": "자신을 성장시키려 하지 말고, 지금 이 순간의 자신을 받아들여라.",
+      "level": 3,
+      "created_at": "2025-09-05T14:21:56.843223+00:00"
+    },
+    {
+      "id": 190,
+      "value": "rock_elephant",
+      "label_kor": "바위코끼리",
+      "label_eng": "rock_elephant",
+      "tier": "solid",
+      "effect": {
+        "sets": [
+          "guardian",
+          "spring_song"
+        ],
+        "content": "[고유] 발동형 아티팩트 (재사용 대기시간: 15초, 대시 횟수 소모 시 3.0초 감소)\n방어력의 +70/95/125/160/200%만큼 피해를 주는 바위창을 3개 발사\n추가 공격 속도 15%당 바위창 갯수 추가"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/rock_elephant.png",
+      "description": "뿔이 세밀하게 깎여있어 부서질 것 같지만, 아주 튼튼합니다.",
+      "level": 4,
+      "created_at": "2025-10-05T15:38:29.251649+00:00"
+    },
+    {
+      "id": 191,
+      "value": "solis_decree",
+      "label_kor": "솔리스 데크리",
+      "label_eng": "solis_decree",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "sun_sword"
+        ],
+        "content": "[고유] 태양검이 대상의 방어력을 +2/4/6/8/10/12/14% 무시\n태양검 치명타 확률 +5/10/15/22/30/40/50%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/solis_decree.png",
+      "description": "정령이 스스로 따르는 이에게 수여되는 쌍날검 모양 뱃지.",
+      "level": 6,
+      "created_at": "2025-10-05T15:42:30.911028+00:00"
+    },
+    {
+      "id": 192,
+      "value": "cloud_shoulder_ornament",
+      "label_kor": "운철 어깨 장식",
+      "label_eng": "cloud_shoulder_ornament",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "sun_sword"
+        ],
+        "content": "[고유] 발동형 아티팩트 (재사용 대기시간: 10/8/6/4/2.5초)\n바닥에 떨어진 모든 태양검을 회수하고, 그 경로의 적에게 태양검 피해"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/cloud_shoulder_ornament.png",
+      "description": "고유의 효과를 지키기 위해 거의 가공하지 않았습니다.",
+      "level": 4,
+      "created_at": "2025-10-05T15:45:12.406855+00:00"
+    },
+    {
+      "id": 193,
+      "value": "cloud_iron_earrings",
+      "label_kor": "운철 귀걸이",
+      "label_eng": "cloud_iron_earrings",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "sun_sword"
+        ],
+        "content": "[고유] 태양검 투척 시 자신과 가까운 곳에 떨어짐\n태양검 피해량 +5/10/15%\n화염속성 피해 +2/4/7"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/cloud_iron_earrings.png",
+      "description": "운철에 끌어당기는 힘은 없지만, 그렇게 되도록 세공되었습니다.",
+      "level": 2,
+      "created_at": "2025-10-05T15:47:15.318441+00:00"
+    },
+    {
+      "id": 194,
+      "value": "solis_decusa",
+      "label_kor": "솔리스 데쿠사",
+      "label_eng": "solis_decusa",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "sun_sword"
+        ],
+        "content": "[고유] 태양검 피해량 +5/10/15/20%\n치명타 피해 +4/8/12/16%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/solis_decusa.png",
+      "description": "정령을 능숙히 다루는 이에게 수여되는 쌍검 모양 뱃지",
+      "level": 3,
+      "created_at": "2025-10-05T15:49:00.032061+00:00"
+    },
+    {
+      "id": 195,
+      "value": "solis_parvo",
+      "label_kor": "솔리스 파르보",
+      "label_eng": "solis_parvo",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "sun_sword"
+        ],
+        "content": "[고유] 태양검 개수 상한 +1/1/2/2/3\n이동 속도 +1/2/4/6/8%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/solis_parvo.png",
+      "description": "정령과 평등해진 이에게 수여되는 소검 모양 뱃지",
+      "level": 4,
+      "created_at": "2025-10-05T15:50:46.450876+00:00"
+    },
+    {
+      "id": 196,
+      "value": "eternal_brazier",
+      "label_kor": "영원의 화로",
+      "label_eng": "eternal_brazier",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "sun_sword"
+        ],
+        "content": "[고유] 10/8/5 초마다 태양검 1개 생성\n치명타 확률 +1/2.5/5%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/eternal_brazier.png",
+      "description": "태양의 형상을 본뜬 결정이 빛나고 있습니다.",
+      "level": 2,
+      "created_at": "2025-10-05T15:52:23.89129+00:00"
+    },
+    {
+      "id": 197,
+      "value": "sunset_cloak",
+      "label_kor": "물드는 노을 망토",
+      "label_eng": "sunset_cloak",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "sun_sword"
+        ],
+        "content": "[고유] 태양검 투척 시 20/40/60/80/100%확률로 크기가 커지고 피해량이 33% 증가"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/sunset_cloak.png",
+      "description": "색을 담아내는 천으로 정확한 순간을 잡아냈습니다.",
+      "level": 4,
+      "created_at": "2025-10-05T15:53:47.470555+00:00"
+    },
+    {
+      "id": 198,
+      "value": "ancient_anvil",
+      "label_kor": "고대 모루",
+      "label_eng": "ancient_anvil",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "sun_sword"
+        ],
+        "content": "[고유] 태양검이 바닥에 10/20/30/40% 더 빨리 떨어짐\n화염속성 피해 +2/4/6/8"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/ancient_anvil.png",
+      "description": "사용자에 맞춰 변하지만 지금은 그 동력을 잃었습니다.",
+      "level": 3,
+      "created_at": "2025-10-05T15:55:21.999393+00:00"
+    },
+    {
+      "id": 199,
+      "value": "solis_pratu",
+      "label_kor": "솔리스 프라투",
+      "label_eng": "solis_pratu",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "sun_sword"
+        ],
+        "content": "화염속성 피해 +2/3/5\n최대 HP +2/4/6"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/solis_pratu.png",
+      "description": "정령의 환심을 사기 위해 비효율적으로 제작된 단검 모양 뱃지",
+      "level": 2,
+      "created_at": "2025-10-05T15:56:55.811202+00:00"
+    },
+    {
+      "id": 200,
+      "value": "shield_bag",
+      "label_kor": "방패 가방",
+      "label_eng": "shield_bag",
+      "tier": "solid",
+      "effect": {
+        "sets": [
+          "guardian",
+          "academy"
+        ],
+        "content": "[고유] 방어력 10당 다음 효과 획득\n화염속성 피해 +1/1/2/3\n얼음속성 피해 +1/1/2/3\n번개속성 피해 +1/1/2/3"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/shield_bag.png",
+      "description": "거북이도 찾는, 위험한 여행길의 필수품",
+      "level": 3,
+      "created_at": "2025-10-05T15:59:34.21804+00:00"
+    },
+    {
+      "id": 201,
+      "value": "tuning_fork",
+      "label_kor": "소리굽쇠",
+      "label_eng": "tuning_fork",
+      "tier": "solid",
+      "effect": {
+        "sets": [
+          "academy",
+          "firmness"
+        ],
+        "content": "[고유] 0.8초마다 한번 마법서 시전 시 '음파' 스택을 획득 (최대 5중첩)\n무기 공격으로 스택을 모두 소모하여 공격 지점에 혼돈 피해를 가함 (마법서 피해로 간주됨)\n피해량: 모든 속성 피해의 평균치 +200/250/300/350/450% (마법서 가속 1당 소리굽쇠 피해량이 +1% 증폭)"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/tuning_fork.png",
+      "description": "악기를 조율하는 데 사용하는 도구",
+      "level": 4,
+      "created_at": "2025-10-05T16:01:37.326812+00:00"
+    },
+    {
+      "id": 202,
+      "value": "sealed_tejas",
+      "label_kor": "봉인된 테자스",
+      "label_eng": "sealed_tejas",
+      "tier": "solid",
+      "effect": {
+        "sets": [
+          "yinggalbul",
+          "glacier"
+        ],
+        "content": "[고유] 화상이 푸른 화상으로 변경\n화상 디버프 추가 피해량 +3/6/9/12%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/sealed_tejas.png",
+      "description": "사나운 불의 정령이 봉인되어 있습니다.",
+      "level": 3,
+      "created_at": "2025-10-05T16:03:07.760302+00:00"
+    },
+    {
+      "id": 204,
+      "value": "ice_cloud_butterfly",
+      "label_kor": "얼음구름 나비",
+      "label_eng": "ice_cloud_butterfly",
+      "tier": "solid",
+      "effect": {
+        "sets": [
+          "extrium",
+          "glacier"
+        ],
+        "content": "[고유] 먹구름이 눈보라 구름으로 변경됨\n얼음속성 피해 +2/4/6/8\n먹구름의 소모 속도 +6/12/18/24%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/ice_cloud_butterfly.png",
+      "description": "나의 사랑하는 패밀리어. 이런 모습에서라도 내 곁에 있어줘.",
+      "level": 3,
+      "created_at": "2025-10-05T16:04:43.622376+00:00"
+    },
+    {
+      "id": 205,
+      "value": "water_droplets_from_plitvice",
+      "label_kor": "플리트비체의 물방울",
+      "label_eng": "water_droplets_from_plitvice",
+      "tier": "solid",
+      "effect": {
+        "sets": [
+          "ice_weapon",
+          "lake"
+        ],
+        "content": "[고유] 얼음 무구 발동 시, MP를 4 소모하여 회전하는 얼음검 소환 (최대 5개) [피해량: 기본 공격력 x 추가 MP의 50% 만큼 피해]\n기본 공격력: 얼음속성 피해의 6%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/water_droplets_from_plitvice.png",
+      "description": "얼음 요정이 호수 위에 춤을 출 때, 그 발 아래 생기는 결정 중 하나",
+      "level": 0,
+      "created_at": "2025-10-05T16:06:46.542535+00:00"
+    },
+    {
+      "id": 206,
+      "value": "tactical_manual",
+      "label_kor": "전술 지침서",
+      "label_eng": "tactical_manual",
+      "tier": "solid",
+      "effect": {
+        "sets": [
+          "colleague",
+          "precision"
+        ],
+        "content": "[고유] 플레이어 치명타 확률, 치명타 피해가 동료에게 +30/60/90/120% 반영\n치명타 확률 +2/4/6/8%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/tactical_manual.png",
+      "description": "도서관에 보관되고 있던 책. 언제 쓰였는지 알 수 없다.",
+      "level": 3,
+      "created_at": "2025-10-05T16:08:16.742785+00:00"
+    },
+    {
+      "id": 207,
+      "value": "swaying_eyes",
+      "label_kor": "일렁이는 눈",
+      "label_eng": "swaying_eyes",
+      "tier": "solid",
+      "effect": {
+        "sets": [
+          "shadow",
+          "precision"
+        ],
+        "content": "[고유] 치명타 시 '신기루'스택 획득. 신기루 100% 상태에서 피격 시 공격을 무조건 회피하며, 주변 넓은 적에게 회피 300/600/900/1200/1500% 혼돈 피해"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/swaying_eyes.png",
+      "description": "형체가 없지만 분명히 잡히고, 가방에 넣어도 빠져나가지 않습니다.",
+      "level": 4,
+      "created_at": "2025-10-05T16:09:51.401617+00:00"
+    },
+    {
+      "id": 208,
+      "value": "sheet_music_storm",
+      "label_kor": "악보 '폭풍'",
+      "label_eng": "sheet_music_storm",
+      "tier": "solid",
+      "effect": {
+        "sets": [
+          "extrium",
+          "spring_song"
+        ],
+        "content": "[고유] 먹구름의 소모 속도는 공격 속도의 25/50/100%만큼 더 빨라짐\n무기 공격 시 5/10/15의 번개속성 피해를 가함\n공격 속도 +4/8/12%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/sheet_music_storm.png",
+      "description": "느껴라, 찰나에 머무는 빛을.",
+      "level": 2,
+      "created_at": "2025-10-05T16:11:40.779209+00:00"
+    },
+    {
+      "id": 209,
+      "value": "sheet_music_galaxy",
+      "label_kor": "악보 '은하'",
+      "label_eng": "sheet_music_galaxy",
+      "tier": "solid",
+      "effect": {
+        "sets": [
+          "planet",
+          "spring_song"
+        ],
+        "content": "[고유] 공격 속도 +4/8/12%\nX/X/무기 공격 할 때 마다 공격 주기가 빨라짐"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/sheet_music_galaxy.png",
+      "description": "하늘의 어둠과 별을 엮어서.",
+      "level": 2,
+      "created_at": "2025-10-05T16:14:02.771524+00:00"
+    },
+    {
+      "id": 210,
+      "value": "brass_mirror_fragments",
+      "label_kor": "황동거울 파편",
+      "label_eng": "brass_mirror_fragments",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "[고유] 특수 공격 비용 감소 +20/30/40/50%\n석궁 전용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/brass_mirror_fragments.png",
+      "description": "과거의 염원이 강하게 남아있다. 부서진 채로 보자기에 싸여 전해진다.",
+      "level": 3,
+      "created_at": "2025-10-05T16:43:58.175799+00:00"
+    },
+    {
+      "id": 211,
+      "value": "stabbing_textbook",
+      "label_kor": "찌르기 교본",
+      "label_eng": "stabbing_textbook",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "[고유] 2초마다 대시 공격이 강화되어 대미지가 30% 증가하고, 가장 높은 속성에 기반한 공격으로 전환\n도 전용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/stabbing_textbook.png",
+      "description": "점과 점 사이를 잇는다는 감각을 느끼는 것이 찌르기의 극의이다.",
+      "level": 0,
+      "created_at": "2025-10-05T16:48:00.918092+00:00"
+    },
+    {
+      "id": 212,
+      "value": "talisman_of_talent",
+      "label_kor": "재주의 부적",
+      "label_eng": "talisman_of_talent",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "shadow"
+        ],
+        "content": "회피 +3/6"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/talisman_of_talent.png",
+      "description": "손목을 고정해 주는 보호대 역할도 한다.",
+      "level": 1,
+      "created_at": "2025-10-05T16:54:58.829572+00:00"
+    },
+    {
+      "id": 213,
+      "value": "broken_sapphire",
+      "label_kor": "부서진 사파이어",
+      "label_eng": "broken_sapphire",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "shadow"
+        ],
+        "content": "[고유] 16/14/12초마다 공격을 무조건 회피하는 장막 획득\n회피 +3/6/10\n방어력 +2/4/6"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/broken_sapphire.png",
+      "description": "있어서는 안 될 일을 반쯤 없던 일로 해준다.",
+      "level": 2,
+      "created_at": "2025-10-05T16:56:47.483014+00:00"
+    },
+    {
+      "id": 214,
+      "value": "cloak_of_the_green",
+      "label_kor": "환록의 망토",
+      "label_eng": "cloak_of_the_green",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "shadow"
+        ],
+        "content": "[고유] 대시 횟수 +0/1/1\n회피 +4/6/8\n치명타 확률 +1/2/4%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/cloak_of_the_green.png",
+      "description": "자연의 기운이 깃들어 푸르른 곳에서 은밀하게 행동할 수 있습니다.",
+      "level": 2,
+      "created_at": "2025-10-05T16:58:12.782962+00:00"
+    },
+    {
+      "id": 215,
+      "value": "wings",
+      "label_kor": "날개",
+      "label_eng": "wings",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "spring_song"
+        ],
+        "content": "[고유] 추가 공격 속도 25/20/15/9/6/5%당 모든 피해 증폭 1% 증가\n공격 속도 +3/6/9/12/15/18%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/wings.png",
+      "description": "마법으로 구름을 엮어 만든 날개.",
+      "level": 5,
+      "created_at": "2025-10-05T17:24:48.790031+00:00"
+    },
+    {
+      "id": 216,
+      "value": "lightning_chakram",
+      "label_kor": "전격 차크람",
+      "label_eng": "lightning_chakram",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "magic_engineering"
+        ],
+        "content": "[고유] 주기적으로 주변을 공격하는 차크람 1/2/2/3/3개 발사\n[피해량: 10/10x2/16x2/16x3/22x3 (번개속성 피해 50/50/80/80/110%)]\n차크람 적중 시 10/10/10/10/30% 확률로 감전 부여"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/lightning_chakram.png",
+      "description": "사탕수수 정도는 베어낼 수 있다.",
+      "level": 4,
+      "created_at": "2025-10-05T17:36:38.614922+00:00"
+    },
+    {
+      "id": 217,
+      "value": "lightning_struck_tree_branch",
+      "label_kor": "번개 맞은 나뭇가지",
+      "label_eng": "lightning_struck_tree_branch",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "magic_engineering"
+        ],
+        "content": "[고유] 무기 공격이나 마법서로 피해를 주면 대상에게 10/20/30 번개속성 피해를 가함 (재사용 대기시간 2초)"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/lightning_struck_tree_branch.png",
+      "description": "무겁고 특이한 냄새가 난다.",
+      "level": 2,
+      "created_at": "2025-10-05T17:40:22.060963+00:00"
+    },
+    {
+      "id": 218,
+      "value": "thunders_earrings",
+      "label_kor": "썬더의 귀걸이",
+      "label_eng": "thunders_earrings",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "magic_engineering"
+        ],
+        "content": "[고유] 4초마다 주변 1/2/2/3/3/4명의 적에게 번개속성 피해 30%의 번개 공격을 가하고, 감전 디버프 부여\n번개속성 피해 +1/2/3/4/5/6"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/thunders_earrings.png",
+      "description": "도서관에서 개발한 신소재를 사용해 가볍습니다.",
+      "level": 5,
+      "created_at": "2025-10-05T17:43:16.667801+00:00"
+    },
+    {
+      "id": 219,
+      "value": "ahmads_soul_powder",
+      "label_kor": "아마드의 영혼 가루",
+      "label_eng": "ahmads_soul_powder",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "magic_engineering",
+          "colleague"
+        ],
+        "content": "[고유] 번개 투사체를 발사하는 해파리 소환\n투사체에 적중한 적은 감전 디버프 적용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/ahmads_soul_powder.png",
+      "description": "물결 없는 그곳. 누구도 상처 주지 않아도 되는 그곳에 다시 가고 싶어라.",
+      "level": 4,
+      "created_at": "2025-10-05T17:46:35.864766+00:00"
+    },
+    {
+      "id": 220,
+      "value": "stinging_bug",
+      "label_kor": "찌릿충",
+      "label_eng": "stinging_bug",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "magic_engineering"
+        ],
+        "content": "[고유] 감전 중첩 +0/1/1/2/2/3"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/stinging_bug.png",
+      "description": "스스로 전기를 일으키는 벌레. 조련이 가능하다.",
+      "level": 5,
+      "created_at": "2025-10-05T17:48:47.038631+00:00"
+    },
+    {
+      "id": 221,
+      "value": "frozen_bow",
+      "label_kor": "얼어붙은 활",
+      "label_eng": "frozen_bow",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "ice_weapon"
+        ],
+        "content": "[고유] 발동형 아티팩트\n0.8초마다 1발씩 자동 충전 (최대 7)\n적에게 얼음 화살을 발사해 얼음 피해를 가함\n[피해량: 20/22/24/26/28/30 (12 + 얼음속성 피해 50/60/70/80/100/120%)]"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/frozen_bow.png",
+      "description": "오랜 시간을 견뎌내면 활을 잡은 이에게만은 냉기를 뿌리지 않습니다.",
+      "level": 5,
+      "created_at": "2025-10-05T17:54:29.784316+00:00"
+    },
+    {
+      "id": 222,
+      "value": "black_planet",
+      "label_kor": "암흑 행성",
+      "label_eng": "black_planet",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "planet"
+        ],
+        "content": "[고유] 혼돈 탄환을 발사하는 암흑 행성 소환\n[피해량: 50/60/70/80/90]"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/black_planet.png",
+      "description": "도서관에 전시되어 있던 검은색 행성. 과거 하늘 밖을 보던 자들이 만들었다.",
+      "level": 4,
+      "created_at": "2025-10-05T18:06:57.002257+00:00"
+    },
+    {
+      "id": 223,
+      "value": "ashen_planet",
+      "label_kor": "잿빛 행성",
+      "label_eng": "ashen_planet",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "planet"
+        ],
+        "content": "[고유] 얼음 탄환을 발사하는 잿빛행성 소환\n[피해량: 15/20/25/30/35/40]"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/ashen_planet.png",
+      "description": "도서관에 전시되어 있던 잿빛 행성 모형. 과거 하늘 밖을 보던 자들이 만들었다.",
+      "level": 5,
+      "created_at": "2025-10-05T18:08:53.249455+00:00"
+    },
+    {
+      "id": 224,
+      "value": "petrification",
+      "label_kor": "석화",
+      "label_eng": "petrification",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "extrium"
+        ],
+        "content": "번개속성 피해 +3/6\n치명타 피해 +3/6%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/petrification.png",
+      "description": "꽃은 하늘에도 지상에도 지하에도 있다.",
+      "level": 1,
+      "created_at": "2025-10-05T18:29:15.179608+00:00"
+    },
+    {
+      "id": 225,
+      "value": "hand_mirror",
+      "label_kor": "손 거울",
+      "label_eng": "hand_mirror",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "guardian"
+        ],
+        "content": "[고유] 대시 시 5초 지속되는 보호막 5/5/10획득 (쿨다운 5초)\n방어력 +3/6/9"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/hand_mirror.png",
+      "description": "털 손질 그 이상을 원하는 동물들이 들고 다니는 도구",
+      "level": 2,
+      "created_at": "2025-10-05T18:40:16.225954+00:00"
+    },
+    {
+      "id": 226,
+      "value": "white_paper",
+      "label_kor": "하얀 종이",
+      "label_eng": "white_paper",
+      "tier": "advanced",
+      "effect": {
+        "content": "[고유] 양쪽 칸에 배치된 아티팩트가 동일한 콤보인 경우, 해당 콤보 수치 1 증가\n모든 피해 증폭 +3/6%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/white_paper.png",
+      "description": null,
+      "level": 1,
+      "created_at": "2025-10-14T10:33:21.706328+00:00"
+    },
+    {
+      "id": 227,
+      "value": "eternal_sun",
+      "label_kor": "영원의 식",
+      "label_eng": "eternal_sun",
+      "tier": "solid",
+      "effect": {
+        "sets": [
+          "sun_sword",
+          "ice_weapon"
+        ],
+        "content": "[고유] 아이템이 인벤토리 왼편에 있다면 얼음 무구 아티팩트가 화염속성 피해 기반으로 변경되고, 오른편에 있다면 태양검 아티팩트가 얼음속성 피해 기반으로 변경됨\n얼음 무구의 피해량 +6/13/21/30%\n태양검 피해량 +6/13/21/30%\n얼음 무구의 공격으로도 태양검이 발동됨"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/eternal_sun.png",
+      "description": "푸른 달과 태양을 조각한 모형.",
+      "level": 3,
+      "created_at": "2025-10-14T10:39:50.423193+00:00"
+    },
+    {
+      "id": 228,
+      "value": "flux_mk2",
+      "label_kor": "플럭스 결합기 Mk.2",
+      "label_eng": "flux_mk2",
+      "tier": "solid",
+      "effect": {
+        "sets": [
+          "extrium",
+          "colleague"
+        ],
+        "content": "[고유] 동료가 번개 피해를 입힐 때 먹구름 1회 발동 (동료별 쿨다운: 0.1초)\n동료가 입히는 피해량 +3/6/9/12%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/flux_mk2.png",
+      "description": "낡은 장치. 뒷편에는 다음과 같이 쓰여 있다: '표준 규격 - 대부분의 개체와 호환됨'",
+      "level": 3,
+      "created_at": "2025-11-28T14:42:04.868571+00:00"
+    },
+    {
+      "id": 229,
+      "value": "overall_armband",
+      "label_kor": "채굴작업 총괄 완장",
+      "label_eng": "overall_armband",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "colleague"
+        ],
+        "content": "[고유] 두더지 대장 소환"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/overall_armband.png",
+      "description": "이 완장은 오직 한 두더지만이 착용할 수 있습니다.",
+      "level": 4,
+      "created_at": "2025-11-28T15:17:17.239065+00:00"
+    },
+    {
+      "id": 230,
+      "value": "badge_of_devotion",
+      "label_kor": "헌신의 휘장",
+      "label_eng": "badge_of_devotion",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "colleague"
+        ],
+        "content": "[고유] 인벤토리 내 동일한 줄에 배치된 동료가 혼돈 피해를 가함\n동료들의 방어력 +6/12/18/24"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/badge_of_devotion.png",
+      "description": "단 하나를 위하여.",
+      "level": 3,
+      "created_at": "2025-11-28T15:20:14.232389+00:00"
+    },
+    {
+      "id": 231,
+      "value": "mysterious_weight",
+      "label_kor": "신비한 무게 추",
+      "label_eng": "mysterious_weight",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "[고유] 일반 공격 피해 +22/26/32/40/50% 증가\n공격 속도 -10/10/10/10/10%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/mysterious_weight.png",
+      "description": null,
+      "level": 4,
+      "created_at": "2025-12-24T17:59:41.022248+00:00"
+    },
+    {
+      "id": 232,
+      "value": "lucky_medal",
+      "label_kor": "행운의 메달",
+      "label_eng": "lucky_medal",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "bargaining"
+        ],
+        "content": "[고유] 상인과 거래 시, +100/150/200 잎 생성 (상인당 1회 발동)\n협상력 +2/6/10"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/lucky_medal.png",
+      "description": "바닥에 떨어진 잎을 찾아내는 행운의 증표.",
+      "level": 2,
+      "created_at": "2026-01-08T16:32:32.279123+00:00"
+    },
+    {
+      "id": 233,
+      "value": "neutralizer_black",
+      "label_kor": "중화제 흑",
+      "label_eng": "neutralizer_black",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "curse"
+        ],
+        "content": "디버프로 가하는 피해량 +4/8/12/16%\n치명타 확률 -10/10/6/6%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/neutralizer_black.png",
+      "description": "연금술을 익힌 동물들이 자주 사용하는 약. 특별한 재료를 넣어 색이 탁해졌다.",
+      "level": 3,
+      "created_at": "2026-01-08T16:37:28.134593+00:00"
+    },
+    {
+      "id": 234,
+      "value": "green_ink_bottle_v2",
+      "label_kor": "초록 잉크병",
+      "label_eng": "green_ink_bottle",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "curse"
+        ],
+        "content": "<제약> 아이템이 인벤토리 가장자리에 있을 때 효과 발동\n디버프를 가할 때 +20/30/40/50% 확률로 가까운 적에게 추가 부여 (쿨다운 0.4초)"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/green_ink_bottle.png",
+      "description": "이 병에 잉크를 넣으면 며칠 후 잉크가 사라집니다.",
+      "level": 3,
+      "created_at": "2026-01-08T16:38:53.169912+00:00"
+    },
+    {
+      "id": 235,
+      "value": "shock_amplifier",
+      "label_kor": "충격 증폭기",
+      "label_eng": "shock_amplifier",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "mystery"
+        ],
+        "content": "[고유] 고정 피해 +1/1/1/2/2/3/4/4/5/6/7/8/9/12/14"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/shock_amplifier.png",
+      "description": null,
+      "level": 14,
+      "created_at": "2026-01-08T17:09:57.598943+00:00"
+    },
+    {
+      "id": 236,
+      "value": "crystal_of_harmony",
+      "label_kor": "조화의 수정",
+      "label_eng": "crystal_of_harmony",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "mystery"
+        ],
+        "content": "근처 8칸 아티팩트 레벨 1당 모든 피해 증폭 +1/2% 증가"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/crystal_of_harmony.png",
+      "description": null,
+      "level": 1,
+      "created_at": "2026-01-08T17:15:01.2003+00:00"
+    },
+    {
+      "id": 237,
+      "value": "eternal_winter",
+      "label_kor": "영원한 겨울",
+      "label_eng": "eternal_winter",
+      "tier": "solid",
+      "effect": {
+        "sets": [
+          "glacier",
+          "firmness"
+        ],
+        "content": "[고유] 일반 공격 적중 시, 16/24/36% 확률로 추가 피해를 가함.\n[피해량: 물리 피해 40/75/125% + 얼음속성 피해의 80/150/250% (일반 공격 피해로 간주됨)]"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/eternal_winter.png",
+      "description": "흙 속에 묻혀있었어. 이 세상 물건이 아닌 것 같군. - 타가",
+      "level": 2,
+      "created_at": "2026-01-09T03:21:35.951263+00:00"
+    },
+    {
+      "id": 238,
+      "value": "lightning_amulet",
+      "label_kor": "전격의 부적",
+      "label_eng": "lightning_amulet",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "magic_engineering"
+        ],
+        "content": "번개속성 피해 +3/4/6/8"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/lightning_amulet.png",
+      "description": "지닌 자의 폭발적인 분노를 잠재운다.",
+      "level": 3,
+      "created_at": "2026-01-09T13:15:22.027454+00:00"
+    },
+    {
+      "id": 239,
+      "value": "multicolored_candy_jar",
+      "label_kor": "오색사탕 유리병",
+      "label_eng": "multicolored_candy_jar",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "element"
+        ],
+        "content": "[고유] 발동형 아티팩트 (재사용 대기시간: 6초)\n가장 높은 속성 피해의 +100/150/200/250%만큼 피해를 주는 속성 폭탄을 +1/2/3/4개 발사"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/multicolored_candy_jar.png",
+      "description": "항상 어린 동물의 손에 닿지 않는 곳에 존재합니다.",
+      "level": 3,
+      "created_at": "2026-01-23T13:44:58.713311+00:00"
+    },
+    {
+      "id": 240,
+      "value": "plump_fruits",
+      "label_kor": "통통열매 양동이",
+      "label_eng": "plump_fruits",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "lake"
+        ],
+        "content": "[고유] 발동형 아티팩트 (재사용 대기시간: 30초, MP 재생 수치 1당 +3% 가속)\n사용 시 MP +50/100%를 즉시 회복"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/plump_fruits.png",
+      "description": "보이는 것 보다 더 많이 물을 넣을 수 있습니다.",
+      "level": 1,
+      "created_at": "2026-01-23T13:54:18.260018+00:00"
+    },
+    {
+      "id": 241,
+      "value": "defect_probe",
+      "label_kor": "결함 탐침봉",
+      "label_eng": "defect_probe",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "precision"
+        ],
+        "content": "[고유] 치명타 확률 +3/6/9/12/15/18/21"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/defect_probe.png",
+      "description": "주로 훈련소 교관과 마법진 선생님이 사용했습니다.",
+      "level": 6,
+      "created_at": "2026-02-12T14:47:17.978425+00:00"
+    },
+    {
+      "id": 242,
+      "value": "wanderers_necklace",
+      "label_kor": "유랑자의 목걸이",
+      "label_eng": "wanderers_necklace",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "spring_song"
+        ],
+        "content": "[고유] 공격 속도 +6/12/18%\n가장 높은 속성 피해 +2/4/6"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/wanderers_necklace.png",
+      "description": "집이 없는 게 아니라 여행 중인 거야.",
+      "level": 2,
+      "created_at": "2026-02-12T14:49:00.327378+00:00"
+    },
+    {
+      "id": 243,
+      "value": "heart_of_the_beast",
+      "label_kor": "야수의 심장",
+      "label_eng": "heart_of_the_beast",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "guardian"
+        ],
+        "content": "[고유] 방어력 +4/8/12/16/20\n모든 피해 증폭 +2/4/6/8/10%\n행운 +2/3/4/5/6"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/heart_of_the_beast.png",
+      "description": "동물을 본뜬 기계 인형을 만들기 위한 장치. 단단해 보이지만 내부가 비어있어 조심해야 합니다.",
+      "level": 4,
+      "created_at": "2026-02-12T14:50:46.269425+00:00"
+    },
+    {
+      "id": 244,
+      "value": "stone_wheel",
+      "label_kor": "돌 가락바퀴",
+      "label_eng": "stone_wheel",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "lake"
+        ],
+        "content": "[고유] MP를 소모하는 능력의 피해량 +6/12/18/24/30%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/stone_wheel.png",
+      "description": "먼 과거, 실을 잣거나 제례에 사용되었습니다.",
+      "level": 4,
+      "created_at": "2026-02-12T14:52:25.283167+00:00"
+    },
+    {
+      "id": 245,
+      "value": "lerids_battleb_racelet",
+      "label_kor": "레리드의 전투 팔찌",
+      "label_eng": "lerids_battleb_racelet",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "shadow"
+        ],
+        "content": "[고유] 대시 횟수 +0/0/1/2\n고정 피해 +1/1/2/3\n이동 속도 +2/4/6/8%\n(3레벨: 대시 무적은 회피 성공 효과로 판정됨)"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/lerids_battleb_racelet.png",
+      "description": "착용 후 발을 무겁게 하기 위해 노력해야 합니다.",
+      "level": 3,
+      "created_at": "2026-02-12T14:55:56.400037+00:00"
+    },
+    {
+      "id": 246,
+      "value": "elastic_band",
+      "label_kor": "탄성 밴드",
+      "label_eng": "elastic_band",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "shadow"
+        ],
+        "content": "[고유] 회피 발동 시 대시 횟수 +1/1/2 회복\n치명타 피해 +2/4/6%\n회피 +1/2/3"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/elastic_band.png",
+      "description": "뻣뻣한 동물들을 위해서 만들어졌습니다.",
+      "level": 2,
+      "created_at": "2026-02-12T14:57:12.574076+00:00"
+    },
+    {
+      "id": 247,
+      "value": "unalloyed_gold_needle",
+      "label_kor": "북향의 금빛 침",
+      "label_eng": "unalloyed_gold_needle",
+      "tier": "rare",
+      "effect": {
+        "content": "윗 칸 아티팩트의 피해량 +6/8/10%\n등급이 고급 이하라면 추가 피해량 +15/20/25%\n직접 피해를 가하는 아티팩트에만 적용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/unalloyed_gold_needle.png",
+      "description": "자성은 없지만, 언제나 북쪽을 가리키는 붉은 침을 품은 나침반.",
+      "level": 2,
+      "created_at": "2026-02-12T14:57:12.574076+00:00"
+    },
+    {
+      "id": 248,
+      "value": "thunder_judgment",
+      "label_kor": "천둥의 심판",
+      "label_eng": "thunder_judgment",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "magic_engineering"
+        ],
+        "content": "[고유] 스킬 천둥의 심판 획득"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/thunder_judgment.png",
+      "description": "천둥의 심판 마법이 적혀 있는 책",
+      "level": 4,
+      "created_at": "2026-02-12T14:57:12.574076+00:00"
+    },
+    {
+      "id": 249,
+      "value": "academy_fountain_pen",
+      "label_kor": "아카데미 만년필",
+      "label_eng": "academy_fountain_pen",
+      "tier": "solid",
+      "effect": {
+        "sets": [
+          "shadow",
+          "academy"
+        ],
+        "content": "[고유] 회피 수치 +5/4/3/2/1당 마법서 피해량 1% 획득\n회피 성공 시 모든 마법서 재사용 대기시간 5/10/15/20/25% 가속"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/academy_fountain_pen.png",
+      "description": "비상시에 사용할 수 있는 호신 기능이 있습니다.",
+      "level": 4,
+      "created_at": "2026-02-12T14:57:12.574076+00:00"
+    },
+    {
+      "id": 250,
+      "value": "zorous_watering_can",
+      "label_kor": "조로우의 물뿌리개",
+      "label_eng": "zorous_watering_can",
+      "tier": "solid",
+      "effect": {
+        "sets": [
+          "lake",
+          "academy"
+        ],
+        "content": "[고유] 최대 MP가 500/400/320/250/200 이상인 경우, 마법서 1회 추가 시전\n마법서 피해량 +3/6/9/12/15%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/zorous_watering_can.png",
+      "description": "식물에게 정확히 필요한 양의 물만 뿌려집니다.",
+      "level": 4,
+      "created_at": "2026-02-12T14:57:12.574076+00:00"
+    },
+    {
+      "id": 251,
+      "value": "snow_mountain_big_eared_bat",
+      "label_kor": "설산 큰귀박쥐",
+      "label_eng": "snow_mountain_big_eared_bat",
+      "tier": "solid",
+      "effect": {
+        "sets": [
+          "glacier",
+          "spring_song"
+        ],
+        "content": "[고유] 0.5초마다 동상에 걸린 적에게 얼음 투사체를 발사\n[피해량: 0 (얼음속성 피해의 45% x 공격속도의 100/120/140/160/200%)]\n이 피해는 서리 손길 효과가 적용되지 않음\n공격 속도 +2/5/6/8/10%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/snow_mountain_big_eared_bat.png",
+      "description": "매우 빠르게 날 수 있지만, 느긋한 걸 좋아합니다.",
+      "level": 4,
+      "created_at": "2026-02-12T14:57:12.574076+00:00"
+    },
+    {
+      "id": 252,
+      "value": "plasma_helmet",
+      "label_kor": "플라즈마 헬맷",
+      "label_eng": "plasma_helmet",
+      "tier": "solid",
+      "effect": {
+        "sets": [
+          "yinggalbul",
+          "magic_engineering"
+        ],
+        "content": "[고유] 화상과 감전이 플라즈마로 변경\n플라즈마 피해량 -15/10/5/0/+5%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/plasma_helmet.png",
+      "description": "착용자가 공포를 극복한다면, 막강한 힘을 휘두를 수 있습니다.",
+      "level": 4,
+      "created_at": "2026-02-12T14:57:12.574076+00:00"
+    },
+    {
+      "id": 253,
+      "value": "red_planet_observation_log",
+      "label_kor": "붉은행성 관찰일지",
+      "label_eng": "red_planet_observation_log",
+      "tier": "solid",
+      "effect": {
+        "sets": [
+          "planet",
+          "yinggalbul"
+        ],
+        "content": "[고유] 행성 공격 적중 시, 화상 틱 피해량에 비례하여 피해량이 증가\n아티팩트 등급이 높을수록 증가량 상승\n일반: 화상 1틱 피해량\n고급: 화상 2틱 피해량\n희귀: 화상 3틱 피해량\n전설: 화상 4틱 피해량"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/red_planet_observation_log.png",
+      "description": "행성이 붉은빛으로 반짝였다는 내용 이후의 기록은 없습니다.",
+      "level": 4,
+      "created_at": "2026-02-12T14:57:12.574076+00:00"
+    },
+    {
+      "id": 254,
+      "value": "water_spirit",
+      "label_kor": "물의 정령",
+      "label_eng": "water_spirit",
+      "tier": "solid",
+      "effect": {
+        "sets": [
+          "lake",
+          "precision"
+        ],
+        "content": "[고유] 발동형 아티팩트 (재사용 대기시간 8초)\n최대 MP 30%를 사용하여, 조준 지점에 '워터 그램' 시전\n[피해량: 최대 MP x 160/240/320/400/500]\n이 공격의 치명타 피해 10/15/20/25/30% 증폭"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/water_spirit.png",
+      "description": "평소에는 동그란 물구슬 안에서 놀고 있습니다.",
+      "level": 4,
+      "created_at": "2026-07-31T14:57:12.574076+00:00"
+    },
+    {
+      "id": 255,
+      "value": "frost_guillotine",
+      "label_kor": "혹한의 길로틴",
+      "label_eng": "frost_guillotine",
+      "tier": "solid",
+      "effect": {
+        "sets": [
+          "ice_weapon",
+          "magic_engineering"
+        ],
+        "content": "[고유] 6초마다 주변 적 최대 4명에게 얼음+번개 속성 칼날을 소환. 적에게 감전 피해를 입히면 대기시간 1초로 감소\n피해량 : (번개속성 피해, 얼음속성 피해 중 높은 피해 + 낮은 피해의 30%) x 150/200/250%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/frost_guillotine.png",
+      "description": "동물의 평등을 위해 만들어진 마법 장치",
+      "level": 2,
+      "created_at": "2026-07-31T14:57:12.574076+00:00"
+    },
+    {
+      "id": 256,
+      "value": "archive_sun",
+      "label_kor": "서고의 태양",
+      "label_eng": "archive_sun",
+      "tier": "solid",
+      "effect": {
+        "sets": [
+          "sun_sword",
+          "academy"
+        ],
+        "content": "[고유] 마법서 피해량 1%당 태양검 피해량 1% 증가\n마법서 피해를 입힐 시, 태양검 0/0/1/1/2회 추가 발동"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/archive_sun.png",
+      "description": "수많은 기록과 연구가 태양의 정령을 현현시킨 순간을 기념한 모형.",
+      "level": 4,
+      "created_at": "2026-07-31T14:57:12.574076+00:00"
+    },
+    {
+      "id": 257,
+      "value": "yakumo_kodachi",
+      "label_kor": "소태도 야쿠모",
+      "label_eng": "yakumo_kodachi",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "대시 공격 피해 +10/20/30/40%\n대시 회복 속도 +4/8/12/16%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/yakumo_kodachi.png",
+      "description": "구름 위를 나는 듯 가벼운 기운이어라.",
+      "level": 3,
+      "created_at": "2026-07-31T14:57:12.574076+00:00"
+    },
+    {
+      "id": 258,
+      "value": "angry_potato",
+      "label_kor": "화난 감자",
+      "label_eng": "angry_potato",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "alchemy"
+        ],
+        "content": "[고유] 방어 관통 +4/7/11/15%\n행운 +1/2/3/4\n이동 속도 +5/5/10/10%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/angry_potato.png",
+      "description": "물 대신 다양한 포션을 먹여 키운 감자.",
+      "level": 3,
+      "created_at": "2026-07-31T14:57:12.574076+00:00"
+    },
+    {
+      "id": 259,
+      "value": "wanderer_blessing",
+      "label_kor": "나그네의 축복",
+      "label_eng": "wanderer_blessing",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "alchemy"
+        ],
+        "content": "[고유] 무기 피해량 +4/8/12%\n마법서 피해량 +4/8/12%\n고정 피해 +0/1/2\n이동 속도 +3/6/9%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/wanderer_blessing.png",
+      "description": "나그네가 쓰다듬어 주었다.",
+      "level": 2,
+      "created_at": "2026-07-31T14:57:12.574076+00:00"
+    },
+    {
+      "id": 260,
+      "value": "alchemist_flask",
+      "label_kor": "나그네의 축복",
+      "label_eng": "alchemist_flask",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "alchemy"
+        ],
+        "content": "[고유] 포션을 마시면 15초 동안 모든 피해 증폭 +5/10/15 증가 버프 획득"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/alchemist_flask.png",
+      "description": "단순하지만 수많은 실험을 통해 계량된 유리병",
+      "level": 2,
+      "created_at": "2026-07-31T14:57:12.574076+00:00"
+    },
+    {
+      "id": 261,
+      "value": "courage_amulet",
+      "label_kor": "용기의 아뮬렛",
+      "label_eng": "courage_amulet",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "[고유] 무기 피해량 +3/6/10%\nHP 흡수 +1/1/1\n대검 전용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/courage_amulet.png",
+      "description": "소지하면 왠지 힘이 샘솟는 것 같다.",
+      "level": 2,
+      "created_at": "2026-07-31T14:57:12.574076+00:00"
+    },
+    {
+      "id": 262,
+      "value": "whirlwind_stone",
+      "label_kor": "회오리 돌",
+      "label_eng": "whirlwind_stone",
+      "tier": "advanced",
+      "effect": {
+        "content": "[고유] 모든 피해 증폭 +2/?/?/?%\n이동 속도 +6/?/?/?%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/whirlwind_stone.png",
+      "description": "시간과 공간이 휘몰아치는 곳에서 왔다고 전해지는 돌",
+      "level": 3,
+      "created_at": "2026-07-31T00:00:00+00:00"
+    },
+    {
+      "id": 263,
+      "value": "toxic_spore_pouch",
+      "label_kor": "맹독 포자 주머니",
+      "label_eng": "toxic_spore_pouch",
+      "tier": "rare",
+      "effect": {
+        "content": "보스와 미니보스에게 주는 추가 피해량 +4/6/8/10%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/toxic_spore_pouch.png",
+      "description": "껍질이 딱딱해도 취급에 주의하세요.",
+      "level": 3,
+      "created_at": "2026-07-31T00:00:00+00:00"
+    },
+    {
+      "id": 264,
+      "value": "topaz_badge",
+      "label_kor": "토파즈 배지",
+      "label_eng": "topaz_badge",
+      "tier": "advanced",
+      "effect": {
+        "content": "[고유] 무기 피해량 +2/4/6/8/10%\n번개속성 피해 +2/3/4/5/6"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/topaz_badge.png",
+      "description": "아카데미에서 총명을 보인 학생에게 주어지는 배지",
+      "level": 4,
+      "created_at": "2026-07-31T00:00:00+00:00"
+    },
+    {
+      "id": 265,
+      "value": "garnet_badge",
+      "label_kor": "가넷 배지",
+      "label_eng": "garnet_badge",
+      "tier": "advanced",
+      "effect": {
+        "content": "[고유] 무기 피해량 +2/4/6/8/10%\n화염속성 피해 +2/3/4/5/6"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/garnet_badge.png",
+      "description": "아카데미에서 열정을 보인 학생에게 주어지는 배지",
+      "level": 4,
+      "created_at": "2026-07-31T00:00:00+00:00"
+    },
+    {
+      "id": 266,
+      "value": "diamond_badge",
+      "label_kor": "다이아몬드 배지",
+      "label_eng": "diamond_badge",
+      "tier": "advanced",
+      "effect": {
+        "content": "[고유] 무기 피해량 +2/4/6/8/10%\n얼음속성 피해 +2/3/4/5/6"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/diamond_badge.png",
+      "description": "아카데미에서 인내를 보인 학생에게 주어지는 배지",
+      "level": 4,
+      "created_at": "2026-07-31T00:00:00+00:00"
+    },
+    {
+      "id": 267,
+      "value": "red_mushroom",
+      "label_kor": "빨간 버섯",
+      "label_eng": "red_mushroom",
+      "tier": "advanced",
+      "effect": {
+        "content": "[고유] 디버프로 주는 피해량 +4/?/?/?%당 공격 속도 1% 증가"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/red_mushroom.png",
+      "description": "스튜로 만들기에는 수상한 색을 띠고 있습니다.",
+      "level": 3,
+      "created_at": "2026-07-31T00:00:00+00:00"
+    },
+    {
+      "id": 268,
+      "value": "tome_of_transmutation_lightning",
+      "label_kor": "변환의 서 : 번개",
+      "label_eng": "tome_of_transmutation_lightning",
+      "tier": "rare",
+      "effect": {
+        "content": "[고유] 추가 물리 피해가 0이 되고, 그 20/40/60/80/100%가 번개속성 피해로 변환"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/tome_of_transmutation_lightning.png",
+      "description": "소지자의 힘을 번개 속성으로 바꾸는 책, 처음의 무력감은 금방 사라집니다",
+      "level": 4,
+      "created_at": "2026-07-31T00:00:00+00:00"
+    },
+    {
+      "id": 269,
+      "value": "tome_of_transmutation_ice",
+      "label_kor": "변환의 서 : 얼음",
+      "label_eng": "tome_of_transmutation_ice",
+      "tier": "rare",
+      "effect": {
+        "content": "[고유] 추가 물리 피해가 0이 되고, 그 20/40/60/80/100%가 얼음속성 피해로 변환"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/tome_of_transmutation_ice.png",
+      "description": "소지자의 힘을 얼음 속성으로 바꾸는 책, 처음의 무력감은 금방 사라집니다.",
+      "level": 4,
+      "created_at": "2026-07-31T00:00:00+00:00"
+    },
+    {
+      "id": 270,
+      "value": "tome_of_transmutation_fire",
+      "label_kor": "변환의 서 : 화염",
+      "label_eng": "tome_of_transmutation_fire",
+      "tier": "rare",
+      "effect": {
+        "content": "[고유] 추가 물리 피해가 0이 되고, 그 20/40/60/80/100%가 화염속성 피해로 변환"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/tome_of_transmutation_fire.png",
+      "description": "소지자의 힘을 화염 속성으로 바꾸는 책, 처음의 무력감은 금방 사라집니다",
+      "level": 4,
+      "created_at": "2026-07-31T00:00:00+00:00"
+    },
+    {
+      "id": 271,
+      "value": "bento",
+      "label_kor": "도시락",
+      "label_eng": "bento",
+      "tier": "advanced",
+      "effect": {
+        "content": "HP 흡수 +?/?/?/?/2"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/bento.png",
+      "description": "생당근, 삶은 당근, 구운 당근이 들어있는 것 같다.",
+      "level": 4,
+      "created_at": "2026-07-31T00:00:00+00:00"
+    },
+    {
+      "id": 272,
+      "value": "cursed_letter",
+      "label_kor": "저주받은 편지",
+      "label_eng": "cursed_letter",
+      "tier": "advanced",
+      "effect": {
+        "content": "가시 +?/?/200%\n공격 속도 -?/?/4%"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/cursed_letter.png",
+      "description": "나흘째 떠나지 못한 편지. 찌릿찌릿한 원한이 느껴집니다.",
+      "level": 2,
+      "created_at": "2026-07-31T00:00:00+00:00"
+    }
+  ]
+}

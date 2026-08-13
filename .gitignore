@@ -6,4 +6,4 @@ userdata/
 .pytest_cache/
 dist/
 build/
-
+artifacts/

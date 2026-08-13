@@ -1,0 +1,1432 @@
+{
+  "locale": "zh-CN",
+  "generatedAt": "2026-08-05T05:36:20.639750+00:00",
+  "source": {
+    "kind": "Sephiria game localization",
+    "buildId": "24548451",
+    "ko": "D:\\SteamLibrary\\steamapps\\common\\Sephiria\\Sephiria_Data\\StreamingAssets\\Localization\\ko-KR.json",
+    "zh": "D:\\SteamLibrary\\steamapps\\common\\Sephiria\\Sephiria_Data\\StreamingAssets\\Localization\\zh-CN.json"
+  },
+  "sets": {
+    "yinggalbul": "余烬",
+    "ice_weapon": "冰霜武装",
+    "glacier": "冰川",
+    "magic_engineering": "魔法工程",
+    "shadow": "影子",
+    "guardian": "守护",
+    "spring_song": "风之歌",
+    "mystery": "神秘",
+    "planet": "行星",
+    "colleague": "同伴",
+    "precision": "精密",
+    "extrium": "乌云",
+    "firmness": "坚固",
+    "lake": "湖泊",
+    "sun_sword": "太阳剑",
+    "academy": "学院",
+    "curse": "诅咒",
+    "bargaining": "交涉",
+    "element": "元素",
+    "alchemy": "炼金术"
+  },
+  "tablets": {
+    "chivalry": "骑士道",
+    "dry": "干燥",
+    "approximation": "近似",
+    "advent": "到来",
+    "linear": "善意",
+    "sight": "凝视",
+    "handshake": "握手",
+    "fate": "命运",
+    "wit": "才智",
+    "exploitation": "剥削",
+    "unity": "团结",
+    "cheer": "欢呼",
+    "hope": "希望",
+    "compete": "竞争",
+    "beating": "鼓动",
+    "home_town": "激昂",
+    "past": "过去",
+    "future": "未来",
+    "distribution": "分配",
+    "triceps": "三头",
+    "harvesting": "收获",
+    "binary_star": "双星",
+    "nurture": "滋养",
+    "yearning": "渴望",
+    "agglutination": "聚集",
+    "entrance": "入口",
+    "joke": "恶作剧",
+    "load": "堆叠",
+    "transition": "转移",
+    "advance": "前进",
+    "justice": "正义",
+    "preparation": "准备",
+    "exit": "出口",
+    "tide": "波浪",
+    "dedication": "献礼",
+    "honor": "荣誉",
+    "rally": "集结",
+    "development": "进步",
+    "base": "基础",
+    "warrant": "权能",
+    "disconnection": "断绝",
+    "concurrency": "同时性",
+    "curse": "诅咒",
+    "vow": "誓言",
+    "rebellion": "反抗",
+    "connection": "连接",
+    "junction": "接合",
+    "last_stand": "破釜沉舟",
+    "flag": "旗帜",
+    "defender": "防御招式",
+    "shade": "遮阳",
+    "thorn": "刺",
+    "boundary": "边界",
+    "sheen": "光辉",
+    "miracle": "奇迹",
+    "daydream": "白日梦",
+    "compression": "压缩",
+    "certitude": "确信",
+    "hospitality": "款待",
+    "courage": "勇气",
+    "peace": "和平"
+  },
+  "artifacts": {
+    "reinforced_potion_lid": {
+      "sourceHash": "fa2fb3f6935f6a13a6e1d4c4f13f14bc2deb4cbd82fddd58307a238af62e1b89",
+      "nameKey": "Item_EnhancementPotionCap_Name",
+      "name": "强化药水盖"
+    },
+    "eye_crystal_necklace": {
+      "sourceHash": "ba063a1d36dee3a95e42bf99285de0f8dbbd936879947f977ae1adeffcb5909c",
+      "nameKey": "Item_SnowNeckless_Name",
+      "name": "雪花项链"
+    },
+    "mast_model": {
+      "sourceHash": "69ad2fe76d6d45c000b5adbf5a9da2fb41b0082e5d069734e6b89666624374b7",
+      "nameKey": "Item_Lightning_Faster_Name",
+      "name": "桅杆模型"
+    },
+    "lightning_bolt": {
+      "sourceHash": "6e3a9c9429b62df5a4def44d78fe5cc5d52069b9a2587fc2508499ddecd61801",
+      "nameKey": "Item_MagicCharm_LightningBolt_Name",
+      "name": "闪电魔弹"
+    },
+    "wizard": {
+      "sourceHash": "092645fbb27538e5fc65ee978f805c4cc1018a7b151b7edb120b9bbc2e3fac3b",
+      "nameKey": "Item_MagicianCoin_Name",
+      "name": "魔法师的硬币"
+    },
+    "dried_flower": {
+      "sourceHash": "6e6e1d916e21791f642cc746ee02ee5876c58bbc595620be47ae239debbf2743",
+      "nameKey": "Item_Dryflower_Name",
+      "name": "枯萎的花"
+    },
+    "amulet": {
+      "sourceHash": "972cae8559978d9e46abbdcdbf71d7f325f9c0c2fbf888744ad087976f6c0fb3",
+      "nameKey": "Item_CharmOfIntelligence_Name",
+      "name": "睿智护符"
+    },
+    "windpool_shawl": {
+      "sourceHash": "8747832f3b144e9fafcb09934d875d8ed01b47dcdb0f6e2e1c414cc2ba96a791",
+      "nameKey": "Item_WindgrassScarf_Name",
+      "name": "风草围巾"
+    },
+    "shield_technique_manual": {
+      "sourceHash": "618f9746334132e6d31ab94fd45b117e5cb1b4bc3af831243193d38fc7202016",
+      "nameKey": "Item_ShieldTrainingManual_Name",
+      "name": "盾牌术教材"
+    },
+    "begonia_flavor_pocket": {
+      "sourceHash": "436fbe8b95c0c4cf40ae8a1fe6debd6b808e17d09270ab3b2afa21e491410b4b",
+      "nameKey": "Item_BegoniaSachet_Name",
+      "name": "秋海棠香囊"
+    },
+    "shield": {
+      "sourceHash": "28c3fecedd139fe3818b2e38412b538d3c97da7e94e85696b33556c69ac2d7e7",
+      "nameKey": "Skill_0013_Name",
+      "name": "护盾"
+    },
+    "unclean_bandage": {
+      "sourceHash": "0408a760b306abf6960d366241af9da25c6ee606521405284058e2b9305fe38d",
+      "nameKey": "Item_AddMaxRage_Name",
+      "name": "邪恶绷带"
+    },
+    "ice_bolt": {
+      "sourceHash": "0ea8274c9654307fe25f59c4c00ff99394b18d1b565ff5aa1609f54de7f44645",
+      "nameKey": "Skill_0029_Name",
+      "name": "寒冰魔弹"
+    },
+    "compression_band": {
+      "sourceHash": "31fd6a9ddd9099f079ae594d0026a70669d67fe6e95a7afb6ff060cf17a0c27c",
+      "nameKey": "Item_IncreaseDashRecoverySpeed_UseMana_Name",
+      "name": "压迫绷带"
+    },
+    "endodits_questionnaire": {
+      "sourceHash": "fa45d9d95e85f9bcfb9474599dc59391f270cbedbfaa2470bc62ba5fff5bb37f",
+      "nameKey": "Item_MovingCast_Name",
+      "name": "恩多迪特的镇纸"
+    },
+    "smoke_screen": {
+      "sourceHash": "c3460d5ba8ec643244393ee3f542476b6b14e8d0fdc51a4f9a94db7b3cca5c16",
+      "nameKey": "Skill_0032_Name",
+      "name": "烟幕"
+    },
+    "amulet_of_aspiration": {
+      "sourceHash": "34260ee520e9a09330a0119f2b64ef9491b057c99b1ee9ae00da725cab2de4dc",
+      "nameKey": "Item_IncreaseCriticalChance_NormalAttack_Name",
+      "name": "渴望护符"
+    },
+    "ohia_lehua": {
+      "sourceHash": "e02e137f1e1c830bb0d6213431b08fe899a89952a90674fed289b8e0edbdbb28",
+      "nameKey": "Item_FlameGround_Range_Name",
+      "name": "欧希阿雷胡阿"
+    },
+    "silver_plate": {
+      "sourceHash": "c5f14ea84eacb13faebcb8176ef8900d5b8644ac379d5f904195d924d4b95bad",
+      "nameKey": "Item_AttackBuffOnHealthLoss_Name",
+      "name": "银盘子"
+    },
+    "straw": {
+      "sourceHash": "5a08683d54a7a5369242dc02de03e450cc9153e9d64f6166ce4de5ee98b8c576",
+      "nameKey": "Item_StrawDoll_Name",
+      "name": "稻草人偶"
+    },
+    "chiri": {
+      "sourceHash": "852109b3789f287aba60508dcd84fff04e09e5e83640f01a4d36240742edda0d",
+      "nameKey": "Item_LightningBread_Name",
+      "name": "麻麻奶油面包"
+    },
+    "cloth_armor": {
+      "sourceHash": "2314711aad9a1f4df21260f2dfc7b17030c30fd80d4f6fed029f9cead60f440d",
+      "nameKey": "Item_ClothArmor_Name",
+      "name": "布甲"
+    },
+    "green_tooth": {
+      "sourceHash": "9ffc6ec9fb5f48dcaf9150186b03e39e57a2e249ac3ca8719c2d85cd0f65bbe8",
+      "nameKey": "Item_GainCriticalBuffOnMPLoss_Name",
+      "name": "绿色齿轮"
+    },
+    "blessing": {
+      "sourceHash": "3d911f485a40f3cd9d082389d3f660e2914a5e1bb11c7d7a0dcbcc4edec6b1d2",
+      "nameKey": "Skill_0033_Name",
+      "name": "祝福"
+    },
+    "calges": {
+      "sourceHash": "9931c872c38fa81899cf8934b21f7584e1c789d89f628a6ecfa4efa8736aa867",
+      "nameKey": "Item_Lightning_Damage_Name",
+      "name": "凯尔萨德尼钥匙"
+    },
+    "criton": {
+      "sourceHash": "ae6a5c61d051e56a3001e90616f9c233948b12d88d804b008451cf9a388a9126",
+      "nameKey": "Item_IncreaseGoldDropRate_Name",
+      "name": "克里顿的印章"
+    },
+    "fire_bolt": {
+      "sourceHash": "edc200359ef838837ad4ce2220cecc4bb626575ffe8944e1f96391703fda81e5",
+      "nameKey": "Item_MagicCharm_FireBolt_Name",
+      "name": "火焰魔弹"
+    },
+    "pro": {
+      "sourceHash": "f4b36f9c1dc62ea05d7e820ad8c1d1639cf8928a88439de4a1c56ecf2460d3a2",
+      "nameKey": "Item_FrostiumRing_Name",
+      "name": "普罗修姆戒指"
+    },
+    "golden_leaf": {
+      "sourceHash": "69e263d0692524b48009f68dcefad5f5abd860ae65f85d6d33cf4aa0bfbac6bf",
+      "nameKey": "Item_EXPGain_Name",
+      "name": "金色枫叶"
+    },
+    "amulet_of_power": {
+      "sourceHash": "88262ca56d8370deb2d6223c22f2b5a9aa316d6aa5df1170c9fe9da84dda9673",
+      "nameKey": "Item_CharmOfStrength_Name",
+      "name": "力量护符"
+    },
+    "thornbush": {
+      "sourceHash": "dd4e3feaf6ea11802cbb183ddeb6a5b073f29676fe5fb0505efc643e60a28887",
+      "nameKey": "Item_IncreaseDirectAttackExternalForce_Name",
+      "name": "荆棘丛"
+    },
+    "thorn_shell": {
+      "sourceHash": "d996fcd5c7a2bcb7574defc9ad3cb92ecbd9a7bd72db77d1bad0cf25246e4be8",
+      "nameKey": "Item_Thorns_Name",
+      "name": "荆棘壳"
+    },
+    "viscosity": {
+      "sourceHash": "54cacc456dbce8070de219e3edc8683b8f80aa6ba0c282f586517f6f4e4758cd",
+      "nameKey": "Item_ThornsCharm_Name",
+      "name": "荆棘护符"
+    },
+    "simple_contract": {
+      "sourceHash": "0cfd89ca116db544286bc4ec5eb15742df452c5d57d1d53c2edec325f76db45c",
+      "nameKey": "Item_ShortContract_Name",
+      "name": "简易契约"
+    },
+    "craving": {
+      "sourceHash": "7a1cfdc53965882a50e0daf5a757dbad4cc4afb61f8f4b587e66cf125d69e9af",
+      "nameKey": "Item_ReservedMpBonus_Name",
+      "name": "渴望宝珠"
+    },
+    "cloud_bottle": {
+      "sourceHash": "39a67ff7e42f991c7d6047eb56984ea768217b1bd4f860121a0fe09c49eda392",
+      "nameKey": "Item_LightningPouch_Name",
+      "name": "云瓶"
+    },
+    "cloud_seed_arrowhead": {
+      "sourceHash": "91462ec04161c21b04aeffae510405d2210198b33d17dd1efec9cd6f19d4bc63",
+      "nameKey": "Item_BasicLightning_Name",
+      "name": "云种箭头"
+    },
+    "gold_cloak": {
+      "sourceHash": "43e6363c4d045f28014f1e718d407405611651c9cfc10a818ccc5ac589bed8a0",
+      "nameKey": "Item_GoldenCloak_Name",
+      "name": "金色斗篷"
+    },
+    "golden_hand_bell": {
+      "sourceHash": "9a92e57005eeb54acbfd10d70ca1335556f4724b8d9a6bc48ce1d60fcf647083",
+      "nameKey": "Item_GoldenHandbell_Name",
+      "name": "金色手铃"
+    },
+    "broken_mirror": {
+      "sourceHash": "b7de37e6d29cc8638289c27ac5fa89fadb6255ac01bc7f018ba96256a0869c82",
+      "nameKey": "Item_BrokenMirror_Name",
+      "name": "破碎的镜子"
+    },
+    "yellow_planet": {
+      "sourceHash": "55d28dc94888203e8e21ed419524adee7ba71992426c07f29b95b0cd5ba6e91c",
+      "nameKey": "Item_Planet_Yellow_Name",
+      "name": "黄色星球"
+    },
+    "snowborne": {
+      "sourceHash": "9c03e6d3f3fe7af0d0bd0eb4ceae4383e83699f12fbd6f2b7dfb9fee4115d9cb",
+      "nameKey": "Item_IceHammer_Name",
+      "name": "暴风雪之锤"
+    },
+    "great_blessing": {
+      "sourceHash": "9c1e7f016573f86e8731898ec7e0f149d701c51c14638ab4bed58dca684de03e",
+      "nameKey": "Skill_0034_Name",
+      "name": "大祝福"
+    },
+    "ray_known": {
+      "sourceHash": "9b1bf8b5c0eb42655752de6a87ff23156327af8ce475914b8a4f3c30e7c6607a",
+      "nameKey": "Item_DoubleMagic_Name",
+      "name": "雷伊星碎片"
+    },
+    "lip": {
+      "sourceHash": "62b8b294b6f876710ec522f71e6d22659a6155264a6d659aba09797a217e8951",
+      "nameKey": "Item_GuardCounterStaff_Name",
+      "name": "还击法杖碎片"
+    },
+    "magma_bead": {
+      "sourceHash": "8425502eb2e661e67b9cd92ea619edc8d0dd34f78b13919c78b9eeb9a671d9ae",
+      "nameKey": "Item_MagmaBead_Name",
+      "name": "熔岩珠"
+    },
+    "magic_carrot": {
+      "sourceHash": "0ebb6435dde584f57184690f9b2da71a3f94e0383ee7dc8b29bbd15f9c18eaba",
+      "nameKey": "Item_AmplitudeMagicCharmAP_Name",
+      "name": "魔法胡萝卜"
+    },
+    "kaleidoscope": {
+      "sourceHash": "c059632aac8b7032cbfa856b0e00f531f8428a7784cdf716374cdb2ed203f04f",
+      "nameKey": "Item_Kaleidoscope_Name",
+      "name": "万花筒"
+    },
+    "fascinating_lure": {
+      "sourceHash": "a54bfee2a8baf24def9fa322e35606f696fdaea79dbe5751418a94838af26ac4",
+      "nameKey": "Item_CaptivatingLure_Name",
+      "name": "诱惑的鱼饵"
+    },
+    "water_bag": {
+      "sourceHash": "ba36a1fa1c21c731e4a941e37970667819f9435c15185460d3f65309cdee61a1",
+      "nameKey": "Item_WaterBag_Name",
+      "name": "水袋"
+    },
+    "mini_balista": {
+      "sourceHash": "f0d68ec4473cb43f0751ba01e57f8504666edfff458ff7bfca9cb05875de22fa",
+      "nameKey": "Item_MiniBalista_Name",
+      "name": "迷你弩炮"
+    },
+    "vane": {
+      "sourceHash": "d6990ad28e9a7db2d2cad023f581e41b2576cf1a04809a1a8d5a048c18da8345",
+      "nameKey": "Item_IncreaseDodgeInvincibleTime_Name",
+      "name": "风车"
+    },
+    "firefly": {
+      "sourceHash": "bdcf736fa4549de5f3417b1dd937dc98367b81e67ae13453afb915f7d10a55bb",
+      "nameKey": "Item_FireFly_Name",
+      "name": "萤火虫"
+    },
+    "balisong": {
+      "sourceHash": "ddaf02b21a2108f7e28b9699261540653d017eba0c4b24b0f8149bc59adcbb50",
+      "nameKey": "Item_TooCloseDamage_Name",
+      "name": "瓦利松"
+    },
+    "ignition": {
+      "sourceHash": "ee26863d08263c7957eeba2bc5d8217f9062a74decc912f828a14c957bf748ee",
+      "nameKey": "Item_FlameWeappn_Name",
+      "name": "易燃油"
+    },
+    "shield_earring": {
+      "sourceHash": "457fc0edea663d3dc5147b10e3fd2d79dd99d8c0879e4c72967605a5b1610b65",
+      "nameKey": "Item_ShieldEarring_Name",
+      "name": "盾牌耳环"
+    },
+    "discarded_gold_ring": {
+      "sourceHash": "0ae43f3ee8cf489d2e3a42530b8fcc70329212b1861d598c3644bc23ff7ac89a",
+      "nameKey": "Item_SweepRange_Name",
+      "name": "丢弃的金戒指"
+    },
+    "lightning_boomerang": {
+      "sourceHash": "319dea48ef34c7e25cfa79d31c3e402fb42624b3d58034bfa4f1e469be39fd71",
+      "nameKey": "Skill_0004_Name",
+      "name": "雷电回旋镖"
+    },
+    "phoenix": {
+      "sourceHash": "1953a3d3814b4c816140892e3be1bcbcb10b2cff4d6e717cb00f6204778a382c",
+      "nameKey": "Item_FireFeather_Name",
+      "name": "凤凰之翼"
+    },
+    "red_snake_eye": {
+      "sourceHash": "2904d7a39899e705a6b8a3bdcb314d47f02b3d9bf72b4cae60afe90e7368abf4",
+      "nameKey": "Item_FireGuard_Name",
+      "name": "红蛇之眼"
+    },
+    "red_dew": {
+      "sourceHash": "d963bf1a91e018a7c0467b918e909fa0f42cfa27d19cad95338881cd88a08a91",
+      "nameKey": "Item_RedDew_Name",
+      "name": "红色露水"
+    },
+    "piece_of_red_cloth": {
+      "sourceHash": "f02cee9617a661ee20ad551caec8683bb3b6862900033c1cd4e7dee04002f202",
+      "nameKey": "Item_RedCloth_Name",
+      "name": "红布碎片"
+    },
+    "red_planet": {
+      "sourceHash": "1077c99333224174b10d087ea10d4b57c1cc99126a1286e36fb178896998e3be",
+      "nameKey": "Item_Planet_Red_Name",
+      "name": "红色星球"
+    },
+    "ice_snow": {
+      "sourceHash": "df707218762ed9d52b03da9d2fe07441f73cb27b485a71762ef9fafce646477c",
+      "nameKey": "Item_IcicleVine_Name",
+      "name": "冰雪藤"
+    },
+    "glacier": {
+      "sourceHash": "2f9cf4be05ed8fb01a17c9c6089ac5f34a36ff18d080eed61bdaa983fb516d7e",
+      "nameKey": "Item_EchoOfTheGlacier_Name",
+      "name": "冰川的回声"
+    },
+    "point": {
+      "sourceHash": "432649d930152c32cb30662eee91b0cf99dbc70546bee6205e321819e5c97a3a",
+      "nameKey": "Item_Lightning_DarkCloudBuff_Name",
+      "name": "尖尖的橡果"
+    },
+    "storm": {
+      "sourceHash": "7b19ca29270796f4a16a48e667c6f16b30752db5cceed7893afea52663bbb34d",
+      "nameKey": "Item_IncreaseDamageOnGuardGauge_Name",
+      "name": "尖锐的燧石"
+    },
+    "sapote": {
+      "sourceHash": "63fc34672d7713518b391bebf0010e475e568719b607624ba6df71c602851fdd",
+      "nameKey": "Item_Lightning_MPRegen _Name",
+      "name": "沙波特果实"
+    },
+    "sharp_eye": {
+      "sourceHash": "a5ab6cf5a0fed3425f4ec8350106dac119a0351083ca29e4b2f1b91060916c38",
+      "nameKey": "Skill_0023_Name",
+      "name": "锐利之眼"
+    },
+    "frost_dagger": {
+      "sourceHash": "99c4554e46b42e6f2d97a83e85d86c8f42c8db698708e37ef9221d1a90ca372f",
+      "nameKey": "Skill_0025_Name",
+      "name": "霜刀"
+    },
+    "crossbow_quiver": {
+      "sourceHash": "00a8fe812c165fc7ae44232caa3cf30011d8abbd0799118f2875c20fc7dd6ea8",
+      "nameKey": "Item_CrossbowReload_Name",
+      "name": "弩箭袋"
+    },
+    "pure_cloak": {
+      "sourceHash": "2356e7e43bb65dea2f8d9f0e0be3844b6b8842d1e07d94d46cc26c649d4400b3",
+      "nameKey": "Item_WhiteCloak_Name",
+      "name": "纯白斗篷"
+    },
+    "star_ruby": {
+      "sourceHash": "05bf1180282b92b361439a8f43295f28317dd9d3bbe18e470c3123c67453ce7c",
+      "nameKey": "Item_FinalHP_Name",
+      "name": "星红宝石"
+    },
+    "star_aqua_marine": {
+      "sourceHash": "20d12a04d60c71e4c01cdec279f5e6d9755cdf6ff8f6683561c12fbb25066907",
+      "nameKey": "Item_FinalMP_Name",
+      "name": "星海蓝宝石"
+    },
+    "single_tree_charcoal": {
+      "sourceHash": "63b331c6e5dfea93eaa5f6d615979b8ea562fe3e01eee326cf0e2df19e5eba1f",
+      "nameKey": "Item_FlameGround_Duration_Name",
+      "name": "栎木炭"
+    },
+    "agbae_tree_fruit": {
+      "sourceHash": "ba50ccfbff1f46fc8d9f3f7936d5ed75c07e0990ead533e9a27cfef87bb343f3",
+      "nameKey": "Item_CrabappleFruit_Name",
+      "name": "海棠果"
+    },
+    "ice_star": {
+      "sourceHash": "f5113e8bd729cb6caf22619516b269710f937ccaf32fb949b374116f0aebe0a6",
+      "nameKey": "Item_FrostRelicStack_Name",
+      "name": "冰星"
+    },
+    "sheet_music_bree": {
+      "sourceHash": "57dcb69cb83c483146ed61f8e7bee0f084c27c1ffeeee58a8ca01933b947dd39",
+      "nameKey": "Item_WindSheetMusic_Name",
+      "name": "乐谱“风”"
+    },
+    "obruss_blood": {
+      "sourceHash": "0afeadb347e75e277df012b92e5b7ac2e18664b8031fe6279ed646e5d484100b",
+      "nameKey": "Item_BloodofObrus_Name",
+      "name": "奥布拉斯之血"
+    },
+    "keel_fragment": {
+      "sourceHash": "804e1eb6a5e6ecb4359908b7ae28b4cd763b62a3a6e32d75715ef46880b89046",
+      "nameKey": "Item_KeelFragment_Name",
+      "name": "龙骨碎片"
+    },
+    "ambergris": {
+      "sourceHash": "86180627137001d06dc9ae0235e2081713864ba6d5e9000ef1cf5bee7dd1ac46",
+      "nameKey": "Item_FireDamage_Name",
+      "name": "龙涎香"
+    },
+    "glass_hammer": {
+      "sourceHash": "b9d202c672227e7d5e3a4fddcba6e8f171b72d766d39ec669f948af30633e566",
+      "nameKey": "Item_GlassHammer_Name",
+      "name": "玻璃锤"
+    },
+    "silver_bracelet": {
+      "sourceHash": "0a35d4a87b4fada4114893baf907c3b808c005170470fe4e8ab85813f578a8c6",
+      "nameKey": "Item_SilverBracelet_Name",
+      "name": "银手镯"
+    },
+    "leafy_leather": {
+      "sourceHash": "9d8f5676284ff67f3673d244a7ffe5eb6b6257ed5977f6ad8b20028932f26964",
+      "nameKey": "Item_Lightning_BasicAttack_Name",
+      "name": "叶纹皮"
+    },
+    "small_magic": {
+      "sourceHash": "f6a3f922f00f3bd2687d12bbcc2974293d3b610ac3da88138ec5a564a191b9f4",
+      "nameKey": "Item_SmallConch_Name",
+      "name": "小魔法海螺"
+    },
+    "mark_of_warrior": {
+      "sourceHash": "deb0801e71aa0655ebaa93facf1bd07003b81cdce05cf12c9e70a87aacde1f21",
+      "nameKey": "Item_ProofOfWarrior_Name",
+      "name": "战士的证明"
+    },
+    "rat_pendant": {
+      "sourceHash": "50676aa32ad1a25c8a1001041d61280b9a43af5f298d2dd05f51d6c6c2023ac9",
+      "nameKey": "Item_FullChargeMagicAPBonus_Name",
+      "name": "鼠魔法师的吊坠"
+    },
+    "pearl_powder": {
+      "sourceHash": "8dfe547ff4f1387afe80a602a085b2f3283c903d91f0d8375796a003ae8e6132",
+      "nameKey": "Item_IncreaseWeaponDamageFromGuardGauge_Name",
+      "name": "珍珠粉"
+    },
+    "cold_lock": {
+      "sourceHash": "a8a268204e27a5f014fed63da837801c4d9fd76a6b8d83e1f19ad0d33eecafcc",
+      "nameKey": "Item_ColdLock_Name",
+      "name": "冰冷的锁"
+    },
+    "chakram": {
+      "sourceHash": "e81807ad0a807cd72f7a33da84f10c12e946d848df558e2821f02b8cd67ea365",
+      "nameKey": "Item_Chakram_Name",
+      "name": "电击查克拉姆"
+    },
+    "gap": {
+      "sourceHash": "9331a06f34670c2799195e346cf34a8e526cb7e1c3fef0f26837c09fc07d184b",
+      "nameKey": "Item_ScabbardOfExorcism_Name",
+      "name": "驱邪剑鞘"
+    },
+    "kunai": {
+      "sourceHash": "22220f85f77eef3b4d0911eb8ba4e226a8ddab5b5bbc61858d6c169964c82678",
+      "nameKey": "Item_Kunai_Name",
+      "name": "苦无"
+    },
+    "terros_soul_powder": {
+      "sourceHash": "59b68cea953fa2d37dc7cb2fc4e5e58003bf78e5e395a1a7ada1c8585724e38f",
+      "nameKey": "Item_SummonJellyFish_Fire_Name",
+      "name": "泰罗的灵魂粉末"
+    },
+    "fire_arrow": {
+      "sourceHash": "14e4053c2d794536a9db25053ae6a9e752bb9fdbe34d552ae2d678121623fb6e",
+      "nameKey": "Item_MagicCharm_FireArrow_Name",
+      "name": "火焰箭"
+    },
+    "palas_card": {
+      "sourceHash": "3ead4170a4eae66efa03593806f0a701897b7f5915a65f027342c9c62858fb5b",
+      "nameKey": "Item_PallasCard_Name",
+      "name": "帕拉斯的卡牌"
+    },
+    "blue_pearl": {
+      "sourceHash": "7aab680cf06c90838e695fb28af9b7e298decf3b555a927ee5f648d41c1d6e15",
+      "nameKey": "Item_BluePearl_Name",
+      "name": "蓝珍珠"
+    },
+    "blue_planet": {
+      "sourceHash": "0c7c6385839cf623c1d7c0e6d54520874f138e4a779ac87cbc9860e8846a0fc9",
+      "nameKey": "Item_Planet_Blue_Name",
+      "name": "蓝色星球"
+    },
+    "sky_blue_planet": {
+      "sourceHash": "220d573b207e29518d0385265fd7d6ca316e3db9a4dae08e85ef02b60d413e05",
+      "nameKey": "Item_Planet_Sky_Name",
+      "name": "天蓝色星球"
+    },
+    "haste": {
+      "sourceHash": "cf48b96c1c4e67fc6042c0810af8ff7dd9d1a277d2f7466026c453be63c6c211",
+      "nameKey": "Skill_0024_Name",
+      "name": "急速"
+    },
+    "helenas_staircase": {
+      "sourceHash": "47a3a489ecca0165ca77a0ce980ba85e8073f7bfb665cc0f422ba37b9adcef5f",
+      "nameKey": "Item_Speed_Name",
+      "name": "海伦娜的阶梯模型"
+    },
+    "fluorescence": {
+      "sourceHash": "9accd3d2456a68e33384cc3bed5fa3bdf28f18414f34e85efb05ba00ff3ee481",
+      "nameKey": "Item_BlockBuffStrength_Name",
+      "name": "荧光护符"
+    },
+    "amber": {
+      "sourceHash": "dc75bf2b8f2cbf52252fefde08c0594d2d91ae44822f54d23522327c20c9f2a1",
+      "nameKey": "Item_FirstAttackBonusDamage_Name",
+      "name": "琥珀"
+    },
+    "flame": {
+      "sourceHash": "75a3f99a3c0881b00303b0dd634f59a0ebc67a25ce3a7abe4f54cd759b4fa0fe",
+      "nameKey": "Item_Burn_Name",
+      "name": "火焰眼罩"
+    },
+    "flame_sword": {
+      "sourceHash": "af4678181c1a39d4c91abc61b991600b172d1c2de5b19490bb95d5feae979746",
+      "nameKey": "Item_BurnExplosion_Name",
+      "name": "烈焰双极刃"
+    },
+    "waters": {
+      "sourceHash": "6b993218551840a46da1c1677db0ba147db853c6a170dc72fa99e9a996868a76",
+      "nameKey": "Item_MagicCharm_WaterOfHeal_Name",
+      "name": "治愈之水"
+    },
+    "sword_earring": {
+      "sourceHash": "f6d974c7dbdedaf17a368c13ea00c6b0c83fde40006bc629c32a89a8761ebf09",
+      "nameKey": "Item_SwordDamage_Name",
+      "name": "剑耳环"
+    },
+    "swordsmanship_textbook": {
+      "sourceHash": "5524f36edfd702749f024166ce4601f500021626ea910eb757d06440ce6e7575",
+      "nameKey": "Item_SwordTrainingManual_Name",
+      "name": "剑术教材"
+    },
+    "flag_of_encouragement": {
+      "sourceHash": "94deb061e629b9cbc95495742eeb8d576232f232ccfadbb433df2d4884cb48ab",
+      "nameKey": "Item_FlagOfCheer_Name",
+      "name": "鼓励旗帜"
+    },
+    "warning": {
+      "sourceHash": "7d2033077d5fdb110d94bc32dccd0b7179acef3d2a1dac88af32597ade769090",
+      "nameKey": "Item_WANTED_Name",
+      "name": "警告文件"
+    },
+    "employment_sentence_coline": {
+      "sourceHash": "ded0cac8d02da92b53cdbc044f1cead052e50bf8135809ca3e9479cce6cf9a81",
+      "nameKey": "Item_WeaselKnight_Name",
+      "name": "雇佣徽章‘科林’"
+    },
+    "pride": {
+      "sourceHash": "a2a543a24676b713068e8cccbc4af3c70a4f8045cab2ac2a4511f1cddd0ad610",
+      "nameKey": "Item_RustyCrown_Name",
+      "name": "傲慢金冠"
+    },
+    "giraffe_horns": {
+      "sourceHash": "4b4f940a44e9cfbaf3fc5580eae64c65bec73e3580db5ba9b9ef997654670473",
+      "nameKey": "Item_KirinHorn_Name",
+      "name": "麒麟的角"
+    },
+    "pot_lid": {
+      "sourceHash": "96dddfd77363a949463a6bb0593a2ebdd868698ba3ae775db6ad1dcbcbcc4126",
+      "nameKey": "Item_Endure_Name",
+      "name": "锅盖"
+    },
+    "green_clothes": {
+      "sourceHash": "3dbb68d18692297e06c46e11caab7f0cb635f2e0ea22a15728b2bb424c94eed4",
+      "nameKey": "Item_GreenGi_Name",
+      "name": "绿色道服"
+    },
+    "brain": {
+      "sourceHash": "8edf784e9699ac55f315942e791ae65f2ba87b8b79551ce0950dc8f91e9b014c",
+      "nameKey": "Item_LightningCompass_Name",
+      "name": "雷云追踪指南针"
+    },
+    "multi_use_belt": {
+      "sourceHash": "3f5b4e55c2d35b600321201b3392c3b89c0c36998e7d568f335e09cb41b44223",
+      "nameKey": "Item_Belt_Name",
+      "name": "多用途腰带"
+    },
+    "libra": {
+      "sourceHash": "6a3dba9f049958686f96de9f3c908cb60627c1c9969f83eac9e007bb56e3bfcf",
+      "nameKey": "Item_FireIce_Name",
+      "name": "对立之秤"
+    },
+    "lizard_sheet": {
+      "sourceHash": "e298f4aa3a2b2fb2723e48da25a5b01b27c872ddec8dca5c0e11dabf2c34529e",
+      "nameKey": "Item_PlateArmor_Name",
+      "name": "蜥蜴板甲"
+    },
+    "library_miniature": {
+      "sourceHash": "383f09fade0b03d3794261694124e60f5e8f7c33f651c591745991370420ccb6",
+      "nameKey": "Item_LibraryMinute_Name",
+      "name": "图书馆分针微型模型"
+    },
+    "warm_stone": {
+      "sourceHash": "c4ce727c6d731f8ff315a7c482abcbe02db84e64460f1a0630a6542b8db984a6",
+      "nameKey": "Item_WarmStone_Name",
+      "name": "温暖的石头"
+    },
+    "magic_glasses": {
+      "sourceHash": "52bf9df7537854a6154cb973866e910957c1401f57514e38c55ff9362d834dd8",
+      "nameKey": "Item_MagicGlasses_Name",
+      "name": "魔法眼镜"
+    },
+    "magic_gem": {
+      "sourceHash": "86ea4e36dbdae523ff05e3eab11ceb8cfbd86c0330ed5b8f5e9ca291bcae4235",
+      "nameKey": "Item_IncreaseAP_Name",
+      "name": "魔法基础"
+    },
+    "model_beak": {
+      "sourceHash": "38a395e23f8254b8830499996f9e358ab419ebcc7148c9532fd1c1f40247b8c8",
+      "nameKey": "Item_IncreasePeacefulMoveSpeed_Name",
+      "name": "标本喙"
+    },
+    "dull_drop": {
+      "sourceHash": "91204fb702faf62b5741194edfd40f4e14ec12d29eb9eacb96bd5a2c5f5778df",
+      "nameKey": "Item_BluntBellKnife_Name",
+      "name": "钝化铃铛"
+    },
+    "colorless_cube": {
+      "sourceHash": "6d1ccd2baedeb59fa991ff025b945ecb43721031eb9f3cac25cda21dd806a726",
+      "nameKey": "Item_TrueDamage_Name",
+      "name": "无色立方体"
+    },
+    "lightstone": {
+      "sourceHash": "fd8b7e8d4f5135a0d8454ff53f1baf8c3914afe87c0b54a2b091f8d9a6410ef3",
+      "nameKey": "Item_PerfectGuardCounter_Lightning_Name",
+      "name": "雷石"
+    },
+    "jewelry_armor": {
+      "sourceHash": "67b88853bd3e0062ec68aa3dc673c1782ddce9c89b0c44b2bc8e3398572d2920",
+      "nameKey": "Item_MagicCritical_Name",
+      "name": "宝石盔甲"
+    },
+    "voluspa": {
+      "sourceHash": "15c008c4a4cd8dae0f2bbfb380a1afee5e25be3041d6ccb7d00b2630078062e1",
+      "nameKey": "Item_IceSpear_Name",
+      "name": "沃尔斯帕"
+    },
+    "broken_root": {
+      "sourceHash": "55ec26addc98b6adb6cfe160d1736af7fe6762561c63f8339bc1ab832a3e2989",
+      "nameKey": "Item_BrokenTree_Name",
+      "name": "破碎的树根"
+    },
+    "fire_circus": {
+      "sourceHash": "585499380a8a4cfedc6530c946adf832f723859e53031c0c82b4f8b379fd161e",
+      "nameKey": "Skill_0002_Name",
+      "name": "火焰马戏团"
+    },
+    "red_thread": {
+      "sourceHash": "0b1541ab068c437a5736f69575166ea504b1f4e098bd7215dcd4e11678c7ed42",
+      "nameKey": "Item_FlameBall_Name",
+      "name": "红色线球"
+    },
+    "freezing_bug": {
+      "sourceHash": "f51286a1c030ef13fa1cb95d967e3e474e9e0f1563bb1c7cd673ce4309616892",
+      "nameKey": "Item_FrostbiteStack_Name",
+      "name": "冰虫"
+    },
+    "pointed_bat": {
+      "sourceHash": "d8901f5b883bfd425ce04661815dd740524023cf3c3b092acfc51fc4472963ba",
+      "nameKey": "Item_PointedBat_Name",
+      "name": "尖刺棍棒"
+    },
+    "touch_of_life": {
+      "sourceHash": "f896112f5be87e66ed0ea304508baabec7223c3516cdecc4a8cdd55b7277bf5e",
+      "nameKey": "Item_Exploitation_Name",
+      "name": "生命之触"
+    },
+    "serens_wanging_letter": {
+      "sourceHash": "236863742ecd88a6877e9470cb63d93d03e779e63e03b81e6d04c729f71cc195",
+      "nameKey": "Item_MagicLetter_Name",
+      "name": "瑟伦潦草的信"
+    },
+    "agma_projection_sword": {
+      "sourceHash": "d38752f5cb7820c652cdfed58a9628044b6b391ef5265ddb1c8d816c44c84e1c",
+      "nameKey": "Item_SwordOfLight_Name",
+      "name": "阿格玛投影剑190,191号"
+    },
+    "academy_brigendin": {
+      "sourceHash": "6cfd81bff0613391b7ac42d9a635dcb5a920d40d34c245895dcc31023a365b5f",
+      "nameKey": "Item_Brigandine_Name",
+      "name": "学院锁子甲"
+    },
+    "alfonsos_horn": {
+      "sourceHash": "571068432a4456e082efc6ec8d6a7011c5ce95f52fda016e70a532678e4c8242",
+      "nameKey": "EffectHUD_AlfonsosHorn_Name",
+      "name": "阿方索的号角"
+    },
+    "arrow_lane": {
+      "sourceHash": "77e0fbab3e9046562da469de2dd729f6086bc5f45aaef3848d2806da609af12e",
+      "nameKey": "Skill_0028_Name",
+      "name": "箭雨"
+    },
+    "thin_cushion": {
+      "sourceHash": "ff5129ad8d8761af85f8b78ecc65ffe9954f315e7bf3e9d3f890ea4fd40e6ed2",
+      "nameKey": "Item_FollowerAttackSpeed_Name",
+      "name": "薄垫子"
+    },
+    "frozen_egg": {
+      "sourceHash": "4e6ed47f49f4f77ed3422e9981d02f5a935a2c62ab17bab99a258fe76e3c9436",
+      "nameKey": "Item_FrozenEgg_Name",
+      "name": "冻结的蛋"
+    },
+    "frozen_heart": {
+      "sourceHash": "da0093a208162f5f85726694594024cf30db4950d0a42068db41e9b52fa14b23",
+      "nameKey": "Item_FastFrostRelic_Name",
+      "name": "冰封的心脏"
+    },
+    "ice_seagull": {
+      "sourceHash": "45a43b5aca41857fbdaff788255eac048ab6eda8be002697cc4e9568f1402ffc",
+      "nameKey": "Item_FrozenMemory_Name",
+      "name": "冰海鸥之足"
+    },
+    "oink_shaman_necklace": {
+      "sourceHash": "4d0e7bc9e6343cc8e00a949d7d24b6e2425dd76a56064645ffb06b7a4a2bfe4b",
+      "nameKey": "Item_DebuffDuration_Name",
+      "name": "嗷克萨满的项链"
+    },
+    "bishopric": {
+      "sourceHash": "f5c3b1a4096c7cd1aab1dafab35a2623fc663e55f16d82960cdbcda55b03bbb1",
+      "nameKey": "Item_BoltMagicMultiShot_Name",
+      "name": "双角管"
+    },
+    "artificial_spirit": {
+      "sourceHash": "6cfadc4f526fe9d098d8ea47c1a71a560ec7bb86c70b5dd94b32ca4b80f68b35",
+      "nameKey": "Item_IncreaseMpRegenOnGuard_Name",
+      "name": "人工精灵伊菲尔"
+    },
+    "combat_wizard_gloves": {
+      "sourceHash": "888c316c9dab30156e8d32f68ee489329ea3c0309c4099411e59dcc91e973bd0",
+      "nameKey": "Item_MagicDamageBySpeed_Name",
+      "name": "战斗法师的手套"
+    },
+    "reloaded_wooden_box": {
+      "sourceHash": "2dd6f72cc66bc3b24062b20657ebe414769253696ae03fd9d1fa469a2e2fbf79",
+      "nameKey": "Item_CrossbowAdditionalMagazine_Name",
+      "name": "装填用木箱"
+    },
+    "thunder": {
+      "sourceHash": "22bbf443ca85faf31e16e9b0afd0130a61b7cb796741808c0cfdefd007d90515",
+      "nameKey": "Skill_0030_Name",
+      "name": "雷霆之甲"
+    },
+    "bronze_mirror": {
+      "sourceHash": "5e23fb3d915707c9e20b1a2ae6242674439f6d626dcc25830b221a3d108ebd7f",
+      "nameKey": "Item_PerfectBlockBuff_Name",
+      "name": "青铜镜碎片"
+    },
+    "rabbit_village_guard_helm": {
+      "sourceHash": "11a5919b833d46199002b0c0f6960238b99e597f55ba36746a4c119691a4dba5",
+      "nameKey": "Item_RabbitVillageGuardHelmet_Name",
+      "name": "兔子村警卫头盔"
+    },
+    "blue_ring": {
+      "sourceHash": "6cbc761d9071ed41c2afe4543fe286a444f6a8d7437622f8843015eb6b59aadf",
+      "nameKey": "Item_IncreaseAllDamageByHP_Name",
+      "name": "蓝环"
+    },
+    "fluffy": {
+      "sourceHash": "e00e8df312433ed232b49c8ef9d9eec1b81aad191fff34f8f33a6dd132a2da4f",
+      "nameKey": "Item_WarmGlove_Name",
+      "name": "蓬松的毛皮手套"
+    },
+    "white_twig": {
+      "sourceHash": "012a2310d3be8afc35c5d1b0e68112ceec738910588ab49ee37227cd1f7c5bd4",
+      "nameKey": "Item_SilverBranch_Name",
+      "name": "白色树枝"
+    },
+    "white_egg_shell": {
+      "sourceHash": "577e6f7a44c94444c082b3b6139069533de4f3436534deb154c7d8bd337c2470",
+      "nameKey": "Item_MinHPKill_Name",
+      "name": "白蛋壳"
+    },
+    "white_planet": {
+      "sourceHash": "4dbcd60c0a9b6390fc3c94e5354f869c9c2a50b667d3499b1f217d47ae511e11",
+      "nameKey": "Item_Planet_White_Name",
+      "name": "白色星球"
+    },
+    "heart_shaped_carrot": {
+      "sourceHash": "cb75adb96b19d6f23c26a758f7e1a1717b9be3d64807556c8ed87701b89b38a5",
+      "nameKey": "Item_HeartShapedCarrot_Name",
+      "name": "心形胡萝卜"
+    },
+    "bloodstone_ring": {
+      "sourceHash": "7949fbdc0e45577a2029ab69ed62086ff4145f1a5ad3cbc0c9a7f4202e60591f",
+      "nameKey": "Item_KillHeal_Name",
+      "name": "血石戒指"
+    },
+    "black_tea": {
+      "sourceHash": "ab06df021b05f03abf44b15bbed5c67ce66a1019b4012046d0fd712361e257ca",
+      "nameKey": "Item_MiniBossFight_Name",
+      "name": "红茶叶袋"
+    },
+    "flame_root": {
+      "sourceHash": "644cb69277fdf0740ce54d5904eabd5fef2d3213c9bea852553c29ef1493312d",
+      "nameKey": "Item_FlamePlantRoot_Name",
+      "name": "火焰草根"
+    },
+    "flame_insect": {
+      "sourceHash": "371512860970330caade24d6e5e6b59322f050c7622a741cdb66ba6c0b08d77c",
+      "nameKey": "Item_BurnStack_Name",
+      "name": "火焰虫"
+    },
+    "giant_telescope": {
+      "sourceHash": "e2333fdfc1892189a929413d318cce43644e00838326cece3c9fee1702f950ec",
+      "nameKey": "Item_PlanetModule_Name",
+      "name": "巨型望远镜"
+    },
+    "black_scales": {
+      "sourceHash": "ab877536df15d9e74561b717ed099d98a6518ea6c2393704dd8d931ace99a824",
+      "nameKey": "Item_CriticalChanceIncreaseWithTablets_Name",
+      "name": "黑鳞片"
+    },
+    "humility_crown": {
+      "sourceHash": "42206d09056475310e318451329a055c827ccea7a0dfccec3cdd183936cbd070",
+      "nameKey": "Item_IncreaseLastAttackDamage_SwordAndShield_Name",
+      "name": "谦逊的王冠"
+    },
+    "clay_tablet": {
+      "sourceHash": "1a95137746abacf1b4a8ad6078b8c933786a1d75d0385c6d6475dff582d8ef27",
+      "nameKey": "Item_DarkCloud_Critical_Name",
+      "name": "雷文泥板"
+    },
+    "riley_congregation_clock": {
+      "sourceHash": "de0f47b3fab7132b8451aaf5e7532f5a4aaea638c3d1d846f7c208af25bfd98f",
+      "nameKey": "Item_RylieWatch_Name",
+      "name": "莱莉的怀表"
+    },
+    "ruby_brooch": {
+      "sourceHash": "44cfd52183f956205d402d45b8b9b810594e55520b5dbbdec21e1e28b515088a",
+      "nameKey": "Item_BlazingStormcloud_Name",
+      "name": "红宝石胸针"
+    },
+    "meteor_shower": {
+      "sourceHash": "21a6e90157f5d5275db31b6792538c72d8b235785e601248645613dc4f6ffcfa",
+      "nameKey": "Skill_0027_Name",
+      "name": "陨石雨"
+    },
+    "walter_work_monocle": {
+      "sourceHash": "562940d9b5250b1d490805f7f56df2488210758b0ae85aba69c3e4525251269a",
+      "nameKey": "Item_CritAndRanged_Name",
+      "name": "巴尔特的工作用单片眼镜"
+    },
+    "berut_sickle": {
+      "sourceHash": "554feb23e180c36872aa4af24f9df02c99d364fa785a333275b7fd9647fc8b33",
+      "nameKey": "Item_ScytheOfBerut_Name",
+      "name": "贝鲁特之镰"
+    },
+    "empty_handle": {
+      "sourceHash": "2f56545f8f23ecfac606f9bb195c4f716ee543a980aeae02302107dce72c1545",
+      "nameKey": "Item_GoldIsDamage_Name",
+      "name": "空剑柄"
+    },
+    "shining_hourglass": {
+      "sourceHash": "9df07244e044bad2aaba34745c988d4f46f66ced26ea5c9f21c367a1cebf5c26",
+      "nameKey": "Item_RightSpellCooldownHelper_Name",
+      "name": "发光的沙漏"
+    },
+    "shield_mate": {
+      "sourceHash": "2d1e9630c40b2ade873c99be0cf2c4accac1eca7e20dd1d0c951cd4ded289d00",
+      "nameKey": "Item_ShieldBash_Name",
+      "name": "盾牌伙伴"
+    },
+    "ice_wings": {
+      "sourceHash": "7217b295247817daa682046f2a99eef2da63fc60486ba7107cc475ead5abd13f",
+      "nameKey": "Item_IceWings_Name",
+      "name": "冰之翼"
+    },
+    "six_leaf_clover": {
+      "sourceHash": "7b37db1ea3eccf856c76134159a142426c3ba5b5a7af1b4af05a803fdbbf2ce6",
+      "nameKey": "Item_SixLeafClover_Name",
+      "name": "六叶草"
+    },
+    "absolute_ring": {
+      "sourceHash": "4b78e7553aa44242e65364ce5c82723582c1d8e0777330dbe29b0483dc0c886a",
+      "nameKey": "Item_SweepRange_Enhanced_Name",
+      "name": "绝对戒指"
+    },
+    "chintamani_stone": {
+      "sourceHash": "7431c88f13ef05ed627df21c4d8d47fe2f60a13c0f3377acc460eb2f29ecb890",
+      "nameKey": "Item_Chintamani_Name",
+      "name": "如意宝珠"
+    },
+    "blue_claws": {
+      "sourceHash": "1acc4e7d94a4f8ffb06246ca0263adeeee08fbce62df4703af54a6969aa160e8",
+      "nameKey": "Item_Freeze_Name",
+      "name": "蓝爪"
+    },
+    "blue_wrist_guard": {
+      "sourceHash": "0b8f995b089e3843049f838e4445993d6b3d420964430ea4523ba8a766bbedc3",
+      "nameKey": "Item_SpecialAttack_Name",
+      "name": "蓝色护腕"
+    },
+    "lightning_rod": {
+      "sourceHash": "b2f7b3b57790355fb167c2eb5518ac2072c6eebe5a9312bf0f028ba8b82d09e8",
+      "nameKey": "Item_MinimumLightning_Name",
+      "name": "避雷针"
+    },
+    "bloodstone_earrings": {
+      "sourceHash": "bc650ba0469110a13a111709a32641986d7111305a2debbfa21d463e5962a588",
+      "nameKey": "Item_HPSteal_Name",
+      "name": "血石耳环"
+    },
+    "white_bread": {
+      "sourceHash": "15f743c3e310c01cadd3589d4e39526f6d91c031fbe21a7879c49afbcf8e3c37",
+      "nameKey": "Item_HitInvincible_Name",
+      "name": "白边面包"
+    },
+    "iridescent_feathers": {
+      "sourceHash": "53c9d736626a22e013eed4345ba603699a4849c73816b3eff964b6f7babfc92e",
+      "nameKey": "Item_RainbowFeather_Name",
+      "name": "彩虹羽毛"
+    },
+    "heitas_soul_powder": {
+      "sourceHash": "7416e27828b5ab6f75cd4485c9a25f9b9b9fbca2f31f1f72675f111002871f81",
+      "nameKey": "Item_SummonJellyFish_Name",
+      "name": "海塔的灵魂粉末"
+    },
+    "meditation_books": {
+      "sourceHash": "c848e65e9c907e2807ed6d6513cd2c2b91335f07cb92fd038f04c2f619aee267",
+      "nameKey": "Item_QuickCast_Name",
+      "name": "冥想书"
+    },
+    "rock_elephant": {
+      "sourceHash": "58152d8bc565327586885b7cd55ca898dae3fa343d4703c62d43a4e00565bcba",
+      "nameKey": "Item_RockElephant_Name",
+      "name": "岩象"
+    },
+    "solis_decree": {
+      "sourceHash": "cf7ee7b10075d0cbf4ab2720d4e89528fb5b9b1e26847436455d590772d2d7c5",
+      "nameKey": "Item_FlameSword04_Name",
+      "name": "索利斯·德克里"
+    },
+    "cloud_shoulder_ornament": {
+      "sourceHash": "83ca136cf5b2820e54782b12e41a5c81bda41e5d8ce0f2289f562337ee9433f6",
+      "nameKey": "Item_FlameSwordFall_Name",
+      "name": "陨铁护肩"
+    },
+    "cloud_iron_earrings": {
+      "sourceHash": "bb4cc3c9ef7c5d6253f6fb6e3d0e139b3300bd983658d40074e6a100ac4b441a",
+      "nameKey": "Item_FlameSwordReturn_Name",
+      "name": "陨铁耳环"
+    },
+    "solis_decusa": {
+      "sourceHash": "cd3eef64e884520dc29adfdce6bdcd54c70eea98ff28d5304299e883b8b81fbc",
+      "nameKey": "Item_FlameSword03_Name",
+      "name": "索利斯·德库萨"
+    },
+    "solis_parvo": {
+      "sourceHash": "5c98fd9dc0e0cb812a1319df814816798ae5915a1f139b6266fe4edcf901439b",
+      "nameKey": "Item_FlameSword02_Name",
+      "name": "索利斯·帕尔沃"
+    },
+    "eternal_brazier": {
+      "sourceHash": "4771c7065d2e631e3c08be2980e89b4688eb35e8c592fa3bce64e8b770aefca7",
+      "nameKey": "Item_FlameSwordAuto_Name",
+      "name": "永恒熔炉"
+    },
+    "sunset_cloak": {
+      "sourceHash": "fd746eb049a227c2ec9dc09f60eddf550fae86ed4f22c3c2ffa1cf5dcea06cf2",
+      "nameKey": "Item_FlameSwordDamage_Name",
+      "name": "火红的夕阳"
+    },
+    "ancient_anvil": {
+      "sourceHash": "46d7a639c2e88f2807afc4eaf19273c41f8d13181df78c60068b75def05682c9",
+      "nameKey": "Item_FlameHeart_Name",
+      "name": "古代铁砧"
+    },
+    "solis_pratu": {
+      "sourceHash": "6e0a7449f200e566430fee8f509abd1f28541309918101c0753a464ad4edb97d",
+      "nameKey": "Item_FlameSword01_Name",
+      "name": "索利斯·弗拉克托"
+    },
+    "shield_bag": {
+      "sourceHash": "fe36e384521b64fd216c61d1f6333b072824902222bb50fc5e15022ce87bc295",
+      "nameKey": "Item_IncreaseShieldDefenseRange_Name",
+      "name": "盾牌包"
+    },
+    "tuning_fork": {
+      "sourceHash": "5c4b9b8b416edcb8ea551571ad68aaadf2d272050b81dec236dc8e8a61446335",
+      "nameKey": "Item_PerfectGuardDamageQuest_Name",
+      "name": "音叉"
+    },
+    "sealed_tejas": {
+      "sourceHash": "4fce46bbc140c5981bcfb59281d5ae7e9f87ffedfcded2fd9206a532eaf04268",
+      "nameKey": "Item_ IceboundTejas_Name",
+      "name": "封印的特加斯"
+    },
+    "ice_cloud_butterfly": {
+      "sourceHash": "d3bd839dab59ad2051a77669c4b81c2dd06844af77a8c76be15173aa6b4ad9bf",
+      "nameKey": "Item_ThunderfrostButterfly_Name",
+      "name": "雷霜蝶"
+    },
+    "water_droplets_from_plitvice": {
+      "sourceHash": "e81fe783090ec2e910bb55fb781907eb2db8799c4b72cb72c14821a27a37770d",
+      "nameKey": "Item_FrostMP_Name",
+      "name": "普利特维采的水滴"
+    },
+    "tactical_manual": {
+      "sourceHash": "3d2870df3a1ded4060e96cc72396b501a0abf692b2c5cb832e9160acf71a6aa1",
+      "nameKey": "Item_Commander_Name",
+      "name": "战术指南书"
+    },
+    "swaying_eyes": {
+      "sourceHash": "2abd60159b27239ed85435bf03a42c76a7af95085b43d58b0268f31e53861894",
+      "nameKey": "Item_ShadowEye_Name",
+      "name": "闪烁的眼睛"
+    },
+    "sheet_music_storm": {
+      "sourceHash": "2a7175fbacb4fd79e20c64a50ba93a5bdf63ef165541390f7b2bfcf697c9037e",
+      "nameKey": "Item_TheTyphoonSheetmusic_Name",
+      "name": "乐谱《台风》"
+    },
+    "sheet_music_galaxy": {
+      "sourceHash": "160317c85d2bd7679781185100921c764d37e5e0a14e79452592009a59e25181",
+      "nameKey": "Item_SuperPlanet_Name",
+      "name": "谱子「银河」"
+    },
+    "brass_mirror_fragments": {
+      "sourceHash": "cf6edfec3a5a016d4e9639af29fe37b34c4bc81200196bf26fd38c78da934fa7",
+      "nameKey": "Item_BrassMirrorShard_Name",
+      "name": "黄铜镜碎片"
+    },
+    "stabbing_textbook": {
+      "sourceHash": "c611d8ab99888a77831958146fb08fcf15612a4dc2036650548d313e1f8f1424",
+      "nameKey": "Item_KatanaDashAttackScroll_Name",
+      "name": "刺击教材"
+    },
+    "talisman_of_talent": {
+      "sourceHash": "e4596606b9858f3fb01d6fe711d86ed5481b538c15e8bc5369b9b0d24be42f22",
+      "nameKey": "Item_CharmOfDexterity_Name",
+      "name": "灵巧护符"
+    },
+    "broken_sapphire": {
+      "sourceHash": "6e44a6fa7605dc666e654e8dc1f9263f117dac9c443148b27644d1b368805b9e",
+      "nameKey": "Item_DecreaseFallingDamage_Name",
+      "name": "破碎的蓝宝石"
+    },
+    "cloak_of_the_green": {
+      "sourceHash": "14554a60452358444e5ec49be66754723b3fbb57d0616913ec8d5db6e674225e",
+      "nameKey": "Item_EvDash_Name",
+      "name": "常青斗篷"
+    },
+    "wings": {
+      "sourceHash": "ac05598a41e7f79efc3ccc3fab2d1dcf128e713c21848ab7b76689aa9ddbe632",
+      "nameKey": "Item_Wings_Name",
+      "name": "翅膀"
+    },
+    "lightning_chakram": {
+      "sourceHash": "586a5020cc58864bf9d6d71909e5d09a60885dd1344fc7a77b23170c2187d699",
+      "nameKey": "Item_Chakram_Name",
+      "name": "电击查克拉姆"
+    },
+    "lightning_struck_tree_branch": {
+      "sourceHash": "99e5dec544713937f4246432e985f3b51d6b1e68d797f3af3d7a11b0689972c2",
+      "nameKey": "Item_Electric_Name",
+      "name": "被雷击中的树枝"
+    },
+    "thunders_earrings": {
+      "sourceHash": "c32c8a77b759a93df39990490d1a190d9ed9ade482b1c3787a98385d46de3bf5",
+      "nameKey": "Item_ElectricEarring_Name",
+      "name": "桑德耳环"
+    },
+    "ahmads_soul_powder": {
+      "sourceHash": "322136cf00d7058bc6a084dcbedc0906a6fec725b1e7c95bc4db4b9c111f6aac",
+      "nameKey": "Item_SummonJellyFish_Electric_Name",
+      "name": "艾哈迈德的灵魂粉末"
+    },
+    "stinging_bug": {
+      "sourceHash": "7b80f7e4bfbc62082294b3ace92b6c3f5a7d20f888081a087e0c3c222dad6d79",
+      "nameKey": "Item_LightningBug_Name",
+      "name": "电击虫"
+    },
+    "frozen_bow": {
+      "sourceHash": "6ee636521cb768b89b965fa751369f9a73ef0410b71d51aa24ccaec7b1ca940e",
+      "nameKey": "Item_IceBow_Name",
+      "name": "冰弓"
+    },
+    "black_planet": {
+      "sourceHash": "9049417f8649733714e3a60565c44007c5e2155f9a403fbdc8da26c1a18d0c60",
+      "nameKey": "Item_Planet_Black_Name",
+      "name": "暗黑星球"
+    },
+    "ashen_planet": {
+      "sourceHash": "a93cdd595179d6d06a294acd3c0639c56a8547508faab455e46a2241a7f216a2",
+      "nameKey": "Item_Planet_Gray_Name",
+      "name": "灰色星球"
+    },
+    "petrification": {
+      "sourceHash": "f75396b190f0d498bfff30775053f55ae9fb69cd98ad52f39a93246e708e5f60",
+      "nameKey": "Item_Lightning_Range_Name",
+      "name": "石花"
+    },
+    "hand_mirror": {
+      "sourceHash": "e78ec4013c947156e1e7118fef3803ce7a88b9aebfb66feef9931c4aa6eaf64e",
+      "nameKey": "Item_HandMirror_Name",
+      "name": "小镜子"
+    },
+    "white_paper": {
+      "sourceHash": "81b2586d3b0327ed04f272ae4a1d2880f7344a393c71455f1d21860d0ca994c0",
+      "nameKey": "Item_WhitePaper_Name",
+      "name": "白纸"
+    },
+    "eternal_sun": {
+      "sourceHash": "1eb1dd5efb113381ed5194d404ca4426a1bb129e6e7a2316bb87a036b27b4a32",
+      "nameKey": "Item_FireIceWeapon_Name",
+      "name": "永恒蚀"
+    },
+    "flux_mk2": {
+      "sourceHash": "9de2316ea94667012169039ed04071a434e8ec624d8c1fbf789a5421285dc7b6",
+      "nameKey": "Item_CompanionCloud_Name",
+      "name": "通量耦合器Mk.2"
+    },
+    "overall_armband": {
+      "sourceHash": "55d4efba56157bd77fd6646f9cd2c78584c349e2bf2e908ace551bb93c441416",
+      "nameKey": "Item_SummonMole_Chief_Name",
+      "name": "采矿作业总监臂章"
+    },
+    "badge_of_devotion": {
+      "sourceHash": "2dda174c57b9804e7e256c9ea223ccdbd351848d6f84548077f907bb6d535b2d",
+      "nameKey": "Item_CompanionChaos_Name",
+      "name": "奉献徽章"
+    },
+    "mysterious_weight": {
+      "sourceHash": "a3602112948cb5a9deb65837f72088f32a72fa6c58b41c48d7e422a92295529d",
+      "nameKey": "Item_MagicPendulum_Name",
+      "name": "神秘摆锤"
+    },
+    "lucky_medal": {
+      "sourceHash": "38571060e1c87892052cdd4ec5533e6320055537c79927192ca168149ceaa113",
+      "nameKey": "Item_TradeMoney_Name",
+      "name": "幸运的奖章"
+    },
+    "neutralizer_black": {
+      "sourceHash": "2d4baa88172e6f311b2c32954486f04f1c5b1a24f9304dd7fa3e9bb5718ad8b3",
+      "nameKey": "Item_AllStat_Name",
+      "name": "中和剂·黑"
+    },
+    "green_ink_bottle_v2": {
+      "sourceHash": "2315b3ce10f48dcf638f056888dfd6e6ab4e964a803f1e0c853713c0a6c1e608",
+      "nameKey": "Item_AttackChim_Name",
+      "name": "绿色墨水瓶"
+    },
+    "shock_amplifier": {
+      "sourceHash": "18a1d09c2a790999d59a7fd5d95522499013cda20f4dbcc8a41b79bebaedd0c3",
+      "nameKey": "Item_Fixer_Name",
+      "name": "冲击增幅器"
+    },
+    "crystal_of_harmony": {
+      "sourceHash": "80252bc1b1549e07727bae3db613d5dd047bd36de61d08de280ff6dfa52664dc",
+      "nameKey": "Item_NearLevelDamage_Name",
+      "name": "和谐之晶"
+    },
+    "eternal_winter": {
+      "sourceHash": "3347f136d32d88d29be9862db16066c75bf8c93759837ded2e2f2fb54da5f622",
+      "nameKey": "Item_FreezeNormal_Name",
+      "name": "永恒的冬日"
+    },
+    "lightning_amulet": {
+      "sourceHash": "fcf4ce75c70ce60c4cc49d360b46014971ed8ca2fda9b9dfe47f7b211974ae38",
+      "nameKey": "Item_CharmOfLightning_Name",
+      "name": "电击护符"
+    },
+    "multicolored_candy_jar": {
+      "sourceHash": "99f4240eadc625e0d5bf7538ae26f099731959f84ae1757b22e630f762b7bba4",
+      "nameKey": "Item_ElementalCandy_Name",
+      "name": "五色糖果玻璃罐"
+    },
+    "plump_fruits": {
+      "sourceHash": "9f5d99f5b8b4cc9131ac218acd95a7571c54b0e6810c768d89e8097b75dbbb26",
+      "nameKey": "Item_MpHeal_Name",
+      "name": "饱满果实桶"
+    },
+    "defect_probe": {
+      "sourceHash": "0108416d37f941c8e8d8e5f5412c4968777fac6febbfd93dd0746e917a212f75",
+      "nameKey": "Item_FaultfinderNeedle_Name",
+      "name": "故障探测针"
+    },
+    "wanderers_necklace": {
+      "sourceHash": "94039d3541b12454d03ca1ba727592bf8f97902bea00737235a285cc923427c7",
+      "nameKey": "Item_DriftNecklace_Name",
+      "name": "流浪者的项链"
+    },
+    "heart_of_the_beast": {
+      "sourceHash": "50de1c8b6b87ff92077b4b2ced67ab0b75babb70d1f7aac8f8462942ff191b86",
+      "nameKey": "Item_TinBeastHeart_Name",
+      "name": "野兽之心"
+    },
+    "stone_wheel": {
+      "sourceHash": "1d4f3f37879123bb96f1593589d9b11e52f1b41623b8cf3c80fb4ee0ca6c2b13",
+      "nameKey": "Item_MPSkillDamage_Name",
+      "name": "石纺锤"
+    },
+    "lerids_battleb_racelet": {
+      "sourceHash": "828866ef86bb5afec790b945be9a094c9b1a8aa3d7ebf6fe377a2ccad21b4dcf",
+      "nameKey": "Item_DashEvasion_Name",
+      "name": "拉里德的战斗手镯"
+    },
+    "elastic_band": {
+      "sourceHash": "18d4dbd47f44a37249c47ebcc506509045bc3de61f76542ce0c5bda2d9fa3205",
+      "nameKey": "Item_EvasionRestore_Name",
+      "name": "弹力带"
+    },
+    "unalloyed_gold_needle": {
+      "sourceHash": "6b5751366eb312242d7e0b47042cbffaa9be61c038701e64f5d229a2cbd7cf24",
+      "nameKey": "Item_UpCharmDamage_Name",
+      "name": "北向的金色针"
+    },
+    "thunder_judgment": {
+      "sourceHash": "308f6a23b82be3310e02fafaaed97001266bf070c304d85656e071acc59d1904",
+      "nameKey": "Skill_0037_Name",
+      "name": "雷之裁决"
+    },
+    "academy_fountain_pen": {
+      "sourceHash": "eb0b88ff6990eec89f97ceaac9f23c2a947549b398ae0e9bb19c56f9c37bc931",
+      "nameKey": "Item_EvasionCooldown_Name",
+      "name": "学院钢笔"
+    },
+    "zorous_watering_can": {
+      "sourceHash": "31877a7c13cdea3598871438befd49064626b631afe500713baa46f739fe6231",
+      "nameKey": "Item_MPMultipleCast_Name",
+      "name": "乔洛的浇水壶"
+    },
+    "snow_mountain_big_eared_bat": {
+      "sourceHash": "971a5361f1d85df36a09a0b269e6a0103c867f9f4ac79a4e98126bb9513a4fe3",
+      "nameKey": "Item_IceBat_Name",
+      "name": "雪山大耳蝙蝠"
+    },
+    "plasma_helmet": {
+      "sourceHash": "c1b96caa2c547c4c0f22431c78709a6919d24587964e2638c9629c1f9d3c0fdf",
+      "nameKey": "Item_PlasmaActive_Name",
+      "name": "等离子头盔"
+    },
+    "red_planet_observation_log": {
+      "sourceHash": "e40970712930ce7e1370bb72777fb158e8e56b5dc5fd774ca0cbf743f1038b31",
+      "nameKey": "Item_FlamePlanet_Name",
+      "name": "红色行星观察日志"
+    },
+    "water_spirit": {
+      "sourceHash": "f9a599c578ea3115e8cb071894a269405f72593dce522db3dcf24c02d5aa98b3",
+      "nameKey": "Item_LakeSpirit_Name",
+      "name": "水之精灵"
+    },
+    "frost_guillotine": {
+      "sourceHash": "2534c0a0d142704d0b08573091c856d51cbc4be1c4834a2d28c00d9b620af7d1",
+      "nameKey": "Item_Guillotine_Name",
+      "name": "酷寒断头台"
+    },
+    "archive_sun": {
+      "sourceHash": "37cae85c595aa34891f84a9d7d1722ecf07e24d8e95ae7b8d25cf51202ead5f3",
+      "nameKey": "Item_FlameSwordMagic_Name",
+      "name": "书库之阳"
+    },
+    "yakumo_kodachi": {
+      "sourceHash": "4a1324563fcc9765fc7e664ff7a7414fb3bc4355b1004634386962121fee3856",
+      "nameKey": "Item_DashSword_Name",
+      "name": "小太刀八云"
+    },
+    "angry_potato": {
+      "sourceHash": "171c65814c4a723043b8886c2cb0676890ad5e24466f57b7fbb96f9fec65ea35",
+      "nameKey": "Item_AngryPotato_Name",
+      "name": "生气的土豆"
+    },
+    "wanderer_blessing": {
+      "sourceHash": "3daf092414d85c311398605b8269942d8792b2bc3320a1d9adb924ca70a6fe6a",
+      "nameKey": "Item_BlessOfSage_Name",
+      "name": "旅人的祝福"
+    },
+    "alchemist_flask": {
+      "sourceHash": "de812baf8d9285e71f6e796a9d0c7d9fe05de0a598c9ee0a9d6c1e601c080f74",
+      "nameKey": "Item_AlchemyFlask_Name",
+      "name": "炼金术士的烧瓶"
+    },
+    "courage_amulet": {
+      "sourceHash": "7da9f5990adf01686f436e17f3e2f6feb0456115114dcc275e58d84e918690f4",
+      "nameKey": "Item_RedAmulet_Name",
+      "name": "勇气护身符"
+    },
+    "whirlwind_stone": {
+      "sourceHash": "e8f48f62ad7eb67fd6f2cdcda293f0e0f20ecd73843392aa2bca2f682073cef8",
+      "nameKey": "Item_HighSpeed_Name",
+      "name": "旋风石"
+    },
+    "toxic_spore_pouch": {
+      "sourceHash": "bc30fc003844e88fe15b68d11f4b31bb8874eca2ec095579db28474d10c0d020",
+      "nameKey": "Item_VenomSporePouch_Name",
+      "name": "剧毒孢子袋"
+    },
+    "topaz_badge": {
+      "sourceHash": "c8b87b32656b4dee22f432803b5350af8b0e13ce1e62255fc0962debd4bc36d3",
+      "nameKey": "Item_KeyMagitech_Name",
+      "name": "黄玉徽章"
+    },
+    "garnet_badge": {
+      "sourceHash": "35ce84fc004beaf7082a1bdf22247c4e9613da8fa155c0c4add371aacdf230d4",
+      "nameKey": "Item_KeyEmber_Name",
+      "name": "石榴石徽章"
+    },
+    "diamond_badge": {
+      "sourceHash": "1529cc594c791afbb7ca23df9f23ff14c71e153a108fdfe4a8fb3f78874ce9fb",
+      "nameKey": "Item_KeyGlacier_Name",
+      "name": "钻石徽章"
+    },
+    "red_mushroom": {
+      "sourceHash": "82205b029eae32296396a81579bbb5cd3187a34cc94b3d43a8b77428692484be",
+      "nameKey": "Item_DebuffAttackSpeed_Name",
+      "name": "红蘑菇"
+    },
+    "tome_of_transmutation_lightning": {
+      "sourceHash": "637256fb3e61239ed3e88acf2fc0a14c8258108e29dcafbf4a9c0cfc4fc9bf7d",
+      "nameKey": "Item_PhysicalToLightning_Name",
+      "name": "转换之书·雷电"
+    },
+    "tome_of_transmutation_ice": {
+      "sourceHash": "e1a3df1eafe3160fe9418b3a5a1ab54ed8d2076934b3c0d456d230a42c47573c",
+      "nameKey": "Item_PhysicalToIce_Name",
+      "name": "转换之书·冰"
+    },
+    "tome_of_transmutation_fire": {
+      "sourceHash": "5fe6bb878fab2d8d5f7dc3d24766dbb21da865d14d0c02287d61caa3a68934da",
+      "nameKey": "Item_PhysicalToFire_Name",
+      "name": "转换之书·火"
+    },
+    "bento": {
+      "sourceHash": "6e2271e0c5ea56cb94a8b50073c818b886acb289dd2c46dfb20f86b76dc7fa43",
+      "nameKey": "Item_KongdolLunchbox_Name",
+      "name": "便当盒"
+    },
+    "cursed_letter": {
+      "sourceHash": "88e459d0cda8b53a81c5edb9682bc128047c4e7761b13000da329e9e05721b03",
+      "nameKey": "Item_MiniThorns_Name",
+      "name": "被诅咒的信"
+    }
+  }
+}
