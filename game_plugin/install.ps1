@@ -15,7 +15,7 @@ $runningGame = Get-Process -Name 'Sephiria' -ErrorAction SilentlyContinue | Wher
     try { $_.Path -eq $gameExe } catch { $false }
 }
 if ($runningGame) {
-    throw 'Close Sephiria before installing the inventory bridge.'
+    Write-Warning 'Sephiria is running. The plugin will be updated now, but the game must be restarted before the new version takes effect.'
 }
 $pluginSource = Join-Path $scriptDir 'SephiriaInventoryBridge.dll'
 if (-not (Test-Path -LiteralPath $pluginSource -PathType Leaf)) {
@@ -56,4 +56,8 @@ New-Item -ItemType Directory -Force -Path $pluginDir | Out-Null
 Copy-Item -LiteralPath $pluginSource `
     -Destination (Join-Path $pluginDir 'SephiriaInventoryBridge.dll') -Force
 Write-Output "Installed the inventory read/apply bridge under: $GameDir"
-Write-Output 'Start Sephiria, enter a run, then click Read Game in the solver.'
+if ($runningGame) {
+    Write-Output 'Restart Sephiria, enter a run, then click Read Game in the solver.'
+} else {
+    Write-Output 'Start Sephiria, enter a run, then click Read Game in the solver.'
+}
