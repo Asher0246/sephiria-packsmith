@@ -213,10 +213,19 @@ def _candidate_behavior(candidate: Candidate) -> tuple:
     )
 
 
-def _deduplicate_candidates(candidates: tuple[Candidate, ...]) -> tuple[Candidate, ...]:
+def _deduplicate_candidates(
+    candidates: tuple[Candidate, ...], preferred_rotation: int | None = None,
+) -> tuple[Candidate, ...]:
     unique: dict[tuple, Candidate] = {}
     for candidate in candidates:
-        unique.setdefault(_candidate_behavior(candidate), candidate)
+        key = _candidate_behavior(candidate)
+        current = unique.get(key)
+        if current is None or (
+            preferred_rotation is not None
+            and candidate.rotation == preferred_rotation
+            and current.rotation != preferred_rotation
+        ):
+            unique[key] = candidate
     return tuple(unique.values())
 
 
@@ -449,7 +458,7 @@ def solve(
                                  if candidate.rotation == instance.fixed_rotation)
         raw_candidate_count += len(possible)
         if instance.fixed_rotation is None:
-            possible = _deduplicate_candidates(possible)
+            possible = _deduplicate_candidates(possible, instance.preferred_rotation)
         if not possible:
             return _empty_result("INFEASIBLE", "石板固定约束没有合法位置", started)
         candidates.append(possible)
@@ -486,10 +495,10 @@ def solve(
     for t, possible in enumerate(candidates):
         model.add(sum(y[t, k] for k in range(len(possible))) == 1)
 
-    tablet_groups: dict[str, list[int]] = {}
+    tablet_groups: dict[tuple[str, int | None], list[int]] = {}
     for t, item in enumerate(request.tablets):
         if item.fixed_cell is None and item.fixed_rotation is None:
-            tablet_groups.setdefault(item.type_id, []).append(t)
+            tablet_groups.setdefault((item.type_id, item.preferred_rotation), []).append(t)
     for indices in tablet_groups.values():
         for left, right in zip(indices, indices[1:]):
             model.add(

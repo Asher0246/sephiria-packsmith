@@ -7,6 +7,7 @@ from ctypes import wintypes
 
 import pytest
 
+from app.custom_tablets import parse_custom_tablet_types
 from app.game_bridge import (
     PIPE_PATH,
     GameApplyError,
@@ -16,6 +17,8 @@ from app.game_bridge import (
     read_game_inventory,
     translate_snapshot,
 )
+from app.models import ArtifactType, parse_request
+from app.solver import solve
 
 
 def snapshot():
@@ -47,7 +50,7 @@ def test_translate_game_snapshot_to_solver_items():
     }]
     assert result["tablets"] == [{
         "instanceId": "game-t-202", "typeId": "tablet-chivalry",
-        "fixedCell": None, "fixedRotation": None,
+        "fixedCell": None, "fixedRotation": None, "preferredRotation": 1,
     }]
     assert result["unmapped"] == []
 
@@ -204,6 +207,87 @@ def test_translate_custom_tablet_uses_compiled_game_rules():
     ]]
     assert result["tablets"][0]["typeId"] == custom["id"]
     assert result["unmapped"] == []
+
+
+def test_known_tablet_uses_live_game_rotation_rules():
+    value = snapshot()
+    value["version"] = 2
+    value["cellCount"] = 6
+    value["tablets"][0].update({
+        "x": 0,
+        "y": 0,
+        "rotatable": True,
+        "queryRotations": ["RIGHT 1", "DOWN 1", "LEFT 1", "UP 1"],
+        "conditionRotations": ["", "", "", ""],
+        "customCandidates": [
+            [0, 0, [[1, "1"]], []],
+            [0, 1, [[6 - 1, "1"]], []],
+            [0, 2, [], []],
+            [0, 3, [], []],
+        ],
+    })
+
+    result = translate_snapshot(value)
+    live_type = result["customTabletTypes"][0]
+
+    assert live_type["baseTypeId"] == "tablet-chivalry"
+    assert live_type["candidates"][0][:3] == [0, 0, [[1, 1]]]
+    assert result["tablets"] == [{
+        "instanceId": "game-t-202",
+        "typeId": live_type["id"],
+        "fixedCell": None,
+        "fixedRotation": None,
+        "preferredRotation": 1,
+        "runtimeRule": {
+            "queryRotations": ["RIGHT 1", "DOWN 1", "LEFT 1", "UP 1"],
+            "conditionRotations": ["", "", "", ""],
+        },
+    }]
+    assert result["unmapped"] == []
+
+
+def test_live_rotation_rule_flows_from_snapshot_through_apply_command():
+    value = snapshot()
+    value["version"] = 2
+    value["cellCount"] = 6
+    value["inventoryFingerprint"] = "f" * 64
+    value["tablets"][0].update({
+        "x": 0,
+        "y": 0,
+        "rotatable": True,
+        "queryRotations": ["RIGHT 1", "TARGET 1", "", ""],
+        "conditionRotations": ["", "", "", ""],
+        "customCandidates": [
+            [0, 0, [[1, "1"]], []],
+            [0, 1, [[5, "1"]], []],
+            [0, 2, [], []],
+            [0, 3, [], []],
+        ],
+    })
+    inventory = translate_snapshot(value)
+    inventory["artifacts"][0]["baseLevel"] = 0
+    inventory["artifacts"][0]["fixedCell"] = 5
+    inventory["tablets"][0]["fixedCell"] = 0
+    payload = {
+        "grid": inventory["grid"],
+        "artifacts": inventory["artifacts"],
+        "tablets": inventory["tablets"],
+        "customTabletTypes": inventory["customTabletTypes"],
+        "options": {"timeLimitMs": 3000},
+    }
+    artifact_id = inventory["artifacts"][0]["typeId"]
+    artifact = ArtifactType(artifact_id, "目标", cap=3, rarity=0)
+    tablets = parse_custom_tablet_types(payload)
+    request = parse_request(payload, {artifact_id}, set(tablets))
+
+    result = solve(request, {artifact_id: artifact}, tablets)
+    command = prepare_apply_command(inventory["source"], result)
+    tablet_placement = next(item for item in result["placements"] if item["kind"] == "tablet")
+    tablet_command = next(item for item in command["placements"] if item["kind"] == "tablet")
+
+    assert result["solutionStatus"] == "OPTIMAL"
+    assert tablet_placement["rotation"] == 1
+    assert tablet_command["rotation"] == 1
 
 
 @pytest.mark.parametrize("mutator", [

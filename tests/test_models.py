@@ -11,7 +11,7 @@ def valid_payload():
     return {
         "grid": {"cellCount": 11},
         "artifacts": [{"instanceId": "a1", "typeId": "artifact-a", "weight": 5, "baseLevel": 1, "minLevel": 2, "exactLevel": 3, "fixedCell": 1}],
-        "tablets": [{"instanceId": "t1", "typeId": "tablet-t", "fixedCell": 4, "fixedRotation": 2}],
+        "tablets": [{"instanceId": "t1", "typeId": "tablet-t", "fixedCell": 4, "fixedRotation": 2, "preferredRotation": 3}],
         "options": {"timeLimitMs": 3000, "workerCount": 16},
     }
 
@@ -26,6 +26,7 @@ def test_parse_full_constraint_request():
     assert request.artifacts[0].weight == 5
     assert request.artifacts[0].base_level == 1
     assert request.tablets[0].fixed_rotation == 2
+    assert request.tablets[0].preferred_rotation == 3
 
 
 def test_artifact_weight_defaults_to_five():
@@ -87,6 +88,8 @@ def test_gold_needle_special_target_must_be_another_artifact(target):
     lambda p: p["artifacts"][0].update(fixedCell=99),
     lambda p: p["tablets"][0].update(typeId="missing"),
     lambda p: p["tablets"][0].update(instanceId="a1"),
+    lambda p: p["tablets"][0].update(preferredRotation=4),
+    lambda p: p["tablets"][0].update(preferredRotation=True),
 ])
 def test_request_validation_is_strict(mutator):
     payload = valid_payload()

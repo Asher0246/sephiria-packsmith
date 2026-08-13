@@ -63,6 +63,27 @@ def test_unfixed_rotation_deduplicates_behaviorally_identical_candidates():
     assert result["diagnostics"]["tabletCandidates"] < 36
 
 
+def test_candidate_deduplication_keeps_preferred_game_rotation():
+    symmetric = TabletType(
+        "tablet-preferred-rotation", "方向保持", "rare", True, None, None,
+        candidates={"1x1": (
+            (0, 0, (), ()), (0, 1, (), ()),
+            (0, 2, (), ()), (0, 3, (), ()),
+        )},
+    )
+    request = SolveRequest(
+        1, 1, (),
+        (TabletInstance("t1", symmetric.id, preferred_rotation=3),),
+        1000,
+    )
+
+    result = solve(request, {}, {symmetric.id: symmetric})
+
+    assert result["solutionStatus"] == "OPTIMAL"
+    assert result["diagnostics"]["tabletCandidates"] == 1
+    assert result["placements"][0]["rotation"] == 3
+
+
 def test_interchangeable_tablets_remain_valid_after_symmetry_breaking():
     tablet = TabletType("tablet-pair", "重复石板", "common", False, None, None, ((1, 1),))
     request = SolveRequest(

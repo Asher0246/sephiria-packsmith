@@ -80,6 +80,7 @@ class TabletInstance:
     type_id: str
     fixed_cell: int | None = None
     fixed_rotation: int | None = None
+    preferred_rotation: int | None = None
 
 
 @dataclass(frozen=True)
@@ -202,6 +203,10 @@ def parse_request(payload: Any, artifact_ids: set[str], tablet_ids: set[str]) ->
             type_id=type_id,
             fixed_cell=_optional_cell(raw.get("fixedCell"), f"tablets[{index}].fixedCell", cell_count),
             fixed_rotation=rotation,
+            preferred_rotation=(
+                _integer(raw.get("preferredRotation"), f"tablets[{index}].preferredRotation", 0, 3)
+                if raw.get("preferredRotation") is not None else None
+            ),
         ))
 
     options = payload.get("options", {})

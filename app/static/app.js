@@ -323,7 +323,7 @@ function requestPayload() {
   const payload = {
     grid: { cellCount: gridCellCount() },
     artifacts: state.items.filter((i) => i.kind === "artifact").map((i) => ({ instanceId: i.instanceId, typeId: i.typeId, weight: i.weight, baseLevel: i.baseLevel ?? 0, minLevel: i.minLevel, exactLevel: i.exactLevel, fixedCell: i.fixedCell, specialPriority: Boolean(i.specialPriority), specialTargetInstanceId: i.specialTargetInstanceId || null })),
-    tablets: state.items.filter((i) => i.kind === "tablet").map((i) => ({ instanceId: i.instanceId, typeId: i.typeId, fixedCell: i.fixedCell, fixedRotation: i.fixedRotation })),
+    tablets: state.items.filter((i) => i.kind === "tablet").map((i) => ({ instanceId: i.instanceId, typeId: i.typeId, fixedCell: i.fixedCell, fixedRotation: i.fixedRotation, preferredRotation: i.preferredRotation ?? null })),
     customTabletTypes: state.customTabletTypes.filter((type) => customIds.has(type.id)),
     options: { timeLimitMs: Number($("timeLimit").value), workerCount: Number($("workerCount").value) },
   };

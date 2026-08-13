@@ -115,7 +115,9 @@ def _metadata_pairs(raw: Any, cell_count: int, label: str) -> list[tuple[int, st
     return result
 
 
-def _translate_custom_tablet(raw: dict, cell_count: int) -> dict:
+def _translate_custom_tablet(
+    raw: dict, cell_count: int, base_type_id: str | None = None,
+) -> dict:
     query_rotations = raw.get("queryRotations")
     condition_rotations = raw.get("conditionRotations")
     if not isinstance(query_rotations, list) or len(query_rotations) not in (1, 4):
@@ -168,13 +170,13 @@ def _translate_custom_tablet(raw: dict, cell_count: int) -> dict:
             sorted([target, value] for target, value in multipliers.items()), conditions,
         ])
     signature = json.dumps(
-        [rotatable, query_rotations, condition_rotations],
+        [base_type_id, rotatable, query_rotations, condition_rotations, candidates],
         ensure_ascii=False, separators=(",", ":"),
     )
     type_id = "custom-tablet-" + hashlib.sha256(signature.encode("utf-8")).hexdigest()[:24]
     raw_name = str(raw.get("name") or "").strip()
     name = raw_name or "自定义石板"
-    return {
+    result = {
         "id": type_id,
         "name": name[:40],
         "tier": "custom",
@@ -187,6 +189,15 @@ def _translate_custom_tablet(raw: dict, cell_count: int) -> dict:
         "conditionRotations": [str(value) for value in condition_rotations],
         "candidates": candidates,
     }
+    if base_type_id:
+        from .catalog import tablet_types
+        base = next((item for item in tablet_types() if item.id == base_type_id), None)
+        if base is not None:
+            result.update({
+                "name": base.name, "tier": base.tier, "image": base.image,
+                "baseTypeId": base.id,
+            })
+    return result
 def translate_snapshot(snapshot: Any) -> dict:
     if not isinstance(snapshot, dict) or snapshot.get("version") not in (1, 2):
         raise GameBridgeError("游戏背包桥接数据版本不受支持")
@@ -223,20 +234,28 @@ def translate_snapshot(snapshot: Any) -> dict:
             if not isinstance(raw, dict):
                 continue
             custom_type = None
-            if kind == "tablet" and raw.get("isCustom"):
+            resolved_type_id = _resolve_type(kind, raw)
+            if kind == "tablet" and raw.get("customCandidates") is not None:
                 try:
-                    custom_type = _translate_custom_tablet(raw, cell_count)
+                    custom_type = _translate_custom_tablet(
+                        raw, cell_count,
+                        None if raw.get("isCustom") else resolved_type_id,
+                    )
                 except (TypeError, ValueError) as exc:
-                    result["unmapped"].append({
-                        "kind": kind, "entityId": raw.get("entityId"),
-                        "name": raw.get("name") or "", "reason": str(exc),
-                    })
-                    continue
-                type_id = custom_type["id"]
-                if all(item["id"] != type_id for item in result["customTabletTypes"]):
-                    result["customTabletTypes"].append(custom_type)
+                    if raw.get("isCustom") or not resolved_type_id:
+                        result["unmapped"].append({
+                            "kind": kind, "entityId": raw.get("entityId"),
+                            "name": raw.get("name") or "", "reason": str(exc),
+                        })
+                        continue
+                if custom_type is not None:
+                    type_id = custom_type["id"]
+                    if all(item["id"] != type_id for item in result["customTabletTypes"]):
+                        result["customTabletTypes"].append(custom_type)
+                else:
+                    type_id = resolved_type_id
             else:
-                type_id = _resolve_type(kind, raw)
+                type_id = resolved_type_id
                 if not type_id and kind == "tablet":
                     try:
                         custom_type = _translate_custom_tablet(raw, cell_count)
@@ -280,6 +299,7 @@ def translate_snapshot(snapshot: Any) -> dict:
                 translated = {
                     "instanceId": instance_id, "typeId": type_id,
                     "fixedCell": None, "fixedRotation": None,
+                    "preferredRotation": source_item["rotation"],
                 }
                 query_rotations = raw.get("queryRotations")
                 condition_rotations = raw.get("conditionRotations")
