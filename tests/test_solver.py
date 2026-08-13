@@ -49,6 +49,39 @@ def test_symmetric_tablet_keeps_explicit_rotation_values():
     assert result["placements"][0]["rotation"] == 2
 
 
+def test_unfixed_rotation_deduplicates_behaviorally_identical_candidates():
+    symmetric = TabletType(
+        "tablet-symmetric-dedup", "对称去重", "rare", True, None, None,
+        ((-1, 1), (1, 1)),
+    )
+    request = SolveRequest(3, 3, (), (TabletInstance("t1", symmetric.id),), 1000)
+
+    result = solve(request, {}, {symmetric.id: symmetric})
+
+    assert result["solutionStatus"] == "OPTIMAL"
+    assert result["diagnostics"]["rawTabletCandidates"] == 36
+    assert result["diagnostics"]["tabletCandidates"] < 36
+
+
+def test_interchangeable_tablets_remain_valid_after_symmetry_breaking():
+    tablet = TabletType("tablet-pair", "重复石板", "common", False, None, None, ((1, 1),))
+    request = SolveRequest(
+        1, 4,
+        (ArtifactInstance("a1", ARTIFACT.id),),
+        (TabletInstance("left", tablet.id), TabletInstance("right", tablet.id)),
+        1000,
+    )
+
+    result = solve(request, {ARTIFACT.id: ARTIFACT}, {tablet.id: tablet})
+    tablet_cells = [
+        item["cell"] for item in result["placements"] if item["kind"] == "tablet"
+    ]
+
+    assert result["solutionStatus"] == "OPTIMAL"
+    assert tablet_cells == sorted(tablet_cells)
+    assert validate_result(request, {ARTIFACT.id: ARTIFACT}, {tablet.id: tablet}, result) == []
+
+
 def test_curse_tablet_uses_game_checkerboard_range_on_partial_last_row():
     curse = TabletType(
         "tablet-curse", "诅咒", "special", True, None, None,
@@ -248,6 +281,55 @@ def test_weighted_objective_prioritizes_requested_artifact():
     assert details["high"]["level"] == 1
     assert details["low"]["level"] == 0
     assert result["primaryObjective"] == 10
+
+
+def test_combined_level_objective_keeps_primary_strictly_ahead_of_secondary():
+    bonus = TabletType(
+        "tablet-level-choice", "等级选择", "common", False, None, None,
+        candidates={"1x4": (
+            (0, 0, ((1, 1),), ()),
+            (0, 1, ((2, 1), (3, 1)), ()),
+        )},
+    )
+    valuable = ArtifactType("artifact-valuable", "高权重", cap=1, rarity=0)
+    filler = ArtifactType("artifact-filler", "低权重", cap=1, rarity=0)
+    request = SolveRequest(
+        1, 4,
+        (
+            ArtifactInstance("valuable", valuable.id, weight=10, fixed_cell=1),
+            ArtifactInstance("filler-1", filler.id, weight=1, fixed_cell=2),
+            ArtifactInstance("filler-2", filler.id, weight=1, fixed_cell=3),
+        ),
+        (TabletInstance("bonus", bonus.id, fixed_cell=0),),
+        3000,
+    )
+
+    result = solve(request, {valuable.id: valuable, filler.id: filler}, {bonus.id: bonus})
+    details = {item["instanceId"]: item for item in result["artifacts"]}
+
+    assert result["solutionStatus"] == "OPTIMAL"
+    assert result["primaryObjective"] == 10
+    assert details["valuable"]["level"] == 1
+
+
+def test_artifacts_with_the_same_base_level_and_cap_share_level_transforms():
+    first = ArtifactType("artifact-shared-a", "共享 A", cap=3, rarity=0)
+    second = ArtifactType("artifact-shared-b", "共享 B", cap=3, rarity=0)
+    request = SolveRequest(
+        1, 2,
+        (
+            ArtifactInstance("a1", first.id, base_level=1),
+            ArtifactInstance("a2", second.id, base_level=1),
+        ),
+        (),
+        1000,
+    )
+
+    result = solve(request, {first.id: first, second.id: second}, {})
+
+    assert result["solutionStatus"] == "OPTIMAL"
+    assert result["diagnostics"]["levelTransformGroups"] == 1
+    assert result["diagnostics"]["optimizationPhases"] <= 2
 
 
 def test_tertiary_objective_avoids_negative_artifact_and_wasted_positive_effects():

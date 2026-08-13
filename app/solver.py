@@ -202,6 +202,24 @@ def build_candidates_cached(
     return built
 
 
+def _candidate_behavior(candidate: Candidate) -> tuple:
+    return (
+        candidate.cell,
+        tuple(sorted(candidate.effects.items())),
+        tuple(sorted(candidate.unlocks)),
+        tuple(sorted(candidate.disables)),
+        tuple(sorted(candidate.multipliers.items())),
+        tuple(sorted(candidate.conditions)),
+    )
+
+
+def _deduplicate_candidates(candidates: tuple[Candidate, ...]) -> tuple[Candidate, ...]:
+    unique: dict[tuple, Candidate] = {}
+    for candidate in candidates:
+        unique.setdefault(_candidate_behavior(candidate), candidate)
+    return tuple(unique.values())
+
+
 def _bool_or(model: cp_model.CpModel, values: list, name: str):
     if not values:
         return model.new_constant(0)
@@ -417,6 +435,7 @@ def solve(
     artifact_types = [artifacts_by_id[item.type_id] for item in request.artifacts]
     tablet_types = [tablets_by_id[item.type_id] for item in request.tablets]
     candidates: list[tuple[Candidate, ...]] = []
+    raw_candidate_count = 0
     for instance, tablet in zip(request.tablets, tablet_types):
         possible = build_candidates_cached(tablet, request.rows, request.cols, request.cell_count)
         possible = tuple(candidate for candidate in possible
@@ -428,6 +447,9 @@ def solve(
             else:
                 possible = tuple(candidate for candidate in possible
                                  if candidate.rotation == instance.fixed_rotation)
+        raw_candidate_count += len(possible)
+        if instance.fixed_rotation is None:
+            possible = _deduplicate_candidates(possible)
         if not possible:
             return _empty_result("INFEASIBLE", "石板固定约束没有合法位置", started)
         candidates.append(possible)
@@ -464,12 +486,28 @@ def solve(
     for t, possible in enumerate(candidates):
         model.add(sum(y[t, k] for k in range(len(possible))) == 1)
 
+    tablet_groups: dict[str, list[int]] = {}
+    for t, item in enumerate(request.tablets):
+        if item.fixed_cell is None and item.fixed_rotation is None:
+            tablet_groups.setdefault(item.type_id, []).append(t)
+    for indices in tablet_groups.values():
+        for left, right in zip(indices, indices[1:]):
+            model.add(
+                sum(candidate.cell * y[left, k]
+                    for k, candidate in enumerate(candidates[left]))
+                <= sum(candidate.cell * y[right, k]
+                       for k, candidate in enumerate(candidates[right]))
+            )
+
     occupied = []
     artifact_occupied = []
+    tablet_anchors = [[] for _ in cells]
+    for t, possible in enumerate(candidates):
+        for k, candidate in enumerate(possible):
+            tablet_anchors[candidate.cell].append(y[t, k])
     for c in cells:
         artifact_sum = sum(x[a, c] for a in range(len(request.artifacts)))
-        tablet_sum = sum(y[t, k] for t, possible in enumerate(candidates)
-                         for k, candidate in enumerate(possible) if candidate.cell == c)
+        tablet_sum = sum(tablet_anchors[c])
         model.add(artifact_sum + tablet_sum <= 1)
         a_occ = model.new_bool_var(f"artifact_occ_{c}")
         model.add(a_occ == artifact_sum)
@@ -527,6 +565,34 @@ def solve(
              for k, candidate in enumerate(possible)},
         )
 
+    effect_terms = [[] for _ in cells]
+    effect_bounds = [[0, 0] for _ in cells]
+    unlock_terms_by_cell = [[] for _ in cells]
+    disable_terms_by_cell = [[] for _ in cells]
+    multiplier_terms_by_cell = [[] for _ in cells]
+    multiplier_highs = [0 for _ in cells]
+    for t, possible in enumerate(candidates):
+        per_cell_values: dict[int, list[int]] = {}
+        per_cell_multipliers: dict[int, list[int]] = {}
+        for k, candidate in enumerate(possible):
+            applied = candidate_applied[t, k]
+            for cell, value in candidate.effects.items():
+                per_cell_values.setdefault(cell, []).append(value)
+                if t not in checkerboard_aggregates:
+                    effect_terms[cell].append(value * applied)
+            for cell in candidate.unlocks:
+                unlock_terms_by_cell[cell].append(applied)
+            for cell in candidate.disables:
+                disable_terms_by_cell[cell].append(applied)
+            for cell, value in candidate.multipliers.items():
+                per_cell_multipliers.setdefault(cell, []).append(value)
+                multiplier_terms_by_cell[cell].append(value * applied)
+        for cell, values in per_cell_values.items():
+            effect_bounds[cell][0] += min(0, *values)
+            effect_bounds[cell][1] += max(0, *values)
+        for cell, values in per_cell_multipliers.items():
+            multiplier_highs[cell] += max(values)
+
     raw_bounds: list[tuple[int, int]] = []
     raw_bonus = []
     unlocked = []
@@ -534,51 +600,28 @@ def solve(
     multiplier_sums = []
     multiplier_factors = []
     for c in cells:
-        terms = []
-        low = high = 0
-        unlock_terms = []
-        disable_terms = []
-        multiplier_terms = []
-        multiplier_high = 0
-        for t, possible in enumerate(candidates):
-            values = [candidate.effects.get(c, 0) for candidate in possible]
-            low += min([0, *values])
-            high += max([0, *values])
-            aggregate = checkerboard_aggregates.get(t)
-            if aggregate is not None:
-                (same_value, opposite_value, even_applied,
-                 odd_applied, applied_by_cell) = aggregate
-                target_even = (c // request.cols + c % request.cols) % 2 == 0
-                same_applied = even_applied if target_even else odd_applied
-                opposite_applied = odd_applied if target_even else even_applied
-                terms.append(same_value * same_applied)
-                terms.append(opposite_value * opposite_applied)
-                if c in applied_by_cell:
-                    terms.append(-same_value * applied_by_cell[c])
-                continue
-            for k, candidate in enumerate(possible):
-                applied = candidate_applied[t, k]
-                value = candidate.effects.get(c, 0)
-                if value:
-                    terms.append(value * applied)
-                if c in candidate.unlocks:
-                    unlock_terms.append(applied)
-                if c in candidate.disables:
-                    disable_terms.append(applied)
-                multiplier = candidate.multipliers.get(c, 0)
-                if multiplier:
-                    multiplier_terms.append(multiplier * applied)
-                    multiplier_high += multiplier
+        terms = effect_terms[c]
+        low, high = effect_bounds[c]
+        for aggregate in checkerboard_aggregates.values():
+            (same_value, opposite_value, even_applied,
+             odd_applied, applied_by_cell) = aggregate
+            target_even = (c // request.cols + c % request.cols) % 2 == 0
+            same_applied = even_applied if target_even else odd_applied
+            opposite_applied = odd_applied if target_even else even_applied
+            terms.append(same_value * same_applied)
+            terms.append(opposite_value * opposite_applied)
+            if c in applied_by_cell:
+                terms.append(-same_value * applied_by_cell[c])
         raw = model.new_int_var(low, high, f"raw_{c}")
         model.add(raw == sum(terms))
         raw_bonus.append(raw)
         raw_bounds.append((low, high))
-        unlocked.append(_bool_or(model, unlock_terms, f"unlocked_{c}"))
-        disabled.append(_bool_or(model, disable_terms, f"disabled_{c}"))
-        multiplier_sum = model.new_int_var(0, multiplier_high, f"multiplier_sum_{c}")
-        model.add(multiplier_sum == sum(multiplier_terms))
+        unlocked.append(_bool_or(model, unlock_terms_by_cell[c], f"unlocked_{c}"))
+        disabled.append(_bool_or(model, disable_terms_by_cell[c], f"disabled_{c}"))
+        multiplier_sum = model.new_int_var(0, multiplier_highs[c], f"multiplier_sum_{c}")
+        model.add(multiplier_sum == sum(multiplier_terms_by_cell[c]))
         multiplier_sums.append(multiplier_sum)
-        multiplier_factor = model.new_int_var(1, max(1, multiplier_high), f"multiplier_factor_{c}")
+        multiplier_factor = model.new_int_var(1, max(1, multiplier_highs[c]), f"multiplier_factor_{c}")
         model.add_max_equality(multiplier_factor, [multiplier_sum, 1])
         multiplier_factors.append(multiplier_factor)
 
@@ -618,7 +661,11 @@ def solve(
     active = []
     score_levels = []
     weighted_contributions = []
-    for a, (item, artifact) in enumerate(zip(request.artifacts, artifact_types)):
+    level_transforms: dict[tuple[int, int], tuple[list, int]] = {}
+    for item, artifact in zip(request.artifacts, artifact_types):
+        key = (item.base_level, artifact.cap)
+        if key in level_transforms:
+            continue
         cell_levels = []
         cell_level_bounds = []
         for c in cells:
@@ -627,16 +674,22 @@ def solve(
             pre_low, pre_high = item.base_level + low, item.base_level + high
             product_low = min(pre_low, pre_low * factor_high, pre_high, pre_high * factor_high)
             product_high = max(pre_low, pre_low * factor_high, pre_high, pre_high * factor_high)
-            pre_level = model.new_int_var(pre_low, pre_high, f"pre_level_{a}_{c}")
+            pre_level = model.new_int_var(pre_low, pre_high, f"pre_level_{len(level_transforms)}_{c}")
             model.add(pre_level == raw_bonus[c] + item.base_level)
-            multiplied = model.new_int_var(product_low, product_high, f"multiplied_level_{a}_{c}")
+            multiplied = model.new_int_var(
+                product_low, product_high, f"multiplied_level_{len(level_transforms)}_{c}",
+            )
             model.add_multiplication_equality(multiplied, [pre_level, multiplier_factors[c]])
             capped_low = min(product_low, artifact.cap)
-            capped = model.new_int_var(capped_low, artifact.cap, f"capped_{a}_{c}")
+            capped = model.new_int_var(capped_low, artifact.cap, f"capped_{len(level_transforms)}_{c}")
             model.add_min_equality(capped, [multiplied, artifact.cap])
             cell_levels.append(capped)
             cell_level_bounds.append(capped_low)
-        level = model.new_int_var(min(cell_level_bounds), artifact.cap, f"level_{a}")
+        level_transforms[key] = (cell_levels, min(cell_level_bounds))
+
+    for a, (item, artifact) in enumerate(zip(request.artifacts, artifact_types)):
+        cell_levels, level_low = level_transforms[item.base_level, artifact.cap]
+        level = model.new_int_var(level_low, artifact.cap, f"level_{a}")
         for c in cells:
             model.add(level == cell_levels[c]).only_enforce_if(x[a, c])
         if item.min_level is not None:
@@ -708,10 +761,32 @@ def solve(
         model.add(empty_level == 0).only_enforce_if(occupied[c])
         empty_cell_levels.append(empty_level)
     empty_cell_score = sum(empty_cell_levels)
-    model.maximize(primary)
+    # Each scale exceeds the full range of every lower-priority objective, so
+    # these weighted sums are exactly equivalent to the original lexicographic order.
+    secondary_upper = sum(artifact.cap for artifact in artifact_types)
+    level_scale = secondary_upper + 1
+    level_objective = primary * level_scale + secondary
+
+    tertiary_upper = sum(
+        max(0, -low) + max(0, high) + 1 + multiplier_highs[c]
+        for c, (low, high) in enumerate(raw_bounds)
+    )
+    empty_lower = sum(min(0, low) for low, _ in raw_bounds)
+    empty_upper = sum(max(0, high) for _, high in raw_bounds)
+    empty_span = empty_upper - empty_lower
+    empty_scale = empty_span + 1
+    special_scale = (tertiary_upper + 1) * empty_scale
+    refinement_objective = (
+        special * special_scale
+        + (tertiary_upper - tertiary) * empty_scale
+        + (empty_cell_score - empty_lower)
+    )
+
+    model.maximize(level_objective)
     built = time.perf_counter()
+    deadline = built + request.time_limit_ms / 1000
     solver = cp_model.CpSolver()
-    solver.parameters.max_time_in_seconds = request.time_limit_ms / 1000
+    solver.parameters.max_time_in_seconds = max(0.001, deadline - time.perf_counter())
     if request.worker_count:
         solver.parameters.num_search_workers = request.worker_count
     solver.parameters.random_seed = 1
@@ -724,70 +799,51 @@ def solve(
         return _empty_result("STOPPED" if controller.stopped else status_name,
                              "求解已停止" if controller.stopped else "没有满足全部约束的排布", started, built)
 
-    primary_value = round(solver.objective_value)
-    # CP-SAT exposes a floating-point upper bound for this integer maximization.
-    # Rounding upward preserves a valid bound even in the presence of tiny numeric drift.
-    primary_bound = math.ceil(solver.best_objective_bound - 1e-6)
+    primary_value = solver.value(primary)
+    combined_bound = math.ceil(solver.best_objective_bound - 1e-6)
+    primary_bound = combined_bound // level_scale
     best_solver = solver
-    secondary_status = "NOT_RUN"
+    secondary_status = "OPTIMAL" if phase1_status == cp_model.OPTIMAL else "NOT_RUN"
     special_status = "NOT_RUN" if special_rewards else "DISABLED"
     tertiary_status = "NOT_RUN"
     empty_cell_status = "NOT_RUN"
 
     placement_vars = list(x.values()) + list(y.values())
+    optimization_phases = 1
 
-    def run_later_phase(objective, maximize: bool, hint_solver=None) -> tuple[int, cp_model.CpSolver]:
-        elapsed = time.perf_counter() - started
-        remaining = max(0.05, request.time_limit_ms / 1000 - elapsed)
-        if maximize:
-            model.maximize(objective)
-        else:
-            model.minimize(objective)
+    def run_refinement(hint_solver) -> tuple[int | None, cp_model.CpSolver | None]:
+        nonlocal optimization_phases
+        remaining = deadline - time.perf_counter()
+        if remaining <= 0 or controller.stopped:
+            return None, None
+        optimization_phases += 1
+        model.maximize(refinement_objective)
         next_solver = cp_model.CpSolver()
         next_solver.parameters.max_time_in_seconds = remaining
         if request.worker_count:
             next_solver.parameters.num_search_workers = request.worker_count
         next_solver.parameters.random_seed = 1
-        if hint_solver is not None:
-            model.clear_hints()
-            for var in placement_vars:
-                value = hint_solver.value(var)
-                if value is not None:
-                    model.add_hint(var, int(round(value)))
+        model.clear_hints()
+        for var in placement_vars:
+            value = hint_solver.value(var)
+            if value is not None:
+                model.add_hint(var, int(round(value)))
         controller.attach(next_solver)
         if on_solver:
             on_solver(next_solver)
         return next_solver.solve(model), next_solver
 
     if phase1_status == cp_model.OPTIMAL and not controller.stopped:
-        model.add(primary == primary_value)
-        phase2_status, solver2 = run_later_phase(secondary, True, best_solver)
-        secondary_status = solver2.status_name(phase2_status)
-        if phase2_status in (cp_model.OPTIMAL, cp_model.FEASIBLE):
-            best_solver = solver2
-        if phase2_status == cp_model.OPTIMAL and not controller.stopped:
-            secondary_value_for_model = round(solver2.objective_value)
-            model.add(secondary == secondary_value_for_model)
-            special_optimal = True
+        model.add(level_objective == solver.value(level_objective))
+        refinement_status, refinement_solver = run_refinement(best_solver)
+        if refinement_status is not None and refinement_solver is not None:
+            refinement_name = refinement_solver.status_name(refinement_status)
             if special_rewards:
-                special_phase_status, special_solver = run_later_phase(special, True, best_solver)
-                special_status = special_solver.status_name(special_phase_status)
-                special_optimal = special_phase_status == cp_model.OPTIMAL
-                if special_phase_status in (cp_model.OPTIMAL, cp_model.FEASIBLE):
-                    best_solver = special_solver
-                if special_optimal:
-                    model.add(special == round(special_solver.objective_value))
-            if special_optimal and not controller.stopped:
-                tertiary_phase_status, tertiary_solver = run_later_phase(tertiary, False, best_solver)
-                tertiary_status = tertiary_solver.status_name(tertiary_phase_status)
-                if tertiary_phase_status in (cp_model.OPTIMAL, cp_model.FEASIBLE):
-                    best_solver = tertiary_solver
-                if tertiary_phase_status == cp_model.OPTIMAL and not controller.stopped:
-                    model.add(tertiary == round(tertiary_solver.objective_value))
-                    empty_phase_status, empty_solver = run_later_phase(empty_cell_score, True, best_solver)
-                    empty_cell_status = empty_solver.status_name(empty_phase_status)
-                    if empty_phase_status in (cp_model.OPTIMAL, cp_model.FEASIBLE):
-                        best_solver = empty_solver
+                special_status = refinement_name
+            tertiary_status = refinement_name
+            empty_cell_status = refinement_name
+            if refinement_status in (cp_model.OPTIMAL, cp_model.FEASIBLE):
+                best_solver = refinement_solver
 
     selected_tablets: dict[int, Candidate] = {}
     selected_tablets_applied: dict[int, bool] = {}
@@ -898,7 +954,11 @@ def solve(
         "disabledCells": sorted(disabled_cells), "unlockedCells": sorted(unlock_cells),
         "buildMs": round((built - started) * 1000), "solveMs": round((time.perf_counter() - built) * 1000),
         "diagnostics": {
-            "tabletCandidates": sum(map(len, candidates)), "artifacts": len(request.artifacts),
+            "tabletCandidates": sum(map(len, candidates)),
+            "rawTabletCandidates": raw_candidate_count,
+            "levelTransformGroups": len(level_transforms),
+            "optimizationPhases": optimization_phases,
+            "artifacts": len(request.artifacts),
             "tablets": len(request.tablets), "workerCount": request.worker_count,
         },
     }
