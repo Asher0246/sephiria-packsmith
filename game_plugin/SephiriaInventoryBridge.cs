@@ -478,6 +478,8 @@ namespace SephiriaInventoryBridge
                     continue;
                 object charm = GetMember(item, "Charm");
                 object tablet = GetMember(item, "StoneTablet");
+                if (charm == null && tablet == null)
+                    continue;
                 int instanceId = GetInt(item, "InstanceID", 0);
                 LiveItem live = new LiveItem();
                 live.InstanceId = instanceId;
