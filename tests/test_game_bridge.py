@@ -159,6 +159,17 @@ def test_translate_last_stand_tablet_from_current_game_name():
     assert result["unmapped"] == []
 
 
+def test_translate_certitude_tablet_from_current_game_name():
+    value = snapshot()
+    value["tablets"][0] = {
+        "entityId": 999997, "instanceId": 412,
+        "name": "信念", "rotation": 0,
+    }
+    result = translate_snapshot(value)
+    assert result["tablets"][0]["typeId"] == "tablet-certitude"
+    assert result["unmapped"] == []
+
+
 def test_translate_curse_tablet_from_current_game_entity_id():
     value = snapshot()
     value["tablets"][0] = {

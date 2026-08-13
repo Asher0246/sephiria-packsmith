@@ -95,7 +95,7 @@ TABLET_NAMES = {
     "junction": "接合", "last_stand": "破釜沉舟", "flag": "旗帜",
     "defender": "防御招式", "shade": "遮阳", "thorn": "刺",
     "boundary": "边界", "sheen": "光辉", "miracle": "奇迹",
-    "daydream": "白日梦", "compression": "压缩", "certitude": "确信",
+    "daydream": "白日梦", "compression": "压缩", "certitude": "信念",
     "hospitality": "款待", "courage": "勇气", "peace": "和平",
 }
 
