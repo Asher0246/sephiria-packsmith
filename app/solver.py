@@ -181,6 +181,27 @@ def build_candidates(
     return tuple(result)
 
 
+_candidates_cache: dict[
+    tuple[str, int, int, int], tuple[TabletType, tuple[Candidate, ...]]
+] = {}
+_candidates_cache_lock = threading.Lock()
+
+
+def build_candidates_cached(
+    tablet: TabletType, rows: int, cols: int, cell_count: int | None = None,
+) -> tuple[Candidate, ...]:
+    cell_count = rows * cols if cell_count is None else cell_count
+    key = (tablet.id, rows, cols, cell_count)
+    with _candidates_cache_lock:
+        cached = _candidates_cache.get(key)
+        if cached is not None and cached[0] == tablet:
+            return cached[1]
+    built = build_candidates(tablet, rows, cols, cell_count)
+    with _candidates_cache_lock:
+        _candidates_cache[key] = (tablet, built)
+    return built
+
+
 def _bool_or(model: cp_model.CpModel, values: list, name: str):
     if not values:
         return model.new_constant(0)
@@ -397,7 +418,7 @@ def solve(
     tablet_types = [tablets_by_id[item.type_id] for item in request.tablets]
     candidates: list[tuple[Candidate, ...]] = []
     for instance, tablet in zip(request.tablets, tablet_types):
-        possible = build_candidates(tablet, request.rows, request.cols, request.cell_count)
+        possible = build_candidates_cached(tablet, request.rows, request.cols, request.cell_count)
         possible = tuple(candidate for candidate in possible
                          if instance.fixed_cell is None or candidate.cell == instance.fixed_cell)
         if instance.fixed_rotation is not None:
@@ -419,6 +440,27 @@ def solve(
         model.add(sum(x[a, c] for c in cells) == 1)
         if item.fixed_cell is not None:
             model.add(x[a, item.fixed_cell] == 1)
+
+    # Symmetry breaking: interchangeable artifacts (same type, weight, base
+    # level, constraints and no fixed cell) are ordered by cell index so the
+    # solver does not explore equivalent permutations.
+    artifact_groups: dict[tuple, list[int]] = {}
+    for a, item in enumerate(request.artifacts):
+        if item.fixed_cell is not None:
+            continue
+        key = (
+            item.type_id, item.weight, item.base_level, item.min_level,
+            item.exact_level, item.special_priority,
+            item.special_target_instance_id,
+        )
+        artifact_groups.setdefault(key, []).append(a)
+    for indices in artifact_groups.values():
+        for left, right in zip(indices, indices[1:]):
+            model.add(
+                sum(c * x[left, c] for c in cells)
+                <= sum(c * x[right, c] for c in cells)
+            )
+
     for t, possible in enumerate(candidates):
         model.add(sum(y[t, k] for k in range(len(possible))) == 1)
 
@@ -692,7 +734,9 @@ def solve(
     tertiary_status = "NOT_RUN"
     empty_cell_status = "NOT_RUN"
 
-    def run_later_phase(objective, maximize: bool) -> tuple[int, cp_model.CpSolver]:
+    placement_vars = list(x.values()) + list(y.values())
+
+    def run_later_phase(objective, maximize: bool, hint_solver=None) -> tuple[int, cp_model.CpSolver]:
         elapsed = time.perf_counter() - started
         remaining = max(0.05, request.time_limit_ms / 1000 - elapsed)
         if maximize:
@@ -704,6 +748,12 @@ def solve(
         if request.worker_count:
             next_solver.parameters.num_search_workers = request.worker_count
         next_solver.parameters.random_seed = 1
+        if hint_solver is not None:
+            model.clear_hints()
+            for var in placement_vars:
+                value = hint_solver.value(var)
+                if value is not None:
+                    model.add_hint(var, int(round(value)))
         controller.attach(next_solver)
         if on_solver:
             on_solver(next_solver)
@@ -711,7 +761,7 @@ def solve(
 
     if phase1_status == cp_model.OPTIMAL and not controller.stopped:
         model.add(primary == primary_value)
-        phase2_status, solver2 = run_later_phase(secondary, True)
+        phase2_status, solver2 = run_later_phase(secondary, True, best_solver)
         secondary_status = solver2.status_name(phase2_status)
         if phase2_status in (cp_model.OPTIMAL, cp_model.FEASIBLE):
             best_solver = solver2
@@ -720,7 +770,7 @@ def solve(
             model.add(secondary == secondary_value_for_model)
             special_optimal = True
             if special_rewards:
-                special_phase_status, special_solver = run_later_phase(special, True)
+                special_phase_status, special_solver = run_later_phase(special, True, best_solver)
                 special_status = special_solver.status_name(special_phase_status)
                 special_optimal = special_phase_status == cp_model.OPTIMAL
                 if special_phase_status in (cp_model.OPTIMAL, cp_model.FEASIBLE):
@@ -728,13 +778,13 @@ def solve(
                 if special_optimal:
                     model.add(special == round(special_solver.objective_value))
             if special_optimal and not controller.stopped:
-                tertiary_phase_status, tertiary_solver = run_later_phase(tertiary, False)
+                tertiary_phase_status, tertiary_solver = run_later_phase(tertiary, False, best_solver)
                 tertiary_status = tertiary_solver.status_name(tertiary_phase_status)
                 if tertiary_phase_status in (cp_model.OPTIMAL, cp_model.FEASIBLE):
                     best_solver = tertiary_solver
                 if tertiary_phase_status == cp_model.OPTIMAL and not controller.stopped:
                     model.add(tertiary == round(tertiary_solver.objective_value))
-                    empty_phase_status, empty_solver = run_later_phase(empty_cell_score, True)
+                    empty_phase_status, empty_solver = run_later_phase(empty_cell_score, True, best_solver)
                     empty_cell_status = empty_solver.status_name(empty_phase_status)
                     if empty_phase_status in (cp_model.OPTIMAL, cp_model.FEASIBLE):
                         best_solver = empty_solver

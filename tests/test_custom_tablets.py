@@ -72,6 +72,27 @@ def test_custom_disable_and_multiplier_match_game_order():
     ) == []
 
 
+def test_candidate_cache_distinguishes_different_rules_with_the_same_tablet_id():
+    first = parse_custom_tablet_types(custom_payload([
+        [0, 0, [[2, 2]], [], [], [], []],
+    ]))["custom-tablet-0123456789abcdef"]
+    second = parse_custom_tablet_types(custom_payload([
+        [0, 0, [[2, 5]], [], [], [], []],
+    ]))["custom-tablet-0123456789abcdef"]
+    artifact = ArtifactType("artifact-cache-target", "缓存目标", 10, 0)
+    request = SolveRequest(
+        1, 6,
+        (ArtifactInstance("target", artifact.id, fixed_cell=2),),
+        (TabletInstance("tablet", first.id, fixed_cell=0),), 3000, 3,
+    )
+
+    first_result = solve(request, {artifact.id: artifact}, {first.id: first})
+    second_result = solve(request, {artifact.id: artifact}, {second.id: second})
+
+    assert first_result["artifacts"][0]["level"] == 2
+    assert second_result["artifacts"][0]["level"] == 5
+
+
 def test_compose_combines_source_ranges_and_consumes_source_rotations():
     left = TabletType(
         "tablet-left", "左", "common", True, None, None,

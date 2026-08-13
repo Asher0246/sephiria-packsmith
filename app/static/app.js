@@ -12,6 +12,7 @@ const state = {
   result: null,
   solveId: null,
   finishedSolveId: null,
+  solveUsedGameSource: false,
   gameSource: null,
   serial: 1,
   pollTimer: null,
@@ -342,7 +343,7 @@ async function startSolve() {
   if (state.items.length > gridCellCount()) return showToast("物品数量超过背包容量。");
   const missingTarget = state.items.find((item) => item.kind === "artifact" && item.typeId === "artifact-unalloyed_gold_needle" && item.specialPriority && !item.specialTargetInstanceId);
   if (missingTarget) return showToast("请为北向的金色针选择上方目标神器。");
-  state.result = null; state.finishedSolveId = null; updateApplyButton(); renderBoard(); setSolving(true); setStatus("solving", "正在构建精确模型", "求解器将放入全部已录入物品");
+  state.result = null; state.finishedSolveId = null; state.solveUsedGameSource = gameSourceMatchesItems(); updateApplyButton(); renderBoard(); setSolving(true); setStatus("solving", "正在构建精确模型", "求解器将放入全部已录入物品");
   try {
     const response = await api("/api/solve", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(requestPayload()) });
     state.solveId = response.solveId; pollSolve();
@@ -385,6 +386,10 @@ async function readGameInventory() {
     state.serial = state.items.length + 1; state.result = null;
     persist(); renderCatalog(); renderOwned(); renderBoard(); updateStatusIdle();
     const skipped = inventory.unmapped?.length || 0;
+  if (skipped) {
+    const names = (inventory.unmapped || []).map((item) => item.name || `实体 ${item.entityId}`).join("、");
+    setStatus("warning", `有 ${skipped} 件物品无法识别`, `${names}。求解后无法应用到游戏。`);
+  }
     showToast(skipped ? `已读取 ${state.items.length} 件物品，另有 ${skipped} 件无法识别。` : `已读取游戏中的 ${state.items.length} 件物品。`);
   } catch (error) {
     showToast(error.message);
@@ -394,13 +399,13 @@ async function readGameInventory() {
 }
 
 function updateApplyButton() {
-  const available = Boolean(state.finishedSolveId && state.result?.placements?.length && gameSourceMatchesItems());
+  const available = Boolean(state.finishedSolveId && state.result?.placements?.length);
   $("applyBtn").hidden = !available;
   $("applyBtn").disabled = false;
 }
 
 async function applyArrangement() {
-  if (!state.finishedSolveId || !gameSourceMatchesItems()) return;
+  if (!state.finishedSolveId) return;
   if (!confirm("将当前求解结果直接应用到游戏背包？插件会从游戏中的当前排布开始调整。")) return;
   const button = $("applyBtn"); button.disabled = true;
   setStatus("solving", "正在应用到游戏", "游戏插件正在交换物品、旋转石板并复核结果");
@@ -409,7 +414,7 @@ async function applyArrangement() {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ solveId: state.finishedSolveId }),
     });
-    state.finishedSolveId = null; updateApplyButton();
+    state.finishedSolveId = null; state.solveUsedGameSource = false; updateApplyButton();
     setStatus("success", "已应用到游戏", `完成 ${response.moves || 0} 次交换、${response.rotations || 0} 次旋转，并已验证排布`);
     showToast("游戏背包已按求解结果排布");
   } catch (error) {
@@ -529,7 +534,7 @@ function showResult(result, solveId) {
   state.result = result; renderBoard();
   $("primaryMetric").textContent = result.primaryObjective ?? "—"; $("secondaryMetric").textContent = result.secondaryObjective ?? "—"; $("specialMetric").textContent = result.specialObjective ?? "—"; $("tertiaryMetric").textContent = result.tertiaryObjective ?? "—"; $("emptyCellMetric").textContent = result.emptyCellObjective ?? "—";
   $("gapMetric").textContent = result.relativeGap == null ? "—" : `${(result.relativeGap * 100).toFixed(1)}%`; $("timeMetric").textContent = `${result.solveMs} ms`;
-  state.finishedSolveId = result.placements?.length && gameSourceMatchesItems() ? solveId : null;
+  state.finishedSolveId = result.placements?.length && state.solveUsedGameSource ? solveId : null;
   updateApplyButton();
   if (!result.placements?.length) { $("resultSection").hidden = true; setStatus("error", result.solutionStatus === "INFEASIBLE" ? "没有可行排布" : "未找到排布", result.message); return; }
   const optimalDetail = result.specialStatus === "DISABLED" ? "加权得分、等级合计、副作用惩罚与空闲格等级均已完成最优性证明" : "加权得分、等级合计、特殊效果、副作用惩罚与空闲格等级均已完成最优性证明";
@@ -546,7 +551,7 @@ function showResult(result, solveId) {
 function setSolving(solving) { $("solveBtn").disabled = solving; $("stopBtn").hidden = !solving; $("stopBtn").disabled = false; }
 function setStatus(kind, title, detail) { const bar = $("statusBar"); bar.className = `status-bar ${kind}`; $("statusTitle").textContent = title; $("statusDetail").textContent = detail; }
 function updateStatusIdle() {
-  state.finishedSolveId = null; updateApplyButton();
+  state.finishedSolveId = null; state.solveUsedGameSource = false; updateApplyButton();
   const fixed = state.items.filter((i) => i.fixedCell != null || i.fixedRotation != null || i.minLevel != null || i.exactLevel != null || i.specialPriority || (i.kind === "artifact" && (i.weight !== 5 || (i.baseLevel ?? 0) !== 0))).length;
   setStatus("idle", state.items.length ? "构筑已更新" : "等待构筑", `${state.items.length} 件物品 · ${fixed} 件带约束`);
   ["primaryMetric", "secondaryMetric", "specialMetric", "tertiaryMetric", "emptyCellMetric", "gapMetric", "timeMetric"].forEach((id) => { $(id).textContent = "—"; }); $("resultSection").hidden = true;

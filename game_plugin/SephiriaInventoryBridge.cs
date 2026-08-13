@@ -598,12 +598,9 @@ namespace SephiriaInventoryBridge
                         JsonString(tablets, "conditionQuery", conditionQuery, false);
                         JsonStringArray(tablets, "queryRotations", queryRotations, false);
                         JsonStringArray(tablets, "conditionRotations", conditionRotations, false);
-                        if (isCustom)
-                        {
-                            tablets.Append(",\"customCandidates\":").Append(
-                                CompileCustomCandidates(tablet, query, conditionQuery, rotatable,
-                                                        width, height, cellCount));
-                        }
+                        tablets.Append(",\"customCandidates\":").Append(
+                            CompileCustomCandidates(tablet, query, conditionQuery, rotatable,
+                                                    width, height, cellCount));
                         tablets.Append('}');
                     }
                 }
@@ -721,7 +718,7 @@ namespace SephiriaInventoryBridge
             }
             output.Append(']');
             cached = output.ToString();
-            if (_customCandidateCache.Count > 32)
+            if (_customCandidateCache.Count > 256)
                 _customCandidateCache.Clear();
             _customCandidateCache[cacheKey] = cached;
             return cached;

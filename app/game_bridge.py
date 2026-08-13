@@ -237,6 +237,15 @@ def translate_snapshot(snapshot: Any) -> dict:
                     result["customTabletTypes"].append(custom_type)
             else:
                 type_id = _resolve_type(kind, raw)
+                if not type_id and kind == "tablet":
+                    try:
+                        custom_type = _translate_custom_tablet(raw, cell_count)
+                    except (TypeError, ValueError):
+                        custom_type = None
+                    if custom_type is not None:
+                        type_id = custom_type["id"]
+                        if all(item["id"] != type_id for item in result["customTabletTypes"]):
+                            result["customTabletTypes"].append(custom_type)
             if not type_id:
                 result["unmapped"].append({
                     "kind": kind, "entityId": raw.get("entityId"), "name": raw.get("name") or "",
