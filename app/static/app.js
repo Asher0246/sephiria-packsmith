@@ -66,13 +66,18 @@ function itemDisplayName(item, type) {
   return index < 0 ? type.name : alphabeticalLabel(index);
 }
 
+function itemImageRotationDegrees(kind, rotation) {
+  if (kind !== "tablet") return 0;
+  return placementRotation({ rotation }) * 90;
+}
+
 function itemVisual(type, kind, rotation = 0, displayName = type.name) {
   const visual = document.createElement("span");
   visual.className = `item-visual ${kind === "tablet" ? "tablet" : ""}${type.custom ? " custom" : ""}`;
   if (type.image) {
     const img = document.createElement("img");
     img.src = type.image; img.alt = ""; img.loading = "lazy";
-    img.style.setProperty("--item-rotation", `${placementRotation({ rotation }) * 90}deg`);
+    img.style.setProperty("--item-rotation", `${itemImageRotationDegrees(kind, rotation)}deg`);
     img.addEventListener("error", () => { visual.textContent = displayName.slice(0, 1); });
     visual.append(img);
   } else {
@@ -272,7 +277,7 @@ function renderBoard() {
         const displayName = itemDisplayName(source, type);
         cell.classList.add(source.kind); const content = document.createElement("div"); content.className = "cell-item";
         const rotation = placementRotation(placement);
-        if (type.image) { const img = document.createElement("img"); img.src = type.image; img.alt = ""; img.style.setProperty("--item-rotation", `${rotation * 90}deg`); content.append(img); }
+        if (type.image) { const img = document.createElement("img"); img.src = type.image; img.alt = ""; img.style.setProperty("--item-rotation", `${itemImageRotationDegrees(source.kind, rotation)}deg`); content.append(img); }
         const label = document.createElement("strong"); label.textContent = displayName; content.append(label);
         const sub = document.createElement("small"); const detail = details.get(source.instanceId);
         if (source.kind === "artifact") {
