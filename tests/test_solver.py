@@ -575,7 +575,10 @@ def test_special_completion_is_normalized_before_weighting():
     assert detail["weightedScore"] == result["specialObjective"] == 1500
 
 
-def test_special_priority_never_sacrifices_level_objectives():
+def test_special_priority_takes_precedence_over_level_objectives():
+    # The target earns +1 from the tablet only on cell 3, but the needle's
+    # enabled special effect comes first: it must keep the target directly
+    # above the needle even though that forfeits the level points.
     needle = ArtifactType(
         "artifact-needle", "北向的金色针", cap=0, rarity=0, special_condition="target_above",
     )
@@ -596,12 +599,15 @@ def test_special_priority_never_sacrifices_level_objectives():
         (TabletInstance("tablet", tablet.id, fixed_cell=0),), 3000,
     )
     result = solve(request, {needle.id: needle, target.id: target}, {tablet.id: tablet})
+    placements = {item["instanceId"]: item["cell"] for item in result["placements"]}
     details = {item["instanceId"]: item for item in result["artifacts"]}
     assert result["solutionStatus"] == "OPTIMAL"
-    assert result["primaryObjective"] == 5
-    assert result["secondaryObjective"] == 1
-    assert details["target"]["cell"] == 3
-    assert result["specialObjective"] == 0
+    assert result["specialObjective"] == 10_000
+    assert placements["target"] == placements["needle"] - request.cols
+    assert result["primaryObjective"] == 0
+    assert result["secondaryObjective"] == 0
+    assert details["target"]["level"] == 0
+    assert validate_result(request, {needle.id: needle, target.id: target}, {tablet.id: tablet}, result) == []
 
 
 def test_pre_stopped_search_never_claims_optimality():

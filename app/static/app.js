@@ -542,7 +542,21 @@ function showResult(result, solveId) {
   state.finishedSolveId = result.placements?.length && state.solveUsedGameSource ? solveId : null;
   updateApplyButton();
   if (!result.placements?.length) { $("resultSection").hidden = true; setStatus("error", result.solutionStatus === "INFEASIBLE" ? "没有可行排布" : "未找到排布", result.message); return; }
-  const optimalDetail = result.specialStatus === "DISABLED" ? "加权得分、等级合计、副作用惩罚与空闲格等级均已完成最优性证明" : "加权得分、等级合计、特殊效果、副作用惩罚与空闲格等级均已完成最优性证明";
+  const specialWrap = $("specialSummary");
+  const specialLines = (result.specialDetails || []).map((detail) => {
+    const line = document.createElement("div"); line.className = "special-line";
+    const artifact = (result.artifacts || []).find((item) => item.instanceId === detail.instanceId);
+    const label = document.createElement("span"); label.className = "special-name";
+    label.textContent = (artifact ? artifact.name : detail.instanceId) + " · " + (specialConditionLabels[detail.condition] || detail.condition) + " (" + detail.rawScore + "/" + detail.maxScore + ")";
+    const chip = document.createElement("span");
+    chip.className = "status-chip" + (detail.satisfied ? "" : " inactive");
+    chip.textContent = detail.satisfied ? "已达成" : "未达成";
+    line.append(label, chip);
+    return line;
+  });
+  specialWrap.replaceChildren(...specialLines);
+  specialWrap.hidden = specialLines.length === 0;
+  const optimalDetail = result.specialStatus === "DISABLED" ? "加权得分、等级合计、副作用惩罚与空闲格等级均已完成最优性证明" : "特殊效果、加权得分、等级合计、副作用惩罚与空闲格等级均已完成最优性证明";
   setStatus(result.solutionStatus === "OPTIMAL" ? "success" : "warning", result.solutionStatus === "OPTIMAL" ? "已证明最优" : "已找到可行排布", result.solutionStatus === "OPTIMAL" ? optimalDetail : `当前解距主目标上界 ${(result.relativeGap * 100).toFixed(1)}%`);
   const tbody = $("resultBody"); tbody.replaceChildren();
   result.artifacts.forEach((detail) => {

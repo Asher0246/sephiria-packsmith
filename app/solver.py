@@ -770,11 +770,28 @@ def solve(
         model.add(empty_level == 0).only_enforce_if(occupied[c])
         empty_cell_levels.append(empty_level)
     empty_cell_score = sum(empty_cell_levels)
-    # Each scale exceeds the full range of every lower-priority objective, so
-    # these weighted sums are exactly equivalent to the original lexicographic order.
+    # Phase-1 objective order: enabled special effects first, then weighted
+    # levels, then total levels.  Each scale strictly exceeds the full range
+    # of every lower-priority component, so the weighted sum is exactly
+    # equivalent to that lexicographic order.  The refinement phase keeps the
+    # phase-1 value fixed and only reorders the remaining tie-breakers.
+    special_upper = sum(
+        SPECIAL_COMPLETION_SCALE * request.artifacts[a].weight
+        for a, *_ in special_variables
+    )
+    primary_upper = sum(
+        instance.weight * artifact.cap
+        for instance, artifact in zip(request.artifacts, artifact_types)
+    )
     secondary_upper = sum(artifact.cap for artifact in artifact_types)
     level_scale = secondary_upper + 1
-    level_objective = primary * level_scale + secondary
+    primary_scale = (primary_upper + 1) * level_scale
+    special_scale = (special_upper + 1) * primary_scale
+    phase1_objective = (
+        special * special_scale
+        + primary * primary_scale
+        + secondary
+    )
 
     tertiary_upper = sum(
         max(0, -low) + max(0, high) + 1 + multiplier_highs[c]
@@ -784,14 +801,12 @@ def solve(
     empty_upper = sum(max(0, high) for _, high in raw_bounds)
     empty_span = empty_upper - empty_lower
     empty_scale = empty_span + 1
-    special_scale = (tertiary_upper + 1) * empty_scale
     refinement_objective = (
-        special * special_scale
-        + (tertiary_upper - tertiary) * empty_scale
+        (tertiary_upper - tertiary) * empty_scale
         + (empty_cell_score - empty_lower)
     )
 
-    model.maximize(level_objective)
+    model.maximize(phase1_objective)
     built = time.perf_counter()
     deadline = built + request.time_limit_ms / 1000
     solver = cp_model.CpSolver()
@@ -810,10 +825,10 @@ def solve(
 
     primary_value = solver.value(primary)
     combined_bound = math.ceil(solver.best_objective_bound - 1e-6)
-    primary_bound = combined_bound // level_scale
+    primary_bound = combined_bound // primary_scale
     best_solver = solver
     secondary_status = "OPTIMAL" if phase1_status == cp_model.OPTIMAL else "NOT_RUN"
-    special_status = "NOT_RUN" if special_rewards else "DISABLED"
+    special_status = status_name if special_rewards else "DISABLED"
     tertiary_status = "NOT_RUN"
     empty_cell_status = "NOT_RUN"
 
@@ -843,12 +858,10 @@ def solve(
         return next_solver.solve(model), next_solver
 
     if phase1_status == cp_model.OPTIMAL and not controller.stopped:
-        model.add(level_objective == solver.value(level_objective))
+        model.add(phase1_objective == solver.value(phase1_objective))
         refinement_status, refinement_solver = run_refinement(best_solver)
         if refinement_status is not None and refinement_solver is not None:
             refinement_name = refinement_solver.status_name(refinement_status)
-            if special_rewards:
-                special_status = refinement_name
             tertiary_status = refinement_name
             empty_cell_status = refinement_name
             if refinement_status in (cp_model.OPTIMAL, cp_model.FEASIBLE):
