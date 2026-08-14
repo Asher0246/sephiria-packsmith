@@ -603,8 +603,12 @@ def solve(
     effect_bounds = [[0, 0] for _ in cells]
     unlock_terms_by_cell = [[] for _ in cells]
     disable_terms_by_cell = [[] for _ in cells]
-    multiplier_terms_by_cell = [[] for _ in cells]
-    multiplier_highs = [0 for _ in cells]
+    multiplier_terms_by_cell = [
+        [2] if cell in request.double_level_cells else [] for cell in cells
+    ]
+    multiplier_highs = [
+        2 if cell in request.double_level_cells else 0 for cell in cells
+    ]
     for t, possible in enumerate(candidates):
         per_cell_values: dict[int, list[int]] = {}
         per_cell_multipliers: dict[int, list[int]] = {}
@@ -904,7 +908,7 @@ def solve(
         selected_tablets[t] = possible[selected_index]
         selected_tablets_applied[t] = best_solver.boolean_value(candidate_applied[t, selected_index])
     effects = [0] * request.cell_count
-    multipliers = [0] * request.cell_count
+    multipliers = [2 if cell in request.double_level_cells else 0 for cell in cells]
     unlock_cells: set[int] = set()
     disabled_cells: set[int] = set()
     for t, candidate in selected_tablets.items():

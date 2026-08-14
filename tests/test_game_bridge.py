@@ -42,7 +42,7 @@ def snapshot():
 
 def test_translate_game_snapshot_to_solver_items():
     result = translate_snapshot(snapshot())
-    assert result["grid"] == {"cellCount": 17}
+    assert result["grid"] == {"cellCount": 17, "doubleLevelCells": []}
     assert result["artifacts"] == [{
         "instanceId": "game-a-101", "typeId": "artifact-eye_crystal_necklace",
         "weight": 5, "baseLevel": 4, "minLevel": None, "exactLevel": None,
@@ -61,6 +61,21 @@ def test_translate_snapshot_reports_unmapped_items_without_failing():
     result = translate_snapshot(value)
     assert result["artifacts"] == []
     assert result["unmapped"] == [{"kind": "artifact", "entityId": 999999, "name": "missing"}]
+
+
+def test_translate_snapshot_preserves_native_double_level_cells():
+    value = snapshot()
+    value["doubleLevelCells"] = [10, 2]
+    result = translate_snapshot(value)
+    assert result["grid"] == {"cellCount": 17, "doubleLevelCells": [2, 10]}
+
+
+@pytest.mark.parametrize("cells", ["2", [True], [-1], [17], [2, 2]])
+def test_translate_snapshot_rejects_invalid_double_level_cells(cells):
+    value = snapshot()
+    value["doubleLevelCells"] = cells
+    with pytest.raises(GameBridgeError):
+        translate_snapshot(value)
 
 
 def test_translate_hidden_heart_burden_from_game_entity_id():
@@ -317,7 +332,7 @@ def test_translate_snapshot_rejects_invalid_bridge_data(mutator):
 def test_translate_snapshot_accepts_bridge_protocol_v2():
     value = snapshot()
     value["version"] = 2
-    assert translate_snapshot(value)["grid"] == {"cellCount": 17}
+    assert translate_snapshot(value)["grid"] == {"cellCount": 17, "doubleLevelCells": []}
 
 
 def test_translate_snapshot_preserves_apply_source_identity_and_positions():
@@ -407,7 +422,7 @@ def test_read_game_inventory_retries_one_invalid_startup_snapshot(monkeypatch):
     monkeypatch.setattr("app.game_bridge.os.name", "nt")
     monkeypatch.setattr("app.game_bridge._read_pipe_windows", lambda *_: next(responses))
     result = read_game_inventory()
-    assert result["grid"] == {"cellCount": 17}
+    assert result["grid"] == {"cellCount": 17, "doubleLevelCells": []}
 
 
 @pytest.mark.skipif(os.name != "nt", reason="Windows named pipe integration")
@@ -442,6 +457,6 @@ def test_reads_complete_snapshot_from_windows_named_pipe():
     assert ready.wait(2)
     result = read_game_inventory(2000, pipe_path)
     thread.join(timeout=2)
-    assert result["grid"] == {"cellCount": 17}
+    assert result["grid"] == {"cellCount": 17, "doubleLevelCells": []}
     assert result["artifacts"][0]["typeId"] == "artifact-eye_crystal_necklace"
     assert result["tablets"][0]["typeId"] == "tablet-chivalry"

@@ -17,7 +17,9 @@ def valid_payload():
 
 
 def test_parse_full_constraint_request():
-    request = parse_request(valid_payload(), ARTIFACT_IDS, TABLET_IDS)
+    payload = valid_payload()
+    payload["grid"]["doubleLevelCells"] = [0, 10]
+    request = parse_request(payload, ARTIFACT_IDS, TABLET_IDS)
     assert (request.rows, request.cols, request.cell_count, request.time_limit_ms) == (2, 6, 11, 3000)
     assert request.worker_count == 16
     assert request.artifacts[0].fixed_cell == 1
@@ -27,6 +29,7 @@ def test_parse_full_constraint_request():
     assert request.artifacts[0].base_level == 1
     assert request.tablets[0].fixed_rotation == 2
     assert request.tablets[0].preferred_rotation == 3
+    assert request.double_level_cells == frozenset({0, 10})
 
 
 def test_artifact_weight_defaults_to_five():
@@ -79,6 +82,10 @@ def test_gold_needle_special_target_must_be_another_artifact(target):
 
 @pytest.mark.parametrize("mutator", [
     lambda p: p["grid"].update(cellCount=True),
+    lambda p: p["grid"].update(doubleLevelCells="1"),
+    lambda p: p["grid"].update(doubleLevelCells=[True]),
+    lambda p: p["grid"].update(doubleLevelCells=[11]),
+    lambda p: p["grid"].update(doubleLevelCells=[1, 1]),
     lambda p: p["options"].update(workerCount=65),
     lambda p: p["options"].update(workerCount=True),
     lambda p: p["artifacts"][0].update(weight=1.5),

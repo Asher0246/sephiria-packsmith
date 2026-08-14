@@ -287,6 +287,43 @@ def test_solver_adds_instance_enchantment_level_before_capping():
     assert validate_result(request, {artifact.id: artifact}, {tablet.id: tablet}, result) == []
 
 
+def test_double_level_cell_multiplies_base_and_tablet_bonus():
+    artifact = ArtifactType("artifact-double", "Double level", cap=10, rarity=0)
+    tablet = TabletType("tablet-plus-two", "Right +2", "common", False, None, None, ((1, 2),))
+    request = SolveRequest(
+        rows=1,
+        cols=2,
+        artifacts=(ArtifactInstance("a1", artifact.id, fixed_cell=1),),
+        tablets=(TabletInstance("t1", tablet.id, fixed_cell=0),),
+        time_limit_ms=1000,
+        double_level_cells=frozenset({1}),
+    )
+    result = solve(request, {artifact.id: artifact}, {tablet.id: tablet})
+    assert result["solutionStatus"] == "OPTIMAL"
+    assert result["artifacts"][0]["rawBonus"] == 2
+    assert result["artifacts"][0]["multiplier"] == 2
+    assert result["artifacts"][0]["level"] == 4
+    assert result["cellMultipliers"] == [0, 2]
+    assert validate_result(request, {artifact.id: artifact}, {tablet.id: tablet}, result) == []
+
+
+def test_solver_prefers_native_double_level_cell():
+    artifact = ArtifactType("artifact-base-double", "Base double", cap=10, rarity=0)
+    request = SolveRequest(
+        rows=1,
+        cols=2,
+        artifacts=(ArtifactInstance("a1", artifact.id, base_level=1),),
+        tablets=(),
+        time_limit_ms=1000,
+        double_level_cells=frozenset({1}),
+    )
+    result = solve(request, {artifact.id: artifact}, {})
+    assert result["solutionStatus"] == "OPTIMAL"
+    assert result["artifacts"][0]["cell"] == 1
+    assert result["artifacts"][0]["level"] == 2
+    assert validate_result(request, {artifact.id: artifact}, {}, result) == []
+
+
 def test_solver_obeys_exact_level_constraint():
     artifacts, tablets = maps()
     request = SolveRequest(1, 2,

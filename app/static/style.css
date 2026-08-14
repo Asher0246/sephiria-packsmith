@@ -79,7 +79,7 @@ button:disabled { cursor: not-allowed; opacity: .52; }
 .status-bar.warning { border-left-color: var(--gold); }.status-bar.warning .status-dot { background: var(--gold); }
 .status-bar.error { border-left-color: var(--red); }.status-bar.error .status-dot { background: var(--red); }
 @keyframes pulse { 50% { opacity: .3; } }
-.metrics { display: grid; grid-template-columns: repeat(7, 1fr); margin: 14px 0; border: 1px solid var(--line); border-radius: 5px; background: white; }
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); margin: 14px 0; border: 1px solid var(--line); border-radius: 5px; background: white; }
 .metrics div { padding: 10px 12px; border-right: 1px solid var(--line); }
 .metrics div:last-child { border-right: 0; }
 .metrics span { display: block; color: var(--muted); font-size: 10px; }
@@ -87,9 +87,12 @@ button:disabled { cursor: not-allowed; opacity: .52; }
 .board-wrap { min-height: 390px; display: grid; place-items: center; padding: 18px; border: 1px solid var(--line); background-color: #e8ebe7; background-image: linear-gradient(#dfe3df 1px, transparent 1px), linear-gradient(90deg, #dfe3df 1px, transparent 1px); background-size: 16px 16px; overflow: auto; }
 .board { display: grid; grid-template-columns: repeat(var(--cols), var(--cell)); grid-auto-rows: var(--cell); gap: 5px; width: max-content; }
 .cell { position: relative; width: var(--cell); height: var(--cell); border: 1px solid #b8c0bb; background: #f9faf8; box-shadow: 0 1px 1px #0000000d; overflow: hidden; }
+.cell:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.cell.double-level { border-color: #a46f0b; }
 .cell-index { position: absolute; top: 4px; left: 5px; color: #929c97; font-size: 9px; z-index: 3; }
 .cell-effect { position: absolute; top: 4px; right: 4px; min-width: 20px; padding: 2px 4px; border-radius: 3px; color: white; background: var(--teal); font-size: 10px; text-align: center; z-index: 3; }
 .cell-effect.negative { background: var(--red); }
+.cell-double-badge { position: absolute; top: 4px; left: 50%; z-index: 4; transform: translateX(-50%); padding: 2px 4px; border-radius: 3px; background: #a46f0b; color: white; font-size: 9px; font-weight: 750; line-height: 1.2; }
 .cell.unlock { outline: 2px solid var(--gold); outline-offset: -3px; }
 .cell-item { position: absolute; inset: 13px 5px 5px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-align: center; }
 .cell-item img { width: 38px; height: 38px; object-fit: cover; border-radius: 4px; border: 1px solid #7e8984; transform: rotate(var(--item-rotation, 0deg)); transform-origin: center; }
@@ -126,6 +129,10 @@ button:disabled { cursor: not-allowed; opacity: .52; }
 .constraints .special-priority { grid-column: 1 / -1; min-height: 30px; display: flex; align-items: center; gap: 7px; padding: 5px 7px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface-2); color: var(--ink); }
 .constraints .special-priority input { width: 15px; height: 15px; margin: 0; accent-color: var(--teal); }
 .constraints .special-priority span { margin: 0; color: var(--ink); font-size: 11px; }
+.cell-menu { position: fixed; z-index: 30; min-width: 142px; padding: 6px; border: 1px solid var(--line-strong); border-radius: 5px; background: white; box-shadow: 0 10px 28px #10181533; }
+.cell-menu label { min-height: 34px; display: flex; align-items: center; gap: 9px; padding: 5px 7px; color: var(--ink); font-size: 12px; cursor: pointer; }
+.cell-menu label:hover { background: var(--surface-2); }
+.cell-menu input { width: 16px; height: 16px; margin: 0; accent-color: var(--teal); }
 .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); max-width: min(480px, calc(100vw - 32px)); z-index: 20; padding: 10px 14px; border-radius: 5px; background: var(--ink); color: white; box-shadow: 0 8px 24px #0004; font-size: 12px; }
 .compose-dialog { width: min(540px, calc(100vw - 28px)); padding: 0; border: 1px solid var(--line-strong); border-radius: 6px; color: var(--ink); background: white; box-shadow: 0 20px 60px #0005; }
 .compose-dialog::backdrop { background: #10181599; }

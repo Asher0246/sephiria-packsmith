@@ -92,6 +92,7 @@ class SolveRequest:
     time_limit_ms: int = 10_000
     actual_cell_count: int | None = None
     worker_count: int = 0
+    double_level_cells: frozenset[int] = frozenset()
 
     @property
     def cell_count(self) -> int:
@@ -124,6 +125,15 @@ def parse_request(payload: Any, artifact_ids: set[str], tablet_ids: set[str]) ->
         rows = _integer(grid.get("rows"), "grid.rows", 1, 10)
         cols = _integer(grid.get("cols"), "grid.cols", 1, 6)
         cell_count = rows * cols
+    raw_double_level_cells = grid.get("doubleLevelCells", [])
+    if not isinstance(raw_double_level_cells, list):
+        raise RequestError("grid.doubleLevelCells 必须是数组")
+    double_level_cells = [
+        _integer(value, f"grid.doubleLevelCells[{index}]", 0, cell_count - 1)
+        for index, value in enumerate(raw_double_level_cells)
+    ]
+    if len(double_level_cells) != len(set(double_level_cells)):
+        raise RequestError("grid.doubleLevelCells 不能包含重复格子")
     raw_artifacts = payload.get("artifacts", [])
     raw_tablets = payload.get("tablets", [])
     if not isinstance(raw_artifacts, list) or not isinstance(raw_tablets, list):
@@ -213,8 +223,14 @@ def parse_request(payload: Any, artifact_ids: set[str], tablet_ids: set[str]) ->
     if not isinstance(options, dict):
         raise RequestError("options 必须是对象")
     return SolveRequest(
-        rows, cols, tuple(artifacts), tuple(tablets),
-        _integer(options.get("timeLimitMs", 10_000), "options.timeLimitMs", 500, 120_000),
-        cell_count,
-        _integer(options.get("workerCount", 0), "options.workerCount", 0, 64),
+        rows=rows,
+        cols=cols,
+        artifacts=tuple(artifacts),
+        tablets=tuple(tablets),
+        time_limit_ms=_integer(
+            options.get("timeLimitMs", 10_000), "options.timeLimitMs", 500, 120_000,
+        ),
+        actual_cell_count=cell_count,
+        worker_count=_integer(options.get("workerCount", 0), "options.workerCount", 0, 64),
+        double_level_cells=frozenset(double_level_cells),
     )

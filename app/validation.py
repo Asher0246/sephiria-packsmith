@@ -76,7 +76,10 @@ def validate_result(
         if item.instance_id in by_instance and isinstance(by_instance[item.instance_id].get("cell"), int)
     }
     effects = [0] * request.cell_count
-    multipliers = [0] * request.cell_count
+    multipliers = [
+        2 if cell in request.double_level_cells else 0
+        for cell in range(request.cell_count)
+    ]
     tablet_effects = [[] for _ in range(request.cell_count)]
     unlocks: set[int] = set()
     disabled: set[int] = set()

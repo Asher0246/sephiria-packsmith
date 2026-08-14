@@ -208,8 +208,21 @@ def translate_snapshot(snapshot: Any) -> dict:
     if width != 6 or not 1 <= cell_count <= 60:
         raise GameBridgeError("游戏返回的背包尺寸无效")
 
+    raw_double_level_cells = snapshot.get("doubleLevelCells", [])
+    if not isinstance(raw_double_level_cells, list):
+        raise GameBridgeError("游戏背包桥接的效率加倍格格式无效")
+    double_level_cells: list[int] = []
+    for raw_cell in raw_double_level_cells:
+        cell = _integer(raw_cell, -1)
+        if not 0 <= cell < cell_count or cell in double_level_cells:
+            raise GameBridgeError("游戏背包桥接的效率加倍格无效")
+        double_level_cells.append(cell)
+
     result = {
-        "grid": {"cellCount": cell_count},
+        "grid": {
+            "cellCount": cell_count,
+            "doubleLevelCells": sorted(double_level_cells),
+        },
         "artifacts": [],
         "tablets": [],
         "customTabletTypes": [],

@@ -53,8 +53,23 @@ if (-not $bepInExInstalled) {
 }
 $pluginDir = Join-Path $GameDir 'BepInEx\plugins'
 New-Item -ItemType Directory -Force -Path $pluginDir | Out-Null
-Copy-Item -LiteralPath $pluginSource `
-    -Destination (Join-Path $pluginDir 'SephiriaInventoryBridge.dll') -Force
+$pluginTarget = Join-Path $pluginDir 'SephiriaInventoryBridge.dll'
+if (-not $runningGame) {
+    Get-ChildItem -LiteralPath $pluginDir -Filter 'SephiriaInventoryBridge.dll.loaded-*' -File `
+        -ErrorAction SilentlyContinue | Remove-Item -Force
+}
+try {
+    Copy-Item -LiteralPath $pluginSource -Destination $pluginTarget -Force
+} catch [System.IO.IOException] {
+    if (-not $runningGame -or -not (Test-Path -LiteralPath $pluginTarget -PathType Leaf)) {
+        throw
+    }
+    $processId = ($runningGame | Select-Object -First 1).Id
+    $loadedTarget = "$pluginTarget.loaded-$processId-$(Get-Date -Format 'yyyyMMddHHmmss')"
+    Move-Item -LiteralPath $pluginTarget -Destination $loadedTarget
+    Copy-Item -LiteralPath $pluginSource -Destination $pluginTarget
+    Write-Output "Preserved the currently loaded plugin as: $loadedTarget"
+}
 Write-Output "Installed the inventory read/apply bridge under: $GameDir"
 if ($runningGame) {
     Write-Output 'Restart Sephiria, enter a run, then click Read Game in the solver.'

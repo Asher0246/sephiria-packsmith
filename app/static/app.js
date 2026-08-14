@@ -17,6 +17,8 @@ const state = {
   serial: 1,
   pollTimer: null,
   composeNameDirty: false,
+  doubleLevelCells: new Set(),
+  cellMenuCell: null,
 };
 
 const criteriaLabels = {
@@ -260,15 +262,55 @@ function toggleArtifactSources(board, detail, active) {
   });
 }
 
+function closeCellMenu() {
+  $("cellMenu").hidden = true;
+  state.cellMenuCell = null;
+  document.querySelectorAll(".cell[aria-expanded=\"true\"]").forEach((cell) => {
+    cell.setAttribute("aria-expanded", "false");
+  });
+}
+
+function openCellMenu(cellIndex, anchor) {
+  closeCellMenu();
+  state.cellMenuCell = cellIndex;
+  const menu = $("cellMenu");
+  const input = $("cellDoubleLevelInput");
+  input.checked = state.doubleLevelCells.has(cellIndex);
+  menu.hidden = false;
+  anchor.setAttribute("aria-expanded", "true");
+  const anchorRect = anchor.getBoundingClientRect();
+  const menuRect = menu.getBoundingClientRect();
+  const gap = 6;
+  const left = Math.max(8, Math.min(anchorRect.left, window.innerWidth - menuRect.width - 8));
+  const below = anchorRect.bottom + gap;
+  const top = below + menuRect.height <= window.innerHeight - 8
+    ? below : Math.max(8, anchorRect.top - menuRect.height - gap);
+  menu.style.left = `${left}px`;
+  menu.style.top = `${top}px`;
+  input.focus({ preventScroll: true });
+}
+
 function renderBoard() {
   const board = $("board"); board.style.setProperty("--cols", String(cols())); board.replaceChildren();
   const placements = new Map((state.result?.placements || []).map((entry) => [entry.cell, entry]));
   const details = new Map((state.result?.artifacts || []).map((entry) => [entry.instanceId, entry]));
   const unlocked = new Set(state.result?.unlockedCells || []); const effects = state.result?.cellEffects || [];
   for (let cellIndex = 0; cellIndex < gridCellCount(); cellIndex += 1) {
-    const cell = document.createElement("div"); cell.className = `cell${unlocked.has(cellIndex) ? " unlock" : ""}`;
+    const doubled = state.doubleLevelCells.has(cellIndex);
+    const cell = document.createElement("div"); cell.className = `cell${unlocked.has(cellIndex) ? " unlock" : ""}${doubled ? " double-level" : ""}`;
     cell.dataset.cell = String(cellIndex);
+    cell.tabIndex = 0;
+    cell.setAttribute("role", "button");
+    cell.setAttribute("aria-haspopup", "menu");
+    cell.setAttribute("aria-expanded", "false");
+    cell.setAttribute("aria-label", `格子 ${cellIndex + 1}${doubled ? "，效率加倍" : ""}`);
+    cell.addEventListener("click", () => openCellMenu(cellIndex, cell));
+    cell.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault(); openCellMenu(cellIndex, cell);
+    });
     const index = document.createElement("span"); index.className = "cell-index"; index.textContent = String(cellIndex + 1); cell.append(index);
+    if (doubled) { const badge = document.createElement("span"); badge.className = "cell-double-badge"; badge.textContent = "×2"; cell.append(badge); }
     if (effects[cellIndex]) { const effect = document.createElement("span"); effect.className = `cell-effect${effects[cellIndex] < 0 ? " negative" : ""}`; effect.textContent = effects[cellIndex] > 0 ? `+${effects[cellIndex]}` : String(effects[cellIndex]); cell.append(effect); }
     const placement = placements.get(cellIndex);
     if (placement) {
@@ -304,6 +346,7 @@ function renderBoard() {
 }
 
 function updateGrid() {
+  closeCellMenu();
   $("cellCountInput").value = gridCellCount();
   if (state.items.length > gridCellCount()) { state.items = state.items.slice(0, gridCellCount()); showToast("网格缩小后，超出容量的末尾物品已移除。"); }
   let cleared = 0;
@@ -314,6 +357,7 @@ function updateGrid() {
   const previousCount = state.items.length;
   state.items = state.items.filter((item) => item.kind !== "tablet" || !incompatible.has(item.typeId));
   if (state.items.length !== previousCount) showToast("背包格数已变化，不兼容的自定义石板已从构筑中移除。");
+  state.doubleLevelCells = new Set([...state.doubleLevelCells].filter((cell) => cell < gridCellCount()));
   state.result = null; persist(); renderCatalog(); renderOwned(); renderBoard(); updateStatusIdle();
 }
 
@@ -326,7 +370,7 @@ function scheduleGridUpdate() {
 function requestPayload() {
   const customIds = new Set(state.items.filter((item) => item.kind === "tablet").map((item) => item.typeId));
   const payload = {
-    grid: { cellCount: gridCellCount() },
+    grid: { cellCount: gridCellCount(), doubleLevelCells: [...state.doubleLevelCells].sort((a, b) => a - b) },
     artifacts: state.items.filter((i) => i.kind === "artifact").map((i) => ({ instanceId: i.instanceId, typeId: i.typeId, weight: i.weight, baseLevel: i.baseLevel ?? 0, minLevel: i.minLevel, exactLevel: i.exactLevel, fixedCell: i.fixedCell, specialPriority: Boolean(i.specialPriority), specialTargetInstanceId: i.specialTargetInstanceId || null })),
     tablets: state.items.filter((i) => i.kind === "tablet").map((i) => ({ instanceId: i.instanceId, typeId: i.typeId, fixedCell: i.fixedCell, fixedRotation: i.fixedRotation, preferredRotation: i.preferredRotation ?? null })),
     customTabletTypes: state.customTabletTypes.filter((type) => customIds.has(type.id)),
@@ -382,6 +426,7 @@ async function readGameInventory() {
   try {
     const inventory = await api("/api/game-inventory");
     $("cellCountInput").value = inventory.grid.cellCount;
+    state.doubleLevelCells = new Set(Array.isArray(inventory.grid.doubleLevelCells) ? inventory.grid.doubleLevelCells : []);
     state.customTabletTypes = Array.isArray(inventory.customTabletTypes) ? inventory.customTabletTypes : [];
     state.gameSource = inventory.source?.fingerprint ? inventory.source : null;
     state.items = [
@@ -395,7 +440,8 @@ async function readGameInventory() {
     const names = (inventory.unmapped || []).map((item) => item.name || `实体 ${item.entityId}`).join("、");
     setStatus("warning", `有 ${skipped} 件物品无法识别`, `${names}。求解后无法应用到游戏。`);
   }
-    showToast(skipped ? `已读取 ${state.items.length} 件物品，另有 ${skipped} 件无法识别。` : `已读取游戏中的 ${state.items.length} 件物品。`);
+    const doubled = state.doubleLevelCells.size ? `，检测到 ${state.doubleLevelCells.size} 个效率加倍格` : "";
+    showToast(skipped ? `已读取 ${state.items.length} 件物品${doubled}，另有 ${skipped} 件无法识别。` : `已读取游戏中的 ${state.items.length} 件物品${doubled}。`);
   } catch (error) {
     showToast(error.message);
   } finally {
@@ -544,7 +590,7 @@ function relativeGapPercent(relativeGap) {
 function showResult(result, solveId) {
   state.result = result; renderBoard();
   const gapPercent = relativeGapPercent(result.relativeGap);
-  $("primaryMetric").textContent = result.primaryObjective ?? "—"; $("secondaryMetric").textContent = result.secondaryObjective ?? "—"; $("specialMetric").textContent = result.specialObjective ?? "—"; $("tertiaryMetric").textContent = result.tertiaryObjective ?? "—"; $("emptyCellMetric").textContent = result.emptyCellObjective ?? "—";
+  $("secondaryMetric").textContent = result.secondaryObjective ?? "—"; $("emptyCellMetric").textContent = result.emptyCellObjective ?? "—";
   $("gapMetric").textContent = gapPercent == null ? "—" : `${gapPercent.toFixed(1)}%`; $("timeMetric").textContent = `${result.solveMs} ms`;
   state.finishedSolveId = result.placements?.length && state.solveUsedGameSource ? solveId : null;
   updateApplyButton();
@@ -563,12 +609,12 @@ function showResult(result, solveId) {
   });
   specialWrap.replaceChildren(...specialLines);
   specialWrap.hidden = specialLines.length === 0;
-  const optimalDetail = result.specialStatus === "DISABLED" ? "加权得分、等级合计、副作用惩罚与空闲格等级均已完成最优性证明" : "特殊效果、加权得分、等级合计、副作用惩罚与空闲格等级均已完成最优性证明";
+  const optimalDetail = result.specialStatus === "DISABLED" ? "等级与布局细化均已完成最优性证明" : "特殊效果、等级与布局细化均已完成最优性证明";
   const feasibleDetail = gapPercent == null ? "当前解的最优差距暂不可用" : `当前解距目标上界 ${gapPercent.toFixed(1)}%`;
   setStatus(result.solutionStatus === "OPTIMAL" ? "success" : "warning", result.solutionStatus === "OPTIMAL" ? "已证明最优" : "已找到可行排布", result.solutionStatus === "OPTIMAL" ? optimalDetail : feasibleDetail);
   const tbody = $("resultBody"); tbody.replaceChildren();
   result.artifacts.forEach((detail) => {
-    const tr = document.createElement("tr"); const values = [detail.name, `${Math.floor(detail.cell / cols()) + 1} 行 ${detail.cell % cols() + 1} 列`, detail.rawBonus > 0 ? `+${detail.rawBonus}` : detail.rawBonus, `${detail.level} / ${detail.cap}`, detail.weight, detail.contribution];
+    const tr = document.createElement("tr"); const values = [detail.name, `${Math.floor(detail.cell / cols()) + 1} 行 ${detail.cell % cols() + 1} 列`, detail.rawBonus > 0 ? `+${detail.rawBonus}` : detail.rawBonus, `${detail.level} / ${detail.cap}`];
     values.forEach((value) => { const td = document.createElement("td"); td.textContent = String(value); tr.append(td); });
     const status = document.createElement("td"); const chip = document.createElement("span"); chip.className = `status-chip${detail.active ? "" : " inactive"}`; chip.textContent = detail.active ? "生效" : "未启用"; status.append(chip); tr.append(status); tbody.append(tr);
   });
@@ -580,13 +626,14 @@ function setStatus(kind, title, detail) { const bar = $("statusBar"); bar.classN
 function updateStatusIdle() {
   state.finishedSolveId = null; state.solveUsedGameSource = false; updateApplyButton();
   const fixed = state.items.filter((i) => i.fixedCell != null || i.fixedRotation != null || i.minLevel != null || i.exactLevel != null || i.specialPriority || (i.kind === "artifact" && (i.weight !== 5 || (i.baseLevel ?? 0) !== 0))).length;
-  setStatus("idle", state.items.length ? "构筑已更新" : "等待构筑", `${state.items.length} 件物品 · ${fixed} 件带约束`);
-  ["primaryMetric", "secondaryMetric", "specialMetric", "tertiaryMetric", "emptyCellMetric", "gapMetric", "timeMetric"].forEach((id) => { $(id).textContent = "—"; }); $("resultSection").hidden = true;
+  const doubled = state.doubleLevelCells.size ? ` · ${state.doubleLevelCells.size} 格效率加倍` : "";
+  setStatus("idle", state.items.length ? "构筑已更新" : "等待构筑", `${state.items.length} 件物品 · ${fixed} 件带约束${doubled}`);
+  ["secondaryMetric", "emptyCellMetric", "gapMetric", "timeMetric"].forEach((id) => { $(id).textContent = "—"; }); $("resultSection").hidden = true;
 }
 function showToast(message) { const toast = $("toast"); toast.textContent = message; toast.hidden = false; clearTimeout(showToast.timer); showToast.timer = setTimeout(() => { toast.hidden = true; }, 3200); }
 
 function persist() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({ cellCount: gridCellCount(), items: state.items, customTabletTypes: state.customTabletTypes, serial: state.serial }));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ cellCount: gridCellCount(), items: state.items, customTabletTypes: state.customTabletTypes, doubleLevelCells: [...state.doubleLevelCells], serial: state.serial }));
 }
 function restore() {
   try {
@@ -596,6 +643,7 @@ function restore() {
     state.items = raw.items.filter((item) => item && ["artifact", "tablet"].includes(item.kind) && findType(item.kind, item.typeId)).map((item) => ({ ...item, weight: item.kind === "artifact" && item.weight == null ? 5 : item.weight, baseLevel: item.kind === "artifact" ? Math.max(0, Number(item.baseLevel) || 0) : null, specialPriority: item.kind === "artifact" && Boolean(item.specialPriority), specialTargetInstanceId: typeof item.specialTargetInstanceId === "string" ? item.specialTargetInstanceId : null }));
     const artifactIds = new Set(state.items.filter((item) => item.kind === "artifact").map((item) => item.instanceId));
     state.items.forEach((item) => { if (item.specialTargetInstanceId && !artifactIds.has(item.specialTargetInstanceId)) item.specialTargetInstanceId = null; });
+    state.doubleLevelCells = new Set((Array.isArray(raw.doubleLevelCells) ? raw.doubleLevelCells : []).filter((cell) => Number.isInteger(cell) && cell >= 0 && cell < gridCellCount()));
     state.serial = Number(raw.serial) || state.items.length + 1;
   } catch { localStorage.removeItem(STORAGE_KEY); }
 }
@@ -610,7 +658,11 @@ function bindEvents() {
   $("composeCancelBtn").addEventListener("click", () => $("composeDialog").close());
   $("composeForm").addEventListener("submit", composeSelectedTablets);
   $("cellCountInput").addEventListener("input", scheduleGridUpdate); $("cellCountInput").addEventListener("change", updateGrid); $("solveBtn").addEventListener("click", startSolve); $("stopBtn").addEventListener("click", stopSolve);
-  $("resetBtn").addEventListener("click", () => { if (state.items.length && !confirm("清空当前构筑和求解结果？")) return; state.items = []; state.customTabletTypes = []; state.gameSource = null; state.result = null; persist(); renderCatalog(); renderOwned(); renderBoard(); updateStatusIdle(); });
+  $("cellDoubleLevelInput").addEventListener("change", (event) => { const cell = state.cellMenuCell; if (cell == null) return; if (event.target.checked) state.doubleLevelCells.add(cell); else state.doubleLevelCells.delete(cell); state.result = null; closeCellMenu(); persist(); renderBoard(); updateStatusIdle(); });
+  document.addEventListener("pointerdown", (event) => { if (!$("cellMenu").hidden && !$("cellMenu").contains(event.target) && !event.target.closest(".cell")) closeCellMenu(); });
+  document.addEventListener("keydown", (event) => { if (event.key === "Escape") closeCellMenu(); });
+  window.addEventListener("resize", closeCellMenu);
+  $("resetBtn").addEventListener("click", () => { if ((state.items.length || state.doubleLevelCells.size) && !confirm("清空当前构筑和求解结果？")) return; state.items = []; state.customTabletTypes = []; state.doubleLevelCells.clear(); state.gameSource = null; state.result = null; closeCellMenu(); persist(); renderCatalog(); renderOwned(); renderBoard(); updateStatusIdle(); });
 }
 function switchKind(kind) { state.kind = kind; $("artifactTab").classList.toggle("active", kind === "artifact"); $("tabletTab").classList.toggle("active", kind === "tablet"); $("artifactTab").setAttribute("aria-selected", String(kind === "artifact")); $("tabletTab").setAttribute("aria-selected", String(kind === "tablet")); renderCatalog(); }
 

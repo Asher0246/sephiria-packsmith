@@ -15,7 +15,7 @@ using UnityEngine;
 
 namespace SephiriaInventoryBridge
 {
-    [BepInPlugin("local.sephiria.inventorybridge", "Sephiria Inventory Bridge", "1.2.2")]
+    [BepInPlugin("local.sephiria.inventorybridge", "Sephiria Inventory Bridge", "1.3.0")]
     public sealed class InventoryBridgePlugin : BaseUnityPlugin
     {
         private const string PipeName = "SephiriaInventoryBridge.v1";
@@ -516,6 +516,11 @@ namespace SephiriaInventoryBridge
                     .Append(item.InstanceId).Append(':').Append(item.EntityId).Append(':')
                     .Append(item.X).Append(':').Append(item.Y).Append(':').Append(item.Rotation);
             }
+            foreach (KeyValuePair<int, int> multiplier in CaptureFixedLevelMultipliers(
+                inventory, GetInt(inventory, "Width", 6), GetInt(inventory, "CurrentInventoryStorage", 0)))
+            {
+                canonical.Append("|M:").Append(multiplier.Key).Append(':').Append(multiplier.Value);
+            }
             using (SHA256 sha = SHA256.Create())
                 return BitConverter.ToString(sha.ComputeHash(
                     Encoding.UTF8.GetBytes(canonical.ToString()))).Replace("-", "").ToLowerInvariant();
@@ -534,6 +539,8 @@ namespace SephiriaInventoryBridge
             int cellCount = GetInt(inventory, "CurrentInventoryStorage", 0);
             if (cellCount <= 0)
                 cellCount = width * height;
+            SortedDictionary<int, int> fixedMultipliers = CaptureFixedLevelMultipliers(
+                inventory, width, cellCount);
 
             StringBuilder artifacts = new StringBuilder();
             StringBuilder tablets = new StringBuilder();
@@ -616,10 +623,50 @@ namespace SephiriaInventoryBridge
             JsonString(json, "assemblySha256", _assemblySha256, false);
             JsonString(json, "capturedAt", DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture), false);
             JsonString(json, "inventoryFingerprint", ComputeInventoryFingerprint(inventory), false);
+            json.Append(",\"doubleLevelCells\":[");
+            bool firstDoubleCell = true;
+            foreach (KeyValuePair<int, int> multiplier in fixedMultipliers)
+            {
+                if (multiplier.Value != 2)
+                    continue;
+                if (!firstDoubleCell) json.Append(',');
+                firstDoubleCell = false;
+                json.Append(multiplier.Key.ToString(CultureInfo.InvariantCulture));
+            }
+            json.Append(']');
             json.Append(",\"artifacts\":[").Append(artifacts).Append(']');
             json.Append(",\"tablets\":[").Append(tablets).Append(']');
             json.Append('}');
             return json.ToString();
+        }
+
+        private static SortedDictionary<int, int> CaptureFixedLevelMultipliers(
+            object inventory, int width, int cellCount)
+        {
+            SortedDictionary<int, int> result = new SortedDictionary<int, int>();
+            IEnumerable engravings = GetMember(inventory, "fixedEngravingsOnServer") as IEnumerable;
+            if (engravings == null || width <= 0 || cellCount <= 0)
+                return result;
+            foreach (object engraving in engravings)
+            {
+                IEnumerable entries = GetMember(engraving, "fixedMultiplyLevel") as IEnumerable;
+                if (entries == null)
+                    continue;
+                foreach (object entry in entries)
+                {
+                    object position = GetMember(entry, "Key");
+                    int x = GetInt(position, "x", -1);
+                    int y = GetInt(position, "y", -1);
+                    int cell = y * width + x;
+                    int value = GetInt(entry, "Value", 0);
+                    if (x < 0 || y < 0 || cell < 0 || cell >= cellCount || value <= 0)
+                        continue;
+                    int existing;
+                    result.TryGetValue(cell, out existing);
+                    result[cell] = existing + value;
+                }
+            }
+            return result;
         }
 
         private string GetEffectiveTabletString(object tablet, string methodName, string fieldName, int instanceId)

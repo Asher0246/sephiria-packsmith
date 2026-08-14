@@ -58,10 +58,7 @@
       </div>
 
       <div class="metrics" aria-label="求解指标">
-        <div><span>加权得分</span><strong id="primaryMetric">—</strong></div>
         <div><span>等级合计</span><strong id="secondaryMetric">—</strong></div>
-        <div><span>加权特殊效果</span><strong id="specialMetric">—</strong></div>
-        <div><span>副作用惩罚</span><strong id="tertiaryMetric">—</strong></div>
         <div><span>空闲格等级</span><strong id="emptyCellMetric">—</strong></div>
         <div><span>最优差距</span><strong id="gapMetric">—</strong></div>
         <div><span>求解耗时</span><strong id="timeMetric">—</strong></div>
@@ -78,7 +75,7 @@
         <div id="specialSummary" class="special-summary" hidden></div>
         <div class="section-heading"><h3>神器明细</h3><span id="activeSummary"></span></div>
         <div class="result-table-wrap">
-          <table class="result-table"><thead><tr><th>神器</th><th>位置</th><th>加成</th><th>等级</th><th>权重</th><th>贡献</th><th>状态</th></tr></thead><tbody id="resultBody"></tbody></table>
+          <table class="result-table"><thead><tr><th>神器</th><th>位置</th><th>加成</th><th>等级</th><th>状态</th></tr></thead><tbody id="resultBody"></tbody></table>
         </div>
       </section>
     </section>
@@ -109,6 +106,10 @@
       <footer><button id="composeCancelBtn" class="button secondary" type="button">取消</button><button id="composeConfirmBtn" class="button primary" type="submit">合成并替换</button></footer>
     </form>
   </dialog>
+
+  <div id="cellMenu" class="cell-menu" hidden>
+    <label><input id="cellDoubleLevelInput" type="checkbox"><span>效率加倍</span></label>
+  </div>
 
   <div id="toast" class="toast" role="alert" hidden></div>
   <script src="/app.js" defer></script>
