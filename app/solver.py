@@ -23,6 +23,31 @@ PLANET_ARTIFACT_IDS = frozenset({
 SPECIAL_COMPLETION_SCALE = 1000
 
 
+def _bounded_relative_gap(value: int, upper_bound: int) -> float:
+    upper_bound = max(value, upper_bound)
+    if upper_bound <= value:
+        return 0.0
+    return min(1.0, (upper_bound - value) / max(1, abs(upper_bound)))
+
+
+def _primary_bound_from_phase1(
+    phase1_bound: int,
+    special_value: int,
+    special_upper: int,
+    special_scale: int,
+    primary_value: int,
+    primary_upper: int,
+    primary_scale: int,
+) -> int:
+    if special_upper:
+        special_bound = phase1_bound // special_scale
+        if special_bound != special_value:
+            return primary_upper
+        phase1_bound -= special_bound * special_scale
+    encoded_bound = phase1_bound // primary_scale
+    return min(primary_upper, max(primary_value, encoded_bound))
+
+
 @dataclass(frozen=True)
 class Candidate:
     cell: int
@@ -824,8 +849,13 @@ def solve(
                              "求解已停止" if controller.stopped else "没有满足全部约束的排布", started, built)
 
     primary_value = solver.value(primary)
-    combined_bound = math.ceil(solver.best_objective_bound - 1e-6)
-    primary_bound = combined_bound // primary_scale
+    phase1_value = solver.value(phase1_objective)
+    phase1_bound = max(phase1_value, math.ceil(solver.best_objective_bound - 1e-6))
+    phase1_special_value = solver.value(special) if special_rewards else 0
+    primary_bound = _primary_bound_from_phase1(
+        phase1_bound, phase1_special_value, special_upper, special_scale,
+        primary_value, primary_upper, primary_scale,
+    )
     best_solver = solver
     secondary_status = "OPTIMAL" if phase1_status == cp_model.OPTIMAL else "NOT_RUN"
     special_status = status_name if special_rewards else "DISABLED"
@@ -961,7 +991,9 @@ def solve(
                and special_status in ("DISABLED", "OPTIMAL")
                and tertiary_status == "OPTIMAL"
                and empty_cell_status == "OPTIMAL")
-    gap = 0.0 if phase1_status == cp_model.OPTIMAL else max(0.0, (primary_bound - primary_value) / max(1, abs(primary_value)))
+    gap = 0.0 if phase1_status == cp_model.OPTIMAL else _bounded_relative_gap(
+        phase1_value, phase1_bound,
+    )
     return {
         "solutionStatus": "OPTIMAL" if optimal else ("STOPPED" if controller.stopped else "FEASIBLE"),
         "secondaryStatus": secondary_status, "specialStatus": special_status,

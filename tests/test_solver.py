@@ -1,7 +1,14 @@
 import pytest
 
 from app.models import ArtifactInstance, ArtifactType, SolveRequest, TabletInstance, TabletType
-from app.solver import Candidate, StopController, build_candidates, solve
+from app.solver import (
+    Candidate,
+    StopController,
+    _bounded_relative_gap,
+    _primary_bound_from_phase1,
+    build_candidates,
+    solve,
+)
 from app.validation import validate_result
 
 
@@ -12,6 +19,37 @@ TABLET = TabletType("tablet-t", "右侧+5", "rare", True, None, None, ((1, 5),))
 
 def maps():
     return {ARTIFACT.id: ARTIFACT, EDGE_ARTIFACT.id: EDGE_ARTIFACT}, {TABLET.id: TABLET}
+
+
+@pytest.mark.parametrize(("value", "bound", "expected"), (
+    (100, 100, 0.0),
+    (50, 100, 0.5),
+    (1, 10_000, 0.9999),
+    (0, 10_000, 1.0),
+))
+def test_relative_gap_is_measured_against_bound_and_never_exceeds_one(value, bound, expected):
+    assert _bounded_relative_gap(value, bound) == pytest.approx(expected)
+
+
+def test_primary_bound_ignores_lexicographic_special_objective_scale():
+    assert _primary_bound_from_phase1(
+        phase1_bound=2 * 1_000_000 + 90 * 100 + 4,
+        special_value=1,
+        special_upper=5,
+        special_scale=1_000_000,
+        primary_value=50,
+        primary_upper=100,
+        primary_scale=100,
+    ) == 100
+    assert _primary_bound_from_phase1(
+        phase1_bound=1 * 1_000_000 + 90 * 100 + 4,
+        special_value=1,
+        special_upper=5,
+        special_scale=1_000_000,
+        primary_value=50,
+        primary_upper=100,
+        primary_scale=100,
+    ) == 90
 
 
 def test_candidate_rotation_uses_anchor_and_clips_effects():
