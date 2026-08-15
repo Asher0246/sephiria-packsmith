@@ -34,6 +34,9 @@ def request(url, token=None, data=None, method=None):
 def test_static_catalog_auth_and_async_solve(live_server):
     base, token = live_server
     assert request(base + "/").status == 200
+    game_read_script = request(base + "/game_read_state.js")
+    assert game_read_script.status == 200
+    assert b"SAME_RUN_THRESHOLD" in game_read_script.read()
     with pytest.raises(urllib.error.HTTPError) as denied:
         request(base + "/api/catalog")
     assert denied.value.code == 403

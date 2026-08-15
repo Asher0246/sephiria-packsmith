@@ -4,6 +4,7 @@ const $ = (id) => document.getElementById(id);
 const token = new URLSearchParams(location.search).get("token") || "";
 const STORAGE_KEY = "sephiria-solver-build-wiki-v1";
 const GRID_COLS = 6;
+const gameReadState = window.SephiriaGameReadState;
 const state = {
   catalog: { artifacts: [], tablets: [] },
   customTabletTypes: [],
@@ -14,6 +15,7 @@ const state = {
   finishedSolveId: null,
   solveUsedGameSource: false,
   gameSource: null,
+  lastGameRead: null,
   serial: 1,
   pollTimer: null,
   composeNameDirty: false,
@@ -429,19 +431,24 @@ async function readGameInventory() {
     state.doubleLevelCells = new Set(Array.isArray(inventory.grid.doubleLevelCells) ? inventory.grid.doubleLevelCells : []);
     state.customTabletTypes = Array.isArray(inventory.customTabletTypes) ? inventory.customTabletTypes : [];
     state.gameSource = inventory.source?.fingerprint ? inventory.source : null;
-    state.items = [
+    const incomingItems = [
       ...inventory.artifacts.map((item) => ({ ...item, kind: "artifact", fixedRotation: null })),
       ...inventory.tablets.map((item) => ({ ...item, kind: "tablet", weight: 1, baseLevel: null, minLevel: null, exactLevel: null, specialPriority: false, specialTargetInstanceId: null })),
     ];
+    const inheritance = gameReadState.inheritArtifactSettings(state.lastGameRead, incomingItems);
+    state.items = inheritance.items;
+    state.lastGameRead = gameReadState.captureGameRead(state.items);
     state.serial = state.items.length + 1; state.result = null;
     persist(); renderCatalog(); renderOwned(); renderBoard(); updateStatusIdle();
     const skipped = inventory.unmapped?.length || 0;
   if (skipped) {
     const names = (inventory.unmapped || []).map((item) => item.name || `实体 ${item.entityId}`).join("、");
     setStatus("warning", `有 ${skipped} 件物品无法识别`, `${names}。求解后无法应用到游戏。`);
-  }
+    }
     const doubled = state.doubleLevelCells.size ? `，检测到 ${state.doubleLevelCells.size} 个效率加倍格` : "";
-    showToast(skipped ? `已读取 ${state.items.length} 件物品${doubled}，另有 ${skipped} 件无法识别。` : `已读取游戏中的 ${state.items.length} 件物品${doubled}。`);
+    const inherited = inheritance.sameRun && inheritance.inheritedCount
+      ? `，已识别为同一局并继承 ${inheritance.inheritedCount} 件神器的优先设置` : "";
+    showToast(skipped ? `已读取 ${state.items.length} 件物品${doubled}${inherited}，另有 ${skipped} 件无法识别。` : `已读取游戏中的 ${state.items.length} 件物品${doubled}${inherited}。`);
   } catch (error) {
     showToast(error.message);
   } finally {
@@ -633,6 +640,12 @@ function updateStatusIdle() {
 function showToast(message) { const toast = $("toast"); toast.textContent = message; toast.hidden = false; clearTimeout(showToast.timer); showToast.timer = setTimeout(() => { toast.hidden = true; }, 3200); }
 
 function persist() {
+  const currentGameRead = gameReadState.captureGameRead(state.items);
+  if (state.lastGameRead && currentGameRead
+      && gameReadState.inventorySimilarity(state.lastGameRead, currentGameRead.items) === 1
+      && state.lastGameRead.items.length === currentGameRead.items.length) {
+    state.lastGameRead = currentGameRead;
+  }
   localStorage.setItem(STORAGE_KEY, JSON.stringify({ cellCount: gridCellCount(), items: state.items, customTabletTypes: state.customTabletTypes, doubleLevelCells: [...state.doubleLevelCells], serial: state.serial }));
 }
 function restore() {
@@ -662,7 +675,7 @@ function bindEvents() {
   document.addEventListener("pointerdown", (event) => { if (!$("cellMenu").hidden && !$("cellMenu").contains(event.target) && !event.target.closest(".cell")) closeCellMenu(); });
   document.addEventListener("keydown", (event) => { if (event.key === "Escape") closeCellMenu(); });
   window.addEventListener("resize", closeCellMenu);
-  $("resetBtn").addEventListener("click", () => { if ((state.items.length || state.doubleLevelCells.size) && !confirm("清空当前构筑和求解结果？")) return; state.items = []; state.customTabletTypes = []; state.doubleLevelCells.clear(); state.gameSource = null; state.result = null; closeCellMenu(); persist(); renderCatalog(); renderOwned(); renderBoard(); updateStatusIdle(); });
+  $("resetBtn").addEventListener("click", () => { if ((state.items.length || state.doubleLevelCells.size) && !confirm("清空当前构筑和求解结果？")) return; state.items = []; state.customTabletTypes = []; state.doubleLevelCells.clear(); state.gameSource = null; state.lastGameRead = null; state.result = null; closeCellMenu(); persist(); renderCatalog(); renderOwned(); renderBoard(); updateStatusIdle(); });
 }
 function switchKind(kind) { state.kind = kind; $("artifactTab").classList.toggle("active", kind === "artifact"); $("tabletTab").classList.toggle("active", kind === "tablet"); $("artifactTab").setAttribute("aria-selected", String(kind === "artifact")); $("tabletTab").setAttribute("aria-selected", String(kind === "tablet")); renderCatalog(); }
 
