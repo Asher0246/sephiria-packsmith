@@ -122,6 +122,76 @@ def test_candidate_deduplication_keeps_preferred_game_rotation():
     assert result["placements"][0]["rotation"] == 3
 
 
+def test_fixed_occupancy_prunes_unfixed_placement_domains():
+    tablet = TabletType(
+        "tablet-fixed-occupancy-pruning", "固定占位剪枝", "common", False, None, None,
+        ((1, 1),),
+    )
+    request = SolveRequest(
+        1, 4,
+        (ArtifactInstance("artifact", ARTIFACT.id, fixed_cell=0),),
+        (TabletInstance("tablet", tablet.id),),
+        1000,
+    )
+
+    result = solve(request, {ARTIFACT.id: ARTIFACT}, {tablet.id: tablet})
+
+    diagnostics = result["diagnostics"]
+    assert result["solutionStatus"] == "OPTIMAL"
+    assert diagnostics["rawTabletCandidates"] == 4
+    assert diagnostics["fixedOccupancyPrunedCandidates"] == 1
+    assert diagnostics["tabletCandidates"] == 3
+    assert diagnostics["artifactPlacementVariables"] == 0
+    assert diagnostics["tabletPlacementVariables"] == 3
+    assert validate_result(request, {ARTIFACT.id: ARTIFACT}, {tablet.id: tablet}, result) == []
+
+
+def test_level_bounds_prune_cells_and_refinement_variables_are_deferred():
+    artifact = ArtifactType("artifact-exact-two", "固定二级", cap=3, rarity=0)
+    tablet = TabletType(
+        "tablet-singleton-plus-two", "固定加二", "common", False, None, None,
+        candidates={"1x4": ((0, 0, ((1, 2),), ()),)},
+    )
+    request = SolveRequest(
+        1, 4,
+        (ArtifactInstance("artifact", artifact.id, exact_level=2),),
+        (TabletInstance("tablet", tablet.id, fixed_cell=0),),
+        1000,
+    )
+
+    result = solve(request, {artifact.id: artifact}, {tablet.id: tablet})
+
+    diagnostics = result["diagnostics"]
+    detail = result["artifacts"][0]
+    assert result["solutionStatus"] == "OPTIMAL"
+    assert (detail["cell"], detail["level"]) == (1, 2)
+    assert diagnostics["artifactPlacementVariables"] == 3
+    assert diagnostics["tabletPlacementVariables"] == 0
+    assert diagnostics["levelPrunedArtifactCells"] == 2
+    assert diagnostics["refinementVariables"] > 0
+    assert diagnostics["finalVariables"] == (
+        diagnostics["phase1Variables"] + diagnostics["refinementVariables"]
+    )
+    assert validate_result(request, {artifact.id: artifact}, {tablet.id: tablet}, result) == []
+
+
+def test_conflicting_fixed_positions_remain_infeasible_after_pruning():
+    tablet = TabletType(
+        "tablet-fixed-conflict", "固定冲突", "common", False, None, None,
+        candidates={"1x2": ((0, 0, (), ()),)},
+    )
+    request = SolveRequest(
+        1, 2,
+        (ArtifactInstance("artifact", ARTIFACT.id, fixed_cell=0),),
+        (TabletInstance("tablet", tablet.id, fixed_cell=0),),
+        1000,
+    )
+
+    result = solve(request, {ARTIFACT.id: ARTIFACT}, {tablet.id: tablet})
+
+    assert result["solutionStatus"] == "INFEASIBLE"
+
+
 def test_interchangeable_tablets_remain_valid_after_symmetry_breaking():
     tablet = TabletType("tablet-pair", "重复石板", "common", False, None, None, ((1, 1),))
     request = SolveRequest(

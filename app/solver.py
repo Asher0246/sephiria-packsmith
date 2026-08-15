@@ -255,23 +255,59 @@ def _deduplicate_candidates(
 
 
 def _bool_or(model: cp_model.CpModel, values: list, name: str):
-    if not values:
+    remaining = []
+    fixed_zero = None
+    for value in values:
+        fixed = _fixed_bool_value(value)
+        if fixed == 1:
+            return value
+        if fixed == 0:
+            fixed_zero = value
+        else:
+            remaining.append(value)
+    if not remaining:
+        if fixed_zero is not None:
+            return fixed_zero
         return model.new_constant(0)
-    if len(values) == 1:
-        return values[0]
+    if len(remaining) == 1:
+        return remaining[0]
     out = model.new_bool_var(name)
-    model.add_max_equality(out, values)
+    model.add_max_equality(out, remaining)
     return out
 
 
 def _bool_and(model: cp_model.CpModel, values: list, name: str):
-    if not values:
+    remaining = []
+    fixed_one = None
+    for value in values:
+        fixed = _fixed_bool_value(value)
+        if fixed == 0:
+            return value
+        if fixed == 1:
+            fixed_one = value
+        else:
+            remaining.append(value)
+    if not remaining:
+        if fixed_one is not None:
+            return fixed_one
         return model.new_constant(1)
-    if len(values) == 1:
-        return values[0]
+    if len(remaining) == 1:
+        return remaining[0]
     out = model.new_bool_var(name)
-    model.add_min_equality(out, values)
+    model.add_min_equality(out, remaining)
     return out
+
+
+def _fixed_bool_value(value) -> int | None:
+    if isinstance(value, (bool, int)):
+        return int(value) if value in (0, 1) else None
+    try:
+        domain = value.Proto().domain
+    except (AttributeError, TypeError):
+        return None
+    if len(domain) == 2 and domain[0] == domain[1] and domain[0] in (0, 1):
+        return int(domain[0])
+    return None
 
 
 def _static_criterion(kind: str, cell: int, rows: int, cols: int, cell_count: int) -> bool | None:
@@ -330,8 +366,14 @@ def _special_objective(
         for c in cells:
             placed_levels = []
             for a, artifact in enumerate(artifact_types):
-                placed = model.new_int_var(0, artifact.cap, f"special_level_{a}_{c}")
-                model.add_multiplication_equality(placed, [score_levels[a], x[a, c]])
+                fixed = _fixed_bool_value(x[a, c])
+                if fixed == 0:
+                    continue
+                if fixed == 1:
+                    placed = score_levels[a]
+                else:
+                    placed = model.new_int_var(0, artifact.cap, f"special_level_{a}_{c}")
+                    model.add_multiplication_equality(placed, [score_levels[a], x[a, c]])
                 placed_levels.append(placed)
             total = model.new_int_var(0, max_cap, f"special_cell_level_{c}")
             model.add(total == sum(placed_levels))
@@ -342,25 +384,42 @@ def _special_objective(
         planet_indexes = [a for a, artifact in enumerate(artifact_types) if artifact.id in PLANET_ARTIFACT_IDS]
         planet_occupied = []
         for c in cells:
-            value = model.new_bool_var(f"planet_occupied_{c}")
-            model.add(value == sum(x[a, c] for a in planet_indexes))
+            terms = [x[a, c] for a in planet_indexes if _fixed_bool_value(x[a, c]) != 0]
+            if not terms:
+                value = 0
+            elif len(terms) == 1:
+                value = terms[0]
+            else:
+                value = model.new_bool_var(f"planet_occupied_{c}")
+                model.add(value == sum(terms))
             planet_occupied.append(value)
 
     shared_side_category = None
     if any(kind == "matching_side_categories" for _, kind in enabled):
-        categories = sorted({category for artifact in artifact_types for category in artifact.categories})
+        categories = sorted({
+            category
+            for artifact in artifact_types
+            for category in artifact.categories
+            if sum(category in candidate.categories for candidate in artifact_types) >= 2
+        })
         category_occupied = {}
         for category in categories:
             indexes = [a for a, artifact in enumerate(artifact_types) if category in artifact.categories]
             for c in cells:
-                value = model.new_bool_var(f"category_{len(category_occupied)}_{c}")
-                model.add(value == sum(x[a, c] for a in indexes))
+                terms = [x[a, c] for a in indexes if _fixed_bool_value(x[a, c]) != 0]
+                if not terms:
+                    value = 0
+                elif len(terms) == 1:
+                    value = terms[0]
+                else:
+                    value = model.new_bool_var(f"category_{len(category_occupied)}_{c}")
+                    model.add(value == sum(terms))
                 category_occupied[category, c] = value
         shared_side_category = []
         for c in cells:
             _, cx = divmod(c, request.cols)
             if cx == 0 or cx == request.cols - 1 or c + 1 >= request.cell_count:
-                shared_side_category.append(model.new_constant(0))
+                shared_side_category.append(0)
                 continue
             matches = [
                 _bool_and(
@@ -373,9 +432,11 @@ def _special_objective(
             shared_side_category.append(_bool_or(model, matches, f"shared_side_category_{c}"))
 
     instance_indexes = {instance.instance_id: index for index, instance in enumerate(request.artifacts)}
-    top_cells = range(min(request.cols, request.cell_count))
-    top_artifact_count = model.new_int_var(0, len(top_cells), "top_artifact_count")
-    model.add(top_artifact_count == sum(artifact_occupied[c] for c in top_cells))
+    top_artifact_count = None
+    if any(kind == "top_row_artifacts" for _, kind in enabled):
+        top_cells = range(min(request.cols, request.cell_count))
+        top_artifact_count = model.new_int_var(0, len(top_cells), "top_artifact_count")
+        model.add(top_artifact_count == sum(artifact_occupied[c] for c in top_cells))
 
     for a, kind in enabled:
         instance = request.artifacts[a]
@@ -397,6 +458,7 @@ def _special_objective(
             raw_score = model.new_int_var(0, upper, f"special_raw_{a}")
             model.add(raw_score == sum(at_cells))
         elif kind == "top_row_artifacts":
+            top_cells = range(min(request.cols, request.cell_count))
             if request.rows == 1:
                 max_score = min(len(top_cells), len(request.artifacts))
             else:
@@ -465,11 +527,19 @@ def solve(
     controller = controller or StopController()
     model = cp_model.CpModel()
     cells = range(request.cell_count)
+    zero = model.new_constant(0)
+    one = model.new_constant(1)
 
     artifact_types = [artifacts_by_id[item.type_id] for item in request.artifacts]
     tablet_types = [tablets_by_id[item.type_id] for item in request.tablets]
+    fixed_position_cells = {
+        item.fixed_cell
+        for item in (*request.artifacts, *request.tablets)
+        if item.fixed_cell is not None
+    }
     candidates: list[tuple[Candidate, ...]] = []
     raw_candidate_count = 0
+    fixed_occupancy_pruned_candidates = 0
     for instance, tablet in zip(request.tablets, tablet_types):
         possible = build_candidates_cached(tablet, request.rows, request.cols, request.cell_count)
         possible = tuple(candidate for candidate in possible
@@ -482,20 +552,53 @@ def solve(
                 possible = tuple(candidate for candidate in possible
                                  if candidate.rotation == instance.fixed_rotation)
         raw_candidate_count += len(possible)
+        if instance.fixed_cell is None and fixed_position_cells:
+            before_pruning = len(possible)
+            possible = tuple(
+                candidate for candidate in possible
+                if candidate.cell not in fixed_position_cells
+            )
+            fixed_occupancy_pruned_candidates += before_pruning - len(possible)
         if instance.fixed_rotation is None:
             possible = _deduplicate_candidates(possible, instance.preferred_rotation)
         if not possible:
             return _empty_result("INFEASIBLE", "石板固定约束没有合法位置", started)
         candidates.append(possible)
 
-    x = {(a, c): model.new_bool_var(f"a_{a}_{c}")
-         for a in range(len(request.artifacts)) for c in cells}
-    y = {(t, k): model.new_bool_var(f"t_{t}_{k}")
-         for t, possible in enumerate(candidates) for k in range(len(possible))}
+    x = {}
+    y = {}
+    placement_vars = []
+    artifact_placement_variables = 0
+    tablet_placement_variables = 0
     for a, item in enumerate(request.artifacts):
-        model.add(sum(x[a, c] for c in cells) == 1)
         if item.fixed_cell is not None:
-            model.add(x[a, item.fixed_cell] == 1)
+            for c in cells:
+                x[a, c] = one if c == item.fixed_cell else zero
+            continue
+        position_vars = []
+        for c in cells:
+            if c not in fixed_position_cells:
+                variable = model.new_bool_var(f"a_{a}_{c}")
+                x[a, c] = variable
+                position_vars.append(variable)
+                placement_vars.append(variable)
+                artifact_placement_variables += 1
+            else:
+                x[a, c] = zero
+        model.add_exactly_one(position_vars)
+
+    for t, possible in enumerate(candidates):
+        if len(possible) == 1:
+            y[t, 0] = one
+            continue
+        position_vars = []
+        for k in range(len(possible)):
+            variable = model.new_bool_var(f"t_{t}_{k}")
+            y[t, k] = variable
+            position_vars.append(variable)
+            placement_vars.append(variable)
+            tablet_placement_variables += 1
+        model.add_exactly_one(position_vars)
 
     # Symmetry breaking: interchangeable artifacts (same type, weight, base
     # level, constraints and no fixed cell) are ordered by cell index so the
@@ -516,9 +619,6 @@ def solve(
                 sum(c * x[left, c] for c in cells)
                 <= sum(c * x[right, c] for c in cells)
             )
-
-    for t, possible in enumerate(candidates):
-        model.add(sum(y[t, k] for k in range(len(possible))) == 1)
 
     tablet_groups: dict[tuple[str, int | None], list[int]] = {}
     for t, item in enumerate(request.tablets):
@@ -625,9 +725,12 @@ def solve(
             for cell, value in candidate.multipliers.items():
                 per_cell_multipliers.setdefault(cell, []).append(value)
                 multiplier_terms_by_cell[cell].append(value * applied)
-        for cell, values in per_cell_values.items():
-            effect_bounds[cell][0] += min(0, *values)
-            effect_bounds[cell][1] += max(0, *values)
+        for cell in per_cell_values:
+            branch_values = [candidate.effects.get(cell, 0) for candidate in possible]
+            if any(candidate.conditions for candidate in possible):
+                branch_values.append(0)
+            effect_bounds[cell][0] += min(branch_values)
+            effect_bounds[cell][1] += max(branch_values)
         for cell, values in per_cell_multipliers.items():
             multiplier_highs[cell] += max(values)
 
@@ -650,62 +753,44 @@ def solve(
             terms.append(opposite_value * opposite_applied)
             if c in applied_by_cell:
                 terms.append(-same_value * applied_by_cell[c])
-        raw = model.new_int_var(low, high, f"raw_{c}")
-        model.add(raw == sum(terms))
+        if terms:
+            raw = model.new_int_var(low, high, f"raw_{c}")
+            model.add(raw == sum(terms))
+        else:
+            raw = zero
         raw_bonus.append(raw)
         raw_bounds.append((low, high))
         unlocked.append(_bool_or(model, unlock_terms_by_cell[c], f"unlocked_{c}"))
         disabled.append(_bool_or(model, disable_terms_by_cell[c], f"disabled_{c}"))
-        multiplier_sum = model.new_int_var(0, multiplier_highs[c], f"multiplier_sum_{c}")
-        model.add(multiplier_sum == sum(multiplier_terms_by_cell[c]))
+        multiplier_terms = multiplier_terms_by_cell[c]
+        if not multiplier_terms:
+            multiplier_sum = zero
+            multiplier_factor = one
+        elif all(isinstance(term, int) for term in multiplier_terms):
+            fixed_multiplier = sum(multiplier_terms)
+            multiplier_sum = model.new_constant(fixed_multiplier)
+            multiplier_factor = model.new_constant(max(1, fixed_multiplier))
+        else:
+            multiplier_sum = model.new_int_var(0, multiplier_highs[c], f"multiplier_sum_{c}")
+            model.add(multiplier_sum == sum(multiplier_terms))
+            multiplier_factor = model.new_int_var(
+                1, max(1, multiplier_highs[c]), f"multiplier_factor_{c}",
+            )
+            model.add_max_equality(multiplier_factor, [multiplier_sum, 1])
         multiplier_sums.append(multiplier_sum)
-        multiplier_factor = model.new_int_var(1, max(1, multiplier_highs[c]), f"multiplier_factor_{c}")
-        model.add_max_equality(multiplier_factor, [multiplier_sum, 1])
         multiplier_factors.append(multiplier_factor)
-
-    # The tertiary objective measures effects that do not help an artifact:
-    # negative net effects on artifact cells and positive net effects on all
-    # other cells.  It is deliberately kept separate from level objectives so
-    # it can only break ties after the first two objectives are fixed.
-    positive_effects = []
-    negative_effects = []
-    for c, (low, high) in enumerate(raw_bounds):
-        positive = model.new_int_var(0, max(0, high), f"positive_effect_{c}")
-        model.add_max_equality(positive, [raw_bonus[c], 0])
-        negative = model.new_int_var(0, max(0, -low), f"negative_effect_{c}")
-        model.add_max_equality(negative, [-raw_bonus[c], 0])
-        positive_effects.append(positive)
-        negative_effects.append(negative)
-
-    negative_on_artifact = []
-    positive_on_artifact = []
-    disabled_on_artifact = []
-    multiplier_on_artifact = []
-    for c in cells:
-        negative_used = model.new_int_var(0, max(0, -raw_bounds[c][0]), f"negative_used_{c}")
-        model.add_multiplication_equality(negative_used, [negative_effects[c], artifact_occupied[c]])
-        positive_used = model.new_int_var(0, max(0, raw_bounds[c][1]), f"positive_used_{c}")
-        model.add_multiplication_equality(positive_used, [positive_effects[c], artifact_occupied[c]])
-        negative_on_artifact.append(negative_used)
-        positive_on_artifact.append(positive_used)
-        disabled_used = model.new_bool_var(f"disabled_used_{c}")
-        model.add_multiplication_equality(disabled_used, [disabled[c], artifact_occupied[c]])
-        disabled_on_artifact.append(disabled_used)
-        multiplier_used = model.new_int_var(0, multiplier_sums[c].Proto().domain[-1], f"multiplier_used_{c}")
-        model.add_multiplication_equality(multiplier_used, [multiplier_sums[c], artifact_occupied[c]])
-        multiplier_on_artifact.append(multiplier_used)
 
     levels = []
     active = []
     score_levels = []
     weighted_contributions = []
-    level_transforms: dict[tuple[int, int], tuple[list, int]] = {}
+    level_transforms: dict[tuple[int, int], tuple[list, list[tuple[int, int]]]] = {}
     for item, artifact in zip(request.artifacts, artifact_types):
         key = (item.base_level, artifact.cap)
         if key in level_transforms:
             continue
         cell_levels = []
-        cell_level_bounds = []
+        cell_level_bounds: list[tuple[int, int]] = []
         for c in cells:
             low, high = raw_bounds[c]
             factor_high = multiplier_factors[c].Proto().domain[-1]
@@ -719,16 +804,40 @@ def solve(
             )
             model.add_multiplication_equality(multiplied, [pre_level, multiplier_factors[c]])
             capped_low = min(product_low, artifact.cap)
-            capped = model.new_int_var(capped_low, artifact.cap, f"capped_{len(level_transforms)}_{c}")
+            capped_high = min(product_high, artifact.cap)
+            capped = model.new_int_var(
+                capped_low, capped_high, f"capped_{len(level_transforms)}_{c}",
+            )
             model.add_min_equality(capped, [multiplied, artifact.cap])
             cell_levels.append(capped)
-            cell_level_bounds.append(capped_low)
-        level_transforms[key] = (cell_levels, min(cell_level_bounds))
+            cell_level_bounds.append((capped_low, capped_high))
+        level_transforms[key] = (cell_levels, cell_level_bounds)
 
+    level_pruned_artifact_cells = 0
     for a, (item, artifact) in enumerate(zip(request.artifacts, artifact_types)):
-        cell_levels, level_low = level_transforms[item.base_level, artifact.cap]
-        level = model.new_int_var(level_low, artifact.cap, f"level_{a}")
-        for c in cells:
+        cell_levels, cell_level_bounds = level_transforms[item.base_level, artifact.cap]
+        possible_cells = []
+        for c, (cell_low, cell_high) in enumerate(cell_level_bounds):
+            impossible = (
+                (item.min_level is not None and cell_high < item.min_level)
+                or (item.exact_level is not None
+                    and not cell_low <= item.exact_level <= cell_high)
+            )
+            if impossible:
+                if _fixed_bool_value(x[a, c]) != 0:
+                    model.add(x[a, c] == 0)
+                    level_pruned_artifact_cells += 1
+                continue
+            if _fixed_bool_value(x[a, c]) != 0:
+                possible_cells.append(c)
+        if possible_cells:
+            level_low = min(cell_level_bounds[c][0] for c in possible_cells)
+            level_high = max(cell_level_bounds[c][1] for c in possible_cells)
+        else:
+            level_low = min(low for low, _ in cell_level_bounds)
+            level_high = max(high for _, high in cell_level_bounds)
+        level = model.new_int_var(level_low, level_high, f"level_{a}")
+        for c in possible_cells:
             model.add(level == cell_levels[c]).only_enforce_if(x[a, c])
         if item.min_level is not None:
             model.add(level >= item.min_level)
@@ -742,12 +851,15 @@ def solve(
 
         active_at = []
         for c in cells:
+            if _fixed_bool_value(x[a, c]) == 0:
+                active_at.append(zero)
+                continue
             cy, cx = divmod(c, request.cols)
             criterion_values = []
             for criterion in artifact.criteria:
                 static = _static_criterion(criterion, c, request.rows, request.cols, request.cell_count)
                 if static is not None:
-                    criterion_values.append(model.new_constant(int(static)))
+                    criterion_values.append(int(static))
                 elif criterion == "side_free":
                     neighbors = []
                     if cx > 0:
@@ -764,7 +876,7 @@ def solve(
                         criterion_values.append(_bool_and(
                             model, [artifact_occupied[c - 1], artifact_occupied[c + 1]], f"both_artifacts_{a}_{c}"))
                     else:
-                        criterion_values.append(model.new_constant(0))
+                        criterion_values.append(0)
             condition = _bool_and(model, criterion_values, f"condition_{a}_{c}")
             eligible = _bool_or(model, [condition, unlocked[c]], f"eligible_{a}_{c}")
             active_at.append(_bool_and(
@@ -787,18 +899,6 @@ def solve(
     primary = sum(weighted_contributions)
     secondary = sum(score_levels)
     special = sum(special_rewards)
-    tertiary = sum(
-        negative_on_artifact[c] + positive_effects[c] - positive_on_artifact[c]
-        + disabled_on_artifact[c] + multiplier_sums[c] - multiplier_on_artifact[c]
-        for c in cells
-    )
-    empty_cell_levels = []
-    for c, (low, high) in enumerate(raw_bounds):
-        empty_level = model.new_int_var(min(0, low), max(0, high), f"empty_level_{c}")
-        model.add(empty_level == raw_bonus[c]).only_enforce_if(occupied[c].Not())
-        model.add(empty_level == 0).only_enforce_if(occupied[c])
-        empty_cell_levels.append(empty_level)
-    empty_cell_score = sum(empty_cell_levels)
     # Phase-1 objective order: enabled special effects first, then weighted
     # levels, then total levels.  Each scale strictly exceeds the full range
     # of every lower-priority component, so the weighted sum is exactly
@@ -822,20 +922,101 @@ def solve(
         + secondary
     )
 
-    tertiary_upper = sum(
-        max(0, -low) + max(0, high) + 1 + multiplier_highs[c]
-        for c, (low, high) in enumerate(raw_bounds)
-    )
-    empty_lower = sum(min(0, low) for low, _ in raw_bounds)
-    empty_upper = sum(max(0, high) for _, high in raw_bounds)
-    empty_span = empty_upper - empty_lower
-    empty_scale = empty_span + 1
-    refinement_objective = (
-        (tertiary_upper - tertiary) * empty_scale
-        + (empty_cell_score - empty_lower)
-    )
+    # These variables only break ties after the core objective is proven.
+    # Keeping them out of phase 1 reduces propagation and presolve work.
+    def add_refinement_objective() -> int:
+        before = len(model.Proto().variables)
+        positive_effects = []
+        negative_effects = []
+        for c, (low, high) in enumerate(raw_bounds):
+            if high <= 0:
+                positive = zero
+            else:
+                positive = model.new_int_var(0, high, f"positive_effect_{c}")
+                model.add_max_equality(positive, [raw_bonus[c], 0])
+            if low >= 0:
+                negative = zero
+            else:
+                negative = model.new_int_var(0, -low, f"negative_effect_{c}")
+                model.add_max_equality(negative, [-raw_bonus[c], 0])
+            positive_effects.append(positive)
+            negative_effects.append(negative)
+
+        negative_on_artifact = []
+        positive_on_artifact = []
+        disabled_on_artifact = []
+        multiplier_on_artifact = []
+        for c in cells:
+            negative_high = max(0, -raw_bounds[c][0])
+            if negative_high:
+                negative_used = model.new_int_var(0, negative_high, f"negative_used_{c}")
+                model.add_multiplication_equality(
+                    negative_used, [negative_effects[c], artifact_occupied[c]],
+                )
+            else:
+                negative_used = zero
+            positive_high = max(0, raw_bounds[c][1])
+            if positive_high:
+                positive_used = model.new_int_var(0, positive_high, f"positive_used_{c}")
+                model.add_multiplication_equality(
+                    positive_used, [positive_effects[c], artifact_occupied[c]],
+                )
+            else:
+                positive_used = zero
+            if _fixed_bool_value(disabled[c]) == 0:
+                disabled_used = zero
+            else:
+                disabled_used = model.new_bool_var(f"disabled_used_{c}")
+                model.add_multiplication_equality(
+                    disabled_used, [disabled[c], artifact_occupied[c]],
+                )
+            multiplier_high = multiplier_sums[c].Proto().domain[-1]
+            if multiplier_high:
+                multiplier_used = model.new_int_var(
+                    0, multiplier_high, f"multiplier_used_{c}",
+                )
+                model.add_multiplication_equality(
+                    multiplier_used, [multiplier_sums[c], artifact_occupied[c]],
+                )
+            else:
+                multiplier_used = zero
+            negative_on_artifact.append(negative_used)
+            positive_on_artifact.append(positive_used)
+            disabled_on_artifact.append(disabled_used)
+            multiplier_on_artifact.append(multiplier_used)
+
+        tertiary = sum(
+            negative_on_artifact[c] + positive_effects[c] - positive_on_artifact[c]
+            + disabled_on_artifact[c] + multiplier_sums[c] - multiplier_on_artifact[c]
+            for c in cells
+        )
+        empty_cell_levels = []
+        for c, (low, high) in enumerate(raw_bounds):
+            if low == 0 and high == 0:
+                empty_level = zero
+            else:
+                empty_level = model.new_int_var(
+                    min(0, low), max(0, high), f"empty_level_{c}",
+                )
+                model.add(empty_level == raw_bonus[c]).only_enforce_if(occupied[c].Not())
+                model.add(empty_level == 0).only_enforce_if(occupied[c])
+            empty_cell_levels.append(empty_level)
+        empty_cell_score = sum(empty_cell_levels)
+        tertiary_upper = sum(
+            max(0, -low) + max(0, high) + 1 + multiplier_highs[c]
+            for c, (low, high) in enumerate(raw_bounds)
+        )
+        empty_lower = sum(min(0, low) for low, _ in raw_bounds)
+        empty_upper = sum(max(0, high) for _, high in raw_bounds)
+        empty_scale = empty_upper - empty_lower + 1
+        model.maximize(
+            (tertiary_upper - tertiary) * empty_scale
+            + (empty_cell_score - empty_lower)
+        )
+        return len(model.Proto().variables) - before
 
     model.maximize(phase1_objective)
+    phase1_variable_count = len(model.Proto().variables)
     built = time.perf_counter()
     deadline = built + request.time_limit_ms / 1000
     solver = cp_model.CpSolver()
@@ -866,16 +1047,19 @@ def solve(
     tertiary_status = "NOT_RUN"
     empty_cell_status = "NOT_RUN"
 
-    placement_vars = list(x.values()) + list(y.values())
     optimization_phases = 1
+    refinement_variable_count = 0
 
     def run_refinement(hint_solver) -> tuple[int | None, cp_model.CpSolver | None]:
-        nonlocal optimization_phases
+        nonlocal optimization_phases, refinement_variable_count
+        remaining = deadline - time.perf_counter()
+        if remaining <= 0 or controller.stopped:
+            return None, None
+        refinement_variable_count = add_refinement_objective()
         remaining = deadline - time.perf_counter()
         if remaining <= 0 or controller.stopped:
             return None, None
         optimization_phases += 1
-        model.maximize(refinement_objective)
         next_solver = cp_model.CpSolver()
         next_solver.parameters.max_time_in_seconds = remaining
         if request.worker_count:
@@ -1014,6 +1198,13 @@ def solve(
         "diagnostics": {
             "tabletCandidates": sum(map(len, candidates)),
             "rawTabletCandidates": raw_candidate_count,
+            "fixedOccupancyPrunedCandidates": fixed_occupancy_pruned_candidates,
+            "levelPrunedArtifactCells": level_pruned_artifact_cells,
+            "artifactPlacementVariables": artifact_placement_variables,
+            "tabletPlacementVariables": tablet_placement_variables,
+            "phase1Variables": phase1_variable_count,
+            "refinementVariables": refinement_variable_count,
+            "finalVariables": len(model.Proto().variables),
             "levelTransformGroups": len(level_transforms),
             "optimizationPhases": optimization_phases,
             "artifacts": len(request.artifacts),
