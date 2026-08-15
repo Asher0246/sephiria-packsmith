@@ -1,4 +1,4 @@
-# Sephiria 背包构筑求解器
+# Sephiria Packsmith
 
 一个在本机浏览器中运行的《Sephiria》背包自动排布工具。目录由 Sephiria Wiki 与游戏文本生成，当前包含 268 种神器与 60 种石板；用户录入本局已获取物品后，可以为每个实例指定固定位置、最低/固定等级、固定旋转和优先权重，由 OR-Tools CP-SAT 搜索最优布局。
 

@@ -77,7 +77,7 @@ class AppState:
 
 def make_handler(state: AppState):
     class Handler(BaseHTTPRequestHandler):
-        server_version = "SephiriaSolver/0.1"
+        server_version = "SephiriaPacksmith/0.1"
 
         def log_message(self, fmt: str, *args) -> None:
             print(f"{self.address_string()} - {fmt % args}")
@@ -272,7 +272,7 @@ def create_server(port: int = 0, token: str | None = None) -> tuple[ThreadingHTT
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Sephiria 背包构筑求解器")
+    parser = argparse.ArgumentParser(description="Sephiria Packsmith 背包构筑求解器")
     parser.add_argument("--port", type=int, default=0)
     parser.add_argument("--token", help=argparse.SUPPRESS)
     parser.add_argument("--no-browser", action="store_true")

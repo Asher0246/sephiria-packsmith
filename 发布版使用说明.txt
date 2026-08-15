@@ -1,4 +1,4 @@
-Sephiria 背包自动排布求解器（Windows x64）
+Sephiria Packsmith 背包自动排布求解器（Windows x64）
 
 一、直接使用求解器
 1. 将整个 ZIP 解压到普通文件夹，不要直接在压缩包内运行。

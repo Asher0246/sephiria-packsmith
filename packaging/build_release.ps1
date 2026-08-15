@@ -1,6 +1,6 @@
 param(
-    [string]$ReleaseName = 'SephiriaSolver-2026.08.07-custom-tablets-win-x64',
-    [string]$PortableBaseName = 'SephiriaSolver-2026.08.07-win-x64',
+    [string]$ReleaseName = 'SephiriaPacksmith-2026.08.07-custom-tablets-win-x64',
+    [string]$PortableBaseName = 'SephiriaPacksmith-2026.08.07-win-x64',
     [string]$BepInExPackage = 'C:\tmp\BepInEx_win_x64_5.4.23.5.zip',
     [string]$BepInExLicense = 'C:\tmp\BepInEx-5.4.23.5-LICENSE.txt'
 )
