@@ -462,8 +462,8 @@ def build_localization(game_dir: Path) -> tuple[dict, dict]:
         "source": {
             "kind": "Sephiria game localization",
             "buildId": _build_id(game_dir),
-            "ko": str(ko_path),
-            "zh": str(zh_path),
+            "ko": ko_path.relative_to(game_dir).as_posix(),
+            "zh": zh_path.relative_to(game_dir).as_posix(),
         },
         "sets": SET_NAMES,
         "tablets": {**TABLET_NAMES, **GAME_ONLY_TABLET_NAMES},

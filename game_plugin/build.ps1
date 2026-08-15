@@ -1,11 +1,14 @@
 param(
-    [string]$GameDir = 'D:\SteamLibrary\steamapps\common\Sephiria',
+    [string]$GameDir = '',
     [string]$BepInExRoot = ''
 )
 
 $ErrorActionPreference = 'Stop'
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $repoRoot = Split-Path -Parent $scriptDir
+$resolver = Join-Path $scriptDir 'find_game.ps1'
+. $resolver
+$GameDir = Resolve-SephiriaGameDir -GameDir $GameDir
 $outputDir = Join-Path $repoRoot 'artifacts\game_plugin'
 if (-not $BepInExRoot) {
     $BepInExRoot = $GameDir

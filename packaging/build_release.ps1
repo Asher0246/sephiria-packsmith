@@ -1,12 +1,19 @@
 param(
     [string]$ReleaseName = 'SephiriaPacksmith-2026.08.07-custom-tablets-win-x64',
     [string]$PortableBaseName = 'SephiriaPacksmith-2026.08.07-win-x64',
-    [string]$BepInExPackage = 'C:\tmp\BepInEx_win_x64_5.4.23.5.zip',
-    [string]$BepInExLicense = 'C:\tmp\BepInEx-5.4.23.5-LICENSE.txt'
+    [string]$BepInExPackage = '',
+    [string]$BepInExLicense = ''
 )
 
 $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path -Parent $PSScriptRoot
+$dependencyRoot = Join-Path $repoRoot 'artifacts\dependencies'
+if (-not $BepInExPackage) {
+    $BepInExPackage = Join-Path $dependencyRoot 'BepInEx_win_x64_5.4.23.5.zip'
+}
+if (-not $BepInExLicense) {
+    $BepInExLicense = Join-Path $dependencyRoot 'BepInEx-5.4.23.5-LICENSE.txt'
+}
 $releaseRoot = Join-Path $repoRoot 'artifacts\release'
 $target = Join-Path $releaseRoot $ReleaseName
 $zipPath = "$target.zip"

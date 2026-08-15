@@ -4,8 +4,8 @@
   "source": {
     "kind": "Sephiria game localization",
     "buildId": "24548451",
-    "ko": "D:\\SteamLibrary\\steamapps\\common\\Sephiria\\Sephiria_Data\\StreamingAssets\\Localization\\ko-KR.json",
-    "zh": "D:\\SteamLibrary\\steamapps\\common\\Sephiria\\Sephiria_Data\\StreamingAssets\\Localization\\zh-CN.json"
+    "ko": "Sephiria_Data/StreamingAssets/Localization/ko-KR.json",
+    "zh": "Sephiria_Data/StreamingAssets/Localization/zh-CN.json"
   },
   "sets": {
     "yinggalbul": "余烬",
