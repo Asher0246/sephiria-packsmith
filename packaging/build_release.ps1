@@ -1,6 +1,6 @@
 param(
-    [string]$ReleaseName = 'SephiriaPacksmith-2026.08.07-custom-tablets-win-x64',
-    [string]$PortableBaseName = 'SephiriaPacksmith-2026.08.07-win-x64',
+    [string]$ReleaseName = 'SephiriaPacksmith-v1.0.0-win-x64',
+    [string]$PortableBaseName = 'SephiriaPacksmith-portable-base-win-x64',
     [string]$BepInExPackage = '',
     [string]$BepInExLicense = ''
 )
@@ -18,6 +18,8 @@ $releaseRoot = Join-Path $repoRoot 'artifacts\release'
 $target = Join-Path $releaseRoot $ReleaseName
 $zipPath = "$target.zip"
 $portableBase = Join-Path $releaseRoot $PortableBaseName
+$pluginDll = Join-Path $repoRoot 'artifacts\game_plugin\SephiriaInventoryBridge.dll'
+$pluginInstaller = Join-Path $repoRoot 'game_plugin\install.ps1'
 
 if (Test-Path -LiteralPath $target) {
     throw "Release directory already exists: $target"
@@ -27,13 +29,24 @@ if (Test-Path -LiteralPath $zipPath) {
 }
 foreach ($required in @(
     (Join-Path $portableBase 'runtime'),
-    (Join-Path $repoRoot 'artifacts\game_plugin\SephiriaInventoryBridge.dll'),
+    $pluginDll,
+    $pluginInstaller,
     $BepInExPackage,
     $BepInExLicense
 )) {
     if (-not (Test-Path -LiteralPath $required)) {
         throw "Missing release input: $required"
     }
+}
+
+$installerText = Get-Content -LiteralPath $pluginInstaller -Raw
+$expectedHashMatch = [regex]::Match($installerText, '\$expectedHash\s*=\s*''([0-9A-Fa-f]{64})''')
+if (-not $expectedHashMatch.Success) {
+    throw "Plugin installer does not contain a valid expectedHash: $pluginInstaller"
+}
+$pluginHash = (Get-FileHash -LiteralPath $pluginDll -Algorithm SHA256).Hash
+if ($pluginHash -ne $expectedHashMatch.Groups[1].Value.ToUpperInvariant()) {
+    throw "Plugin DLL hash does not match game_plugin/install.ps1: $pluginHash"
 }
 
 New-Item -ItemType Directory -Path $target | Out-Null
@@ -63,11 +76,13 @@ foreach ($file in $pluginFiles) {
 Get-ChildItem -LiteralPath (Join-Path $repoRoot 'game_plugin') -File -Filter '*.bat' | ForEach-Object {
     Copy-Item -LiteralPath $_.FullName -Destination (Join-Path $target 'game_plugin')
 }
-Copy-Item -LiteralPath (Join-Path $repoRoot 'artifacts\game_plugin\SephiriaInventoryBridge.dll') -Destination (Join-Path $target 'game_plugin')
+Copy-Item -LiteralPath $pluginDll -Destination (Join-Path $target 'game_plugin')
 Copy-Item -LiteralPath $BepInExPackage -Destination (Join-Path $target 'game_plugin\BepInEx_win_x64_5.4.23.5.zip')
 Copy-Item -LiteralPath $BepInExLicense -Destination (Join-Path $target 'THIRD_PARTY_LICENSES\BepInEx-5.4.23.5-LICENSE.txt')
 
-Copy-Item -LiteralPath (Join-Path $repoRoot 'README.md') -Destination $target
+foreach ($file in @('README.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md')) {
+    Copy-Item -LiteralPath (Join-Path $repoRoot $file) -Destination $target
+}
 Get-ChildItem -LiteralPath $repoRoot -File | Where-Object { $_.Extension -in @('.txt', '.bat') } | ForEach-Object {
     Copy-Item -LiteralPath $_.FullName -Destination $target
 }

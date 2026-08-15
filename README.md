@@ -1,6 +1,6 @@
 # Sephiria Packsmith
 
-一个在本机浏览器中运行的《Sephiria》背包自动排布工具。目录由 Sephiria Wiki 与游戏文本生成，当前包含 268 种神器与 60 种石板；用户录入本局已获取物品后，可以为每个实例指定固定位置、最低/固定等级、固定旋转和优先权重，由 OR-Tools CP-SAT 搜索最优布局。
+一个在本机浏览器中运行的《Sephiria》背包自动排布工具。目录由 Sephiria Wiki 与游戏文本生成，当前包含 268 种神器与 61 种石板；用户录入本局已获取物品后，可以为每个实例指定固定位置、最低/固定等级、固定旋转和优先权重，由 OR-Tools CP-SAT 搜索最优布局。
 
 ## 启动
 
@@ -43,6 +43,12 @@ powershell -ExecutionPolicy Bypass -File .\setup.ps1
 - `没有可行排布`：固定位置、最低等级或背包容量等硬约束相互冲突。
 
 构筑会自动保存在浏览器本地。
+
+## 许可证
+
+项目原创代码与文档采用 [MIT License](LICENSE)。`assets/` 中来自 Sephiria
+及 Sephiria Wiki 的数据、文本和图片不包含在该授权中；发行包内第三方组件
+继续适用各自许可证，详情见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
 
 ## 从游戏读取
 

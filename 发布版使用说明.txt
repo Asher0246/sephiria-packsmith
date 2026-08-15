@@ -17,9 +17,10 @@ Sephiria Packsmith 背包自动排布求解器（Windows x64）
 也可以在工具的“当前构筑”中点击“合成石板”，选择两块已有石板及合成方向；
 工具会用合成结果替换两块源石板，但不会把修改写回游戏。
 
-插件只读取本地玩家背包，并通过本机命名管道发送快照；不会写入游戏内存，
-也不会调用游戏命令。卸载时先关闭游戏，再双击“卸载插件.bat”。卸载脚本只
-移除 SephiriaInventoryBridge.dll，会保留可能被其他插件使用的 BepInEx。
+插件通过本机命名管道读取本地玩家背包。用户确认后，也可以把求解结果应用到
+游戏；插件会在 Unity 主线程调用游戏自身的交换和点击接口，并复核最终排布，
+不会直接改写背包矩阵或物品坐标。卸载时先关闭游戏，再双击“卸载插件.bat”。
+卸载脚本只移除 SephiriaInventoryBridge.dll，会保留可能被其他插件使用的 BepInEx。
 
 如果 Steam 游戏目录无法自动找到，可在 PowerShell 中手动运行：
 powershell -ExecutionPolicy Bypass -File .\game_plugin\install.ps1 -GameDir "你的Sephiria目录"
