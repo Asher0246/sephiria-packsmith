@@ -18,15 +18,18 @@ function Resolve-SephiriaGameDir {
             }
         } catch {}
     }
-    foreach ($root in @(
-        (Join-Path ${env:ProgramFiles(x86)} 'Steam'),
-        'C:\Steam', 'D:\Steam', 'D:\SteamLibrary', 'E:\SteamLibrary', 'F:\SteamLibrary'
-    )) {
-        if ($root) { $steamRoots.Add($root) }
+    if (${env:ProgramFiles(x86)}) {
+        $steamRoots.Add((Join-Path ${env:ProgramFiles(x86)} 'Steam'))
+    }
+    foreach ($root in @('C:\Steam', 'D:\Steam', 'D:\SteamLibrary', 'E:\SteamLibrary', 'F:\SteamLibrary')) {
+        $steamRoots.Add($root)
     }
 
     $libraryRoots = [Collections.Generic.List[string]]::new()
     foreach ($steamRoot in ($steamRoots | Select-Object -Unique)) {
+        if (-not [IO.Directory]::Exists($steamRoot)) {
+            continue
+        }
         $libraryRoots.Add($steamRoot)
         $libraryFile = Join-Path $steamRoot 'steamapps\libraryfolders.vdf'
         if (Test-Path -LiteralPath $libraryFile -PathType Leaf) {
@@ -39,6 +42,9 @@ function Resolve-SephiriaGameDir {
     }
 
     foreach ($libraryRoot in ($libraryRoots | Select-Object -Unique)) {
+        if (-not [IO.Directory]::Exists($libraryRoot)) {
+            continue
+        }
         $candidate = Join-Path $libraryRoot 'steamapps\common\Sephiria'
         if (Test-Path -LiteralPath (Join-Path $candidate 'Sephiria.exe') -PathType Leaf) {
             return [IO.Path]::GetFullPath($candidate)

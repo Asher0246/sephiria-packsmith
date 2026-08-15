@@ -4,7 +4,8 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$expectedHash = 'AEDB59BA8F51AFCB115F6C28BE46F0E78F820A4155F811FFC4C2E9D1E193E698'
+$bepInExPackageHash = '82F9878551030F54657792C0740D9D51A09500EEAE1FBA21106B0C441E6732C4'
+$pluginHash = 'AEDB59BA8F51AFCB115F6C28BE46F0E78F820A4155F811FFC4C2E9D1E193E698'
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $repoRoot = Split-Path -Parent $scriptDir
 $resolver = Join-Path $scriptDir 'find_game.ps1'
@@ -24,6 +25,10 @@ if (-not (Test-Path -LiteralPath $pluginSource -PathType Leaf)) {
 if (-not (Test-Path -LiteralPath $pluginSource -PathType Leaf)) {
     throw 'Precompiled SephiriaInventoryBridge.dll is missing.'
 }
+$actualPluginHash = (Get-FileHash -LiteralPath $pluginSource -Algorithm SHA256).Hash
+if ($actualPluginHash -ne $pluginHash) {
+    throw 'SephiriaInventoryBridge.dll hash mismatch.'
+}
 
 $bepInExInstalled = Test-Path -LiteralPath (Join-Path $GameDir 'BepInEx\core\BepInEx.dll') -PathType Leaf
 if (-not $bepInExInstalled) {
@@ -34,7 +39,7 @@ if (-not $bepInExInstalled) {
         throw "BepInEx package not found: $PackagePath"
     }
     $actualHash = (Get-FileHash -LiteralPath $PackagePath -Algorithm SHA256).Hash
-    if ($actualHash -ne $expectedHash) {
+    if ($actualHash -ne $bepInExPackageHash) {
         throw 'BepInEx package hash mismatch.'
     }
     $extractDir = Join-Path ([IO.Path]::GetTempPath()) ('SephiriaInventoryBridge-' + [guid]::NewGuid().ToString('N'))
