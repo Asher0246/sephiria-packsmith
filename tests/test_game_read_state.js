@@ -46,7 +46,7 @@ test("inherits artifact settings at exactly seventy percent similarity", () => {
   assert.equal(result.inheritedCount, 3);
   assert.deepEqual(
     result.items.find((item) => item.instanceId === "game-a-1"),
-    artifact(1, { weight: 9, specialPriority: true, specialTargetInstanceId: "game-a-2" }),
+    artifact(1, { weight: 9, specialPriority: true, specialTargetInstanceId: "game-a-2", minLevel: null, exactLevel: null }),
   );
   assert.equal(result.items.find((item) => item.instanceId === "game-a-10").weight, 5);
 });
@@ -95,5 +95,41 @@ test("capture ignores manually added items and sanitizes artifact settings", () 
     weight: 5,
     specialPriority: false,
     specialTargetInstanceId: null,
+    minLevel: null,
+    exactLevel: null,
   }] });
+});
+
+test("inherits minimum and exact level constraints within the same run", () => {
+  const previousItems = [
+    artifact(1, { minLevel: 2 }), artifact(2, { exactLevel: 4 }),
+    artifact(3), artifact(4), artifact(5),
+    tablet(1), tablet(2), tablet(3), tablet(4), tablet(5),
+  ];
+  const nextItems = [
+    artifact(1), artifact(2), artifact(3), artifact(4), artifact(5),
+    tablet(1), tablet(2), tablet(3), tablet(4), tablet(5),
+  ];
+
+  const result = inheritArtifactSettings(captureGameRead(previousItems), nextItems);
+
+  assert.equal(result.items.find((item) => item.instanceId === "game-a-1").minLevel, 2);
+  assert.equal(result.items.find((item) => item.instanceId === "game-a-1").exactLevel, null);
+  assert.equal(result.items.find((item) => item.instanceId === "game-a-2").exactLevel, 4);
+  assert.equal(result.items.find((item) => item.instanceId === "game-a-2").minLevel, null);
+  assert.equal(result.items.find((item) => item.instanceId === "game-a-3").minLevel, null);
+  assert.equal(result.items.find((item) => item.instanceId === "game-a-3").exactLevel, null);
+});
+
+test("capture keeps only one of minimum or exact level", () => {
+  const captured = captureGameRead([
+    artifact(1, { minLevel: 2, exactLevel: 4 }),
+    artifact(2, { minLevel: "3" }),
+  ]);
+
+  const [first, second] = captured.items;
+  assert.equal(first.minLevel, null);
+  assert.equal(first.exactLevel, 4);
+  assert.equal(second.minLevel, null);
+  assert.equal(second.exactLevel, null);
 });

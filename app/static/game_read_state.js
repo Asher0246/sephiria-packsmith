@@ -30,6 +30,10 @@
         specialPriority: item.specialPriority === true,
         specialTargetInstanceId: typeof item.specialTargetInstanceId === "string"
           ? item.specialTargetInstanceId : null,
+        // 最低等级与固定等级互斥；历史数据若同时存在，保留约束更强的固定等级。
+        minLevel: Number.isInteger(item.exactLevel)
+          ? null : (Number.isInteger(item.minLevel) ? item.minLevel : null),
+        exactLevel: Number.isInteger(item.exactLevel) ? item.exactLevel : null,
       } : {}),
     }));
     return captured.length ? { items: captured } : null;
@@ -69,6 +73,8 @@
       item.specialPriority = previousItem.specialPriority;
       item.specialTargetInstanceId = newArtifactIds.has(previousItem.specialTargetInstanceId)
         ? previousItem.specialTargetInstanceId : null;
+      item.minLevel = previousItem.minLevel ?? null;
+      item.exactLevel = previousItem.exactLevel ?? null;
       inheritedCount += 1;
     });
     return { items, similarity, sameRun: true, inheritedCount };

@@ -212,9 +212,9 @@ function renderOwned() {
     if (item.kind === "artifact") {
       constraints.append(constraintInput("附魔等级", item.baseLevel ?? 0, null, (raw) => updateItem(item, "baseLevel", raw === "" ? 0 : Number(raw))));
       constraints.lastChild.querySelector("input").min = "0"; constraints.lastChild.querySelector("input").max = "99";
-      constraints.append(constraintInput("最低等级", item.minLevel, null, (raw) => updateItem(item, "minLevel", raw === "" ? null : Number(raw))));
+      constraints.append(constraintInput("最低等级", item.minLevel, null, (raw) => updateLevelConstraint(item, "minLevel", raw)));
       constraints.lastChild.querySelector("input").min = "-99"; constraints.lastChild.querySelector("input").max = String(type.cap);
-      constraints.append(constraintInput("固定等级", item.exactLevel, null, (raw) => updateItem(item, "exactLevel", raw === "" ? null : Number(raw))));
+      constraints.append(constraintInput("固定等级", item.exactLevel, null, (raw) => updateLevelConstraint(item, "exactLevel", raw)));
       constraints.lastChild.querySelector("input").min = "-99"; constraints.lastChild.querySelector("input").max = String(type.cap);
       constraints.append(constraintInput("优先权重", item.weight, [["1", "1"], ["2", "2"], ["3", "3"], ["5", "5 默认"], ["8", "8"], ["10", "10 最高"]], (raw) => updateItem(item, "weight", Number(raw))));
       if (type.specialCondition) {
@@ -233,6 +233,13 @@ function renderOwned() {
 }
 
 function updateItem(item, key, value) { item[key] = Number.isNaN(value) ? null : value; state.result = null; persist(); if (key === "fixedRotation") renderOwned(); renderBoard(); updateStatusIdle(); }
+// 最低等级与固定等级互斥：填写其中一个会清空另一个，避免两条约束叠加造成误解。
+function updateLevelConstraint(item, key, raw) {
+  const value = raw === "" || Number.isNaN(Number(raw)) ? null : Number(raw);
+  item[key] = value;
+  if (value !== null) item[key === "minLevel" ? "exactLevel" : "minLevel"] = null;
+  state.result = null; persist(); renderOwned(); renderBoard(); updateStatusIdle();
+}
 function gridCellCount() { return Math.max(1, Math.min(60, Math.trunc(Number($("cellCountInput").value)) || 30)); }
 function rows() { return Math.ceil(gridCellCount() / GRID_COLS); }
 function cols() { return GRID_COLS; }
@@ -432,7 +439,7 @@ async function readGameInventory() {
     state.customTabletTypes = Array.isArray(inventory.customTabletTypes) ? inventory.customTabletTypes : [];
     state.gameSource = inventory.source?.fingerprint ? inventory.source : null;
     const incomingItems = [
-      ...inventory.artifacts.map((item) => ({ ...item, kind: "artifact", fixedRotation: null })),
+      ...inventory.artifacts.map((item) => ({ ...item, kind: "artifact", fixedRotation: null, minLevel: item.minLevel ?? null, exactLevel: item.exactLevel ?? null })),
       ...inventory.tablets.map((item) => ({ ...item, kind: "tablet", weight: 1, baseLevel: null, minLevel: null, exactLevel: null, specialPriority: false, specialTargetInstanceId: null })),
     ];
     const inheritance = gameReadState.inheritArtifactSettings(state.lastGameRead, incomingItems);
