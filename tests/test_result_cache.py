@@ -139,6 +139,7 @@ def test_app_state_returns_cached_result_without_solving(tmp_path):
     assert first.result.get("fromCache") is None
 
     payload["options"]["timeLimitMs"] = 30000
+    payload["options"]["fastMode"] = True
     payload["artifacts"] = [
         {"instanceId": "b2", "typeId": kind.id, "weight": 3},
         {"instanceId": "b1", "typeId": kind.id, "weight": 3},

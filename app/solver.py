@@ -83,6 +83,47 @@ class StopController:
             return self._stopped
 
 
+FAST_MODE_STALL_SECONDS = 2.0
+
+
+class _StallStopper:
+    """Stops a CP-SAT search once its incumbent stops improving.
+
+    Fast mode trades the optimality proof for a quick return.  In this model
+    good solutions arrive early and then stall long before the proof
+    completes, so instead of waiting out the remaining time limit we watch
+    for that stall and stop the search.  The stopper never fires before the
+    first solution exists.
+    """
+
+    def __init__(self, solver: cp_model.CpSolver, stall_seconds: float) -> None:
+        self._solver = solver
+        self._stall_seconds = stall_seconds
+        self._found = False
+        self._last_improvement = 0.0
+        self._done = threading.Event()
+        stopper = self
+
+        class _Callback(cp_model.CpSolverSolutionCallback):
+            def on_solution_callback(self) -> None:
+                stopper._found = True
+                stopper._last_improvement = time.perf_counter()
+
+        self.callback = _Callback()
+
+    def start(self) -> None:
+        threading.Thread(target=self._watch, daemon=True).start()
+
+    def _watch(self) -> None:
+        while not self._done.wait(0.2):
+            if self._found and time.perf_counter() - self._last_improvement >= self._stall_seconds:
+                self._solver.stop_search()
+                return
+
+    def stop(self) -> None:
+        self._done.set()
+
+
 def _linear_offset(value: int) -> tuple[int, int]:
     dy = math.trunc(value / 6)
     return value - 6 * dy, dy
@@ -1053,10 +1094,20 @@ def solve(
     if request.worker_count:
         solver.parameters.num_search_workers = request.worker_count
     solver.parameters.random_seed = 1
-    controller.attach(solver)
-    if on_solver:
-        on_solver(solver)
-    phase1_status = solver.solve(model)
+    def run_search(target: cp_model.CpSolver) -> int:
+        controller.attach(target)
+        if on_solver:
+            on_solver(target)
+        stall = _StallStopper(target, FAST_MODE_STALL_SECONDS) if request.fast_mode else None
+        if stall is not None:
+            stall.start()
+        try:
+            return target.solve(model, stall.callback if stall is not None else None)
+        finally:
+            if stall is not None:
+                stall.stop()
+
+    phase1_status = run_search(solver)
     status_name = solver.status_name(phase1_status)
     if phase1_status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
         return _empty_result("STOPPED" if controller.stopped else status_name,
@@ -1102,10 +1153,7 @@ def solve(
         hint = model.Proto().solution_hint
         hint.vars.extend(range(len(solution)))
         hint.values.extend(int(value) for value in solution)
-        controller.attach(next_solver)
-        if on_solver:
-            on_solver(next_solver)
-        return next_solver.solve(model), next_solver
+        return run_search(next_solver), next_solver
 
     if phase1_status == cp_model.OPTIMAL and not controller.stopped:
         model.add(phase1_objective == solver.value(phase1_objective))

@@ -69,6 +69,8 @@ button:disabled { cursor: not-allowed; opacity: .52; }
 .solve-actions { display: flex; align-items: end; gap: 8px; }
 .time-limit { display: flex; flex-direction: column; gap: 3px; color: var(--muted); font-size: 11px; }
 .time-limit select { height: 36px; border: 1px solid var(--line); border-radius: 5px; background: white; padding: 0 28px 0 9px; color: var(--ink); }
+.fast-mode { display: flex; align-items: center; gap: 5px; height: 36px; color: var(--muted); font-size: 11px; cursor: help; user-select: none; }
+.fast-mode input { width: 14px; height: 14px; cursor: pointer; }
 .status-bar { min-height: 54px; display: flex; align-items: center; gap: 10px; margin-top: 16px; padding: 9px 12px; border: 1px solid var(--line); border-left-width: 4px; border-radius: 5px; background: white; }
 .status-dot { width: 9px; height: 9px; border-radius: 50%; background: #9aa39f; flex: 0 0 auto; }
 .status-bar strong, .status-bar span { display: block; }

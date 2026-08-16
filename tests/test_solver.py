@@ -1,5 +1,6 @@
 import pytest
 
+from app.catalog import artifact_types, tablet_types
 from app.models import ArtifactInstance, ArtifactType, SolveRequest, TabletInstance, TabletType
 from app.solver import (
     Candidate,
@@ -548,6 +549,45 @@ def test_artifacts_with_the_same_base_level_and_cap_share_level_transforms():
     assert result["solutionStatus"] == "OPTIMAL"
     assert result["diagnostics"]["levelTransformGroups"] == 1
     assert result["diagnostics"]["optimizationPhases"] <= 2
+
+
+def test_fast_mode_stops_after_stall_instead_of_waiting_out_the_limit():
+    artifacts, tablets = (
+        {item.id: item for item in artifact_types()},
+        {item.id: item for item in tablet_types()},
+    )
+    chosen = [item for item in artifact_types() if item.cap >= 3 and not item.criteria][:10]
+    tablet_ids = ("tablet-dry", "tablet-approximation", "tablet-fate",
+                  "tablet-hope", "tablet-beating", "tablet-advance")
+    request = SolveRequest(
+        4, 4,
+        tuple(ArtifactInstance(f"a-{index}", item.id, weight=1 + index % 3)
+              for index, item in enumerate(chosen)),
+        tuple(TabletInstance(f"t-{index}", type_id) for index, type_id in enumerate(tablet_ids)),
+        15000, worker_count=8, fast_mode=True,
+    )
+    result = solve(request, artifacts, tablets)
+    assert result["solutionStatus"] in ("OPTIMAL", "FEASIBLE")
+    assert result["solveMs"] < 10000
+    assert validate_result(request, artifacts, tablets, result) == []
+
+
+def test_fast_mode_still_proves_small_builds_optimal():
+    artifacts, tablets = (
+        {item.id: item for item in artifact_types()},
+        {item.id: item for item in tablet_types()},
+    )
+    chosen = [item for item in artifact_types() if item.cap >= 3 and not item.criteria][:8]
+    request = SolveRequest(
+        2, 6,
+        tuple(ArtifactInstance(f"a-{index}", item.id, weight=2 + index % 4)
+              for index, item in enumerate(chosen)),
+        (TabletInstance("t0", "tablet-dry"), TabletInstance("t1", "tablet-fate")),
+        15000, worker_count=8, fast_mode=True,
+    )
+    result = solve(request, artifacts, tablets)
+    assert result["solutionStatus"] == "OPTIMAL"
+    assert result["diagnostics"]["optimizationPhases"] == 2
 
 
 def test_nine_artifacts_fit_without_tablets_when_worker_count_is_keyword_only():

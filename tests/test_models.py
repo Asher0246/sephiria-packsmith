@@ -30,6 +30,16 @@ def test_parse_full_constraint_request():
     assert request.tablets[0].fixed_rotation == 2
     assert request.tablets[0].preferred_rotation == 3
     assert request.double_level_cells == frozenset({0, 10})
+    assert request.fast_mode is False
+
+
+def test_fast_mode_option_parses_and_rejects_non_boolean():
+    payload = valid_payload()
+    payload["options"]["fastMode"] = True
+    assert parse_request(payload, ARTIFACT_IDS, TABLET_IDS).fast_mode is True
+    payload["options"]["fastMode"] = "yes"
+    with pytest.raises(RequestError):
+        parse_request(payload, ARTIFACT_IDS, TABLET_IDS)
 
 
 def test_artifact_weight_defaults_to_five():

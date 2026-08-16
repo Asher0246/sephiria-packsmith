@@ -383,7 +383,7 @@ function requestPayload() {
     artifacts: state.items.filter((i) => i.kind === "artifact").map((i) => ({ instanceId: i.instanceId, typeId: i.typeId, weight: i.weight, baseLevel: i.baseLevel ?? 0, minLevel: i.minLevel, exactLevel: i.exactLevel, fixedCell: i.fixedCell, specialPriority: Boolean(i.specialPriority), specialTargetInstanceId: i.specialTargetInstanceId || null })),
     tablets: state.items.filter((i) => i.kind === "tablet").map((i) => ({ instanceId: i.instanceId, typeId: i.typeId, fixedCell: i.fixedCell, fixedRotation: i.fixedRotation, preferredRotation: i.preferredRotation ?? null })),
     customTabletTypes: state.customTabletTypes.filter((type) => customIds.has(type.id)),
-    options: { timeLimitMs: Number($("timeLimit").value), workerCount: Number($("workerCount").value) },
+    options: { timeLimitMs: Number($("timeLimit").value), workerCount: Number($("workerCount").value), fastMode: $("fastMode").checked },
   };
   if (gameSourceMatchesItems()) payload.gameSource = state.gameSource;
   return payload;
@@ -417,7 +417,7 @@ async function pollSolve() {
       if (response.error) { setStatus("error", "求解失败", response.error.message); return; }
       showResult(response.result, finishedId); persist(); return;
     }
-    setStatus("solving", "正在搜索最优排布", `任务 ${state.solveId.slice(0, 8)} · 可随时停止并保留已找到的解`);
+    setStatus("solving", $("fastMode").checked ? "正在搜索优质排布" : "正在搜索最优排布", `任务 ${state.solveId.slice(0, 8)}${$("fastMode").checked ? " · 快速模式：找到优质排布即停止" : " · 可随时停止并保留已找到的解"}`);
     state.pollTimer = setTimeout(pollSolve, 350);
   } catch (error) { state.solveId = null; setSolving(false); setStatus("error", "读取求解状态失败", error.message); }
 }
@@ -653,7 +653,7 @@ function persist() {
       && state.lastGameRead.items.length === currentGameRead.items.length) {
     state.lastGameRead = currentGameRead;
   }
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({ cellCount: gridCellCount(), items: state.items, customTabletTypes: state.customTabletTypes, doubleLevelCells: [...state.doubleLevelCells], serial: state.serial }));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ cellCount: gridCellCount(), items: state.items, customTabletTypes: state.customTabletTypes, doubleLevelCells: [...state.doubleLevelCells], serial: state.serial, fastMode: $("fastMode").checked }));
 }
 function restore() {
   try {
@@ -665,11 +665,13 @@ function restore() {
     state.items.forEach((item) => { if (item.specialTargetInstanceId && !artifactIds.has(item.specialTargetInstanceId)) item.specialTargetInstanceId = null; });
     state.doubleLevelCells = new Set((Array.isArray(raw.doubleLevelCells) ? raw.doubleLevelCells : []).filter((cell) => Number.isInteger(cell) && cell >= 0 && cell < gridCellCount()));
     state.serial = Number(raw.serial) || state.items.length + 1;
+    $("fastMode").checked = raw.fastMode === true;
   } catch { localStorage.removeItem(STORAGE_KEY); }
 }
 function bindEvents() {
   $("artifactTab").addEventListener("click", () => switchKind("artifact")); $("tabletTab").addEventListener("click", () => switchKind("tablet")); $("searchInput").addEventListener("input", renderCatalog);
   $("readGameBtn").addEventListener("click", readGameInventory);
+  $("fastMode").addEventListener("change", persist);
   $("applyBtn").addEventListener("click", applyArrangement);
   $("combineTabletBtn").addEventListener("click", openComposeDialog);
   $("composeFirst").addEventListener("change", changeComposeSource);

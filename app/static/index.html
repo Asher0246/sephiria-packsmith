@@ -46,6 +46,9 @@
           <label class="time-limit">时限
             <select id="timeLimit"><option value="3000">3 秒</option><option value="10000" selected>10 秒</option><option value="30000">30 秒</option><option value="60000">60 秒</option></select>
           </label>
+          <label class="fast-mode" for="fastMode" title="快速模式：找到优质排布后立刻停止，不再等待最优性证明。通常几秒内出结果，布局质量一般接近最优，但不保证理论最优；关闭后求解器会用满时限证明最优。">
+            <input type="checkbox" id="fastMode"> 快速模式
+          </label>
           <button id="stopBtn" class="button danger" type="button" hidden>停止</button>
           <button id="applyBtn" class="button secondary" type="button" hidden>应用到游戏</button>
           <button id="solveBtn" class="button primary" type="button">自动求解</button>
