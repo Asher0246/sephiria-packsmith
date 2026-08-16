@@ -23,6 +23,7 @@ from .game_bridge import (
     read_game_inventory,
 )
 from .models import RequestError, parse_request
+from .result_cache import ResultCache, default_cache
 from .solver import StopController, solve
 
 STATIC = Path(__file__).resolve().parent / "static"
@@ -40,10 +41,11 @@ class Job:
 
 
 class AppState:
-    def __init__(self, token: str) -> None:
+    def __init__(self, token: str, result_cache: ResultCache | None = None) -> None:
         self.token = token
         self.jobs: dict[str, Job] = {}
         self.lock = threading.Lock()
+        self.result_cache = result_cache or default_cache()
 
     def create_job(self, payload: dict) -> Job:
         artifact_map = {item.id: item for item in artifact_types()}
@@ -57,6 +59,22 @@ class AppState:
                 raise RequestError(f"自定义石板 {tablet.name} 仅适用于创建时的背包格数")
         game_source = payload.get("gameSource")
         job = Job(uuid.uuid4().hex, game_source=game_source if isinstance(game_source, dict) else None)
+
+        cache_key = artifact_ids = tablet_ids = None
+        try:
+            cache_key, artifact_ids, tablet_ids = self.result_cache.key(request, payload)
+            cached = self.result_cache.lookup(
+                cache_key, request, artifact_map, tablet_map, artifact_ids, tablet_ids,
+            )
+        except Exception as exc:  # Boundary: a cache failure must never block solving.
+            print(f"result cache skipped: {exc!r}")
+            cached = None
+        if cached is not None:
+            job.status = "FINISHED"
+            job.result = cached
+            with self.lock:
+                self.jobs[job.id] = job
+            return job
         with self.lock:
             self.jobs[job.id] = job
 
@@ -65,6 +83,11 @@ class AppState:
             try:
                 job.result = solve(request, artifact_map, tablet_map, job.controller)
                 job.status = "FINISHED"
+                if cache_key is not None:
+                    try:
+                        self.result_cache.store(cache_key, artifact_ids, tablet_ids, job.result)
+                    except Exception as exc:
+                        print(f"result cache store skipped: {exc!r}")
             except Exception as exc:  # Boundary: return a stable API error, keep traceback in console.
                 job.status = "FAILED"
                 job.error = {"code": "INTERNAL_SOLVE_FAILURE", "message": str(exc)}
