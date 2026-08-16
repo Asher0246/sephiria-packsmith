@@ -1,6 +1,6 @@
 import pytest
 
-from app.models import RequestError, parse_request
+from app.models import RequestError, SolveRequest, parse_request
 
 
 ARTIFACT_IDS = {"artifact-a"}
@@ -44,6 +44,11 @@ def test_parse_legacy_rectangular_grid():
     payload["grid"] = {"rows": 2, "cols": 3}
     request = parse_request(payload, ARTIFACT_IDS, TABLET_IDS)
     assert (request.rows, request.cols, request.cell_count) == (2, 3, 6)
+
+
+def test_solve_request_optional_settings_require_keywords():
+    with pytest.raises(TypeError):
+        SolveRequest(3, 6, (), (), 5000, 8)
 
 
 def test_parse_gold_needle_special_target():

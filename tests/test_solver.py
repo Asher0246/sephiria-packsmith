@@ -211,6 +211,8 @@ def test_interchangeable_tablets_remain_valid_after_symmetry_breaking():
     assert validate_result(request, {ARTIFACT.id: ARTIFACT}, {tablet.id: tablet}, result) == []
 
 
+
+
 def test_curse_tablet_uses_game_checkerboard_range_on_partial_last_row():
     curse = TabletType(
         "tablet-curse", "诅咒", "special", True, None, None,
@@ -496,6 +498,22 @@ def test_artifacts_with_the_same_base_level_and_cap_share_level_transforms():
     assert result["solutionStatus"] == "OPTIMAL"
     assert result["diagnostics"]["levelTransformGroups"] == 1
     assert result["diagnostics"]["optimizationPhases"] <= 2
+
+
+def test_nine_artifacts_fit_without_tablets_when_worker_count_is_keyword_only():
+    plain = ArtifactType("artifact-plain", "Plain", cap=3, rarity=0)
+    request = SolveRequest(
+        3, 6,
+        tuple(ArtifactInstance(f"a{i}", plain.id, weight=3) for i in range(9)),
+        (), 5000, worker_count=8,
+    )
+
+    result = solve(request, {plain.id: plain}, {})
+
+    assert request.cell_count == 18
+    assert result["solutionStatus"] == "OPTIMAL"
+    assert len(result["placements"]) == 9
+    assert validate_result(request, {plain.id: plain}, {}, result) == []
 
 
 def test_tertiary_objective_avoids_negative_artifact_and_wasted_positive_effects():

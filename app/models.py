@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import KW_ONLY, dataclass, field
 from typing import Any
 
 
@@ -90,6 +90,7 @@ class SolveRequest:
     artifacts: tuple[ArtifactInstance, ...]
     tablets: tuple[TabletInstance, ...]
     time_limit_ms: int = 10_000
+    _: KW_ONLY
     actual_cell_count: int | None = None
     worker_count: int = 0
     double_level_cells: frozenset[int] = frozenset()

@@ -35,7 +35,8 @@ def test_custom_condition_requires_item_before_effect_applies():
         1, 6,
         (ArtifactInstance("target", artifact.id, fixed_cell=2),
          ArtifactInstance("filler", filler.id, fixed_cell=1)),
-        (TabletInstance("tablet", tablet.id, fixed_cell=0),), 3000, 3,
+        (TabletInstance("tablet", tablet.id, fixed_cell=0),), 3000,
+        actual_cell_count=3,
     )
     result = solve(request, {artifact.id: artifact, filler.id: filler}, {tablet.id: tablet})
     details = {item["instanceId"]: item for item in result["artifacts"]}
@@ -56,7 +57,8 @@ def test_custom_disable_and_multiplier_match_game_order():
         1, 6,
         (ArtifactInstance("target", artifact.id, base_level=1, fixed_cell=2),
          ArtifactInstance("disabled", disabled.id, base_level=6, fixed_cell=1)),
-        (TabletInstance("tablet", tablet.id, fixed_cell=0),), 3000, 3,
+        (TabletInstance("tablet", tablet.id, fixed_cell=0),), 3000,
+        actual_cell_count=3,
     )
     result = solve(request, {artifact.id: artifact, disabled.id: disabled}, {tablet.id: tablet})
     details = {item["instanceId"]: item for item in result["artifacts"]}
@@ -83,7 +85,8 @@ def test_candidate_cache_distinguishes_different_rules_with_the_same_tablet_id()
     request = SolveRequest(
         1, 6,
         (ArtifactInstance("target", artifact.id, fixed_cell=2),),
-        (TabletInstance("tablet", first.id, fixed_cell=0),), 3000, 3,
+        (TabletInstance("tablet", first.id, fixed_cell=0),), 3000,
+        actual_cell_count=3,
     )
 
     first_result = solve(request, {artifact.id: artifact}, {first.id: first})
