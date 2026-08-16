@@ -29,6 +29,50 @@ only this plugin with:
 powershell -ExecutionPolicy Bypass -File .\game_plugin\uninstall.ps1
 ```
 
+## In-game auto-organize (v1.4+)
+
+When the Packsmith solver is running, the plugin can also expose a small
+**整理** button beside the dungeon backpack grid. No hotkey is required.
+
+1. Start the solver (`启动求解器.bat` or `python -m app.server`). The server
+   writes `%LOCALAPPDATA%\SephiriaPacksmith\runtime.json` with its local port
+   and access token.
+2. Enter a single-player or host run and open the character backpack
+   (`UI_CharacterStatusPanel`).
+3. Click **整理**. The plugin calls `POST /api/auto-organize` on the local
+   solver with `fastMode: true`, a 30 s time limit, and automatic worker count.
+4. Packsmith reads the live inventory from the existing named pipe, searches for
+   a strong layout, and applies it through the same verified `Swap` /
+   `DoClickAction` path as the Web **应用到游戏** button.
+
+While organizing, the button shows **…** and ignores duplicate clicks. Closing
+the backpack hides the button.
+
+Defaults for this one-click flow (not configurable in-game):
+
+- **Fast mode** on — stops once the search stops improving; usually returns in
+  a few seconds on typical backpacks.
+- **Artifact weight** 5, no fixed cells, no special-priority toggles — the same
+  neutral defaults as an empty Web build, not your saved browser constraints.
+- **Scope** — main inventory grid only; potion slots and sub-bags are unchanged.
+
+Requirements and limits:
+
+- The solver must stay running in the background; the plugin reads
+  `runtime.json` for connection details.
+- Apply still requires single-player or host authority, a complete inventory
+  snapshot, and mappable artifacts/tablets. Unmapped items abort with an error.
+- Multiplayer guest clients are not supported for automatic apply.
+
+Rebuild after changing the plugin:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\game_plugin\build.ps1
+```
+
+Copy `artifacts\game_plugin\SephiriaInventoryBridge.dll` into the game's
+`BepInEx\plugins\` folder and restart Sephiria.
+
 The installer pins BepInEx `5.4.23.5` and verifies the official release archive
 SHA-256 before copying files. It intentionally leaves BepInEx installed during
 plugin removal because other game plugins may depend on it.
