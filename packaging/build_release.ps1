@@ -60,13 +60,9 @@ New-Item -ItemType Directory -Path (Join-Path $target 'assets') -Force | Out-Nul
 New-Item -ItemType Directory -Path (Join-Path $target 'game_plugin') -Force | Out-Null
 New-Item -ItemType Directory -Path (Join-Path $target 'THIRD_PARTY_LICENSES') -Force | Out-Null
 
-$appFiles = @(
-    '__init__.py', 'catalog.py', 'custom_tablets.py', 'game_bridge.py',
-    'models.py', 'server.py', 'solver.py', 'validation.py'
-)
-foreach ($file in $appFiles) {
-    Copy-Item -LiteralPath (Join-Path $repoRoot "app\$file") -Destination (Join-Path $target 'app')
-}
+# Copy every Python module: a fixed file list silently drops newly added
+# modules and ships a package whose server cannot even import.
+Copy-Item -Path (Join-Path $repoRoot 'app\*.py') -Destination (Join-Path $target 'app')
 Copy-Item -Path (Join-Path $repoRoot 'app\static\*') -Destination (Join-Path $target 'app\static') -Recurse
 Copy-Item -LiteralPath (Join-Path $repoRoot 'assets\wiki_artifacts.json') -Destination (Join-Path $target 'assets')
 Copy-Item -LiteralPath (Join-Path $repoRoot 'assets\wiki_tablets.json.gz') -Destination (Join-Path $target 'assets')
