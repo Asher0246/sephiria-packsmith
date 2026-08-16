@@ -567,7 +567,6 @@ def solve(
 
     x = {}
     y = {}
-    placement_vars = []
     artifact_placement_variables = 0
     tablet_placement_variables = 0
     for a, item in enumerate(request.artifacts):
@@ -581,7 +580,6 @@ def solve(
                 variable = model.new_bool_var(f"a_{a}_{c}")
                 x[a, c] = variable
                 position_vars.append(variable)
-                placement_vars.append(variable)
                 artifact_placement_variables += 1
             else:
                 x[a, c] = zero
@@ -596,7 +594,6 @@ def solve(
             variable = model.new_bool_var(f"t_{t}_{k}")
             y[t, k] = variable
             position_vars.append(variable)
-            placement_vars.append(variable)
             tablet_placement_variables += 1
         model.add_exactly_one(position_vars)
 
@@ -817,6 +814,7 @@ def solve(
     for a, (item, artifact) in enumerate(zip(request.artifacts, artifact_types)):
         cell_levels, cell_level_bounds = level_transforms[item.base_level, artifact.cap]
         possible_cells = []
+        excluded_cells: set[int] = set()
         for c, (cell_low, cell_high) in enumerate(cell_level_bounds):
             impossible = (
                 (item.min_level is not None and cell_high < item.min_level)
@@ -824,12 +822,17 @@ def solve(
                     and not cell_low <= item.exact_level <= cell_high)
             )
             if impossible:
+                excluded_cells.add(c)
                 if _fixed_bool_value(x[a, c]) != 0:
                     model.add(x[a, c] == 0)
                     level_pruned_artifact_cells += 1
                 continue
             if _fixed_bool_value(x[a, c]) != 0:
                 possible_cells.append(c)
+        if not possible_cells:
+            return _empty_result(
+                "INFEASIBLE", f"神器 {artifact.name} 在当前背包中没有可行位置", started,
+            )
         if possible_cells:
             level_low = min(cell_level_bounds[c][0] for c in possible_cells)
             level_high = max(cell_level_bounds[c][1] for c in possible_cells)
@@ -851,7 +854,7 @@ def solve(
 
         active_at = []
         for c in cells:
-            if _fixed_bool_value(x[a, c]) == 0:
+            if c in excluded_cells or _fixed_bool_value(x[a, c]) == 0:
                 active_at.append(zero)
                 continue
             cy, cx = divmod(c, request.cols)
@@ -1066,10 +1069,13 @@ def solve(
             next_solver.parameters.num_search_workers = request.worker_count
         next_solver.parameters.random_seed = 1
         model.clear_hints()
-        for var in placement_vars:
-            value = hint_solver.value(var)
-            if value is not None:
-                model.add_hint(var, int(round(value)))
+        # Reuse the complete phase-1 solution (all variables, not only
+        # placements) so refinement starts from the proven assignment instead
+        # of re-deriving every derived variable.
+        solution = hint_solver.response_proto.solution
+        hint = model.Proto().solution_hint
+        hint.vars.extend(range(len(solution)))
+        hint.values.extend(int(value) for value in solution)
         controller.attach(next_solver)
         if on_solver:
             on_solver(next_solver)
