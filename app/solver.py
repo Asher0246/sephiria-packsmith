@@ -88,6 +88,22 @@ def _linear_offset(value: int) -> tuple[int, int]:
     return value - 6 * dy, dy
 
 
+def _artifact_signature(artifact: ArtifactType) -> tuple:
+    """Behavioral fingerprint of a type: everything the model reads from it.
+
+    Two instances of types with equal signatures are interchangeable whenever
+    their per-instance settings match; the catalog name, image and rarity
+    never enter the model.
+    """
+    return (
+        artifact.cap,
+        tuple(sorted(set(artifact.categories))),
+        tuple(sorted(artifact.criteria)),
+        artifact.special_condition,
+        artifact.id in PLANET_ARTIFACT_IDS,
+    )
+
+
 def _rotate(dx: int, dy: int, rotation: int) -> tuple[int, int]:
     for _ in range(rotation % 4):
         dx, dy = -dy, dx
@@ -597,16 +613,26 @@ def solve(
             tablet_placement_variables += 1
         model.add_exactly_one(position_vars)
 
-    # Symmetry breaking: interchangeable artifacts (same type, weight, base
-    # level, constraints and no fixed cell) are ordered by cell index so the
-    # solver does not explore equivalent permutations.
+    # Symmetry breaking: interchangeable artifacts are ordered by cell index
+    # so the solver does not explore equivalent permutations.  Two instances
+    # are interchangeable when their types have equal behavioral signatures
+    # (see _artifact_signature; different catalog types can qualify) and all
+    # per-instance settings match.  Instances pinned to a cell never move, and
+    # instances targeted by an enabled golden needle are excluded too:
+    # swapping them changes which cell the needle's condition evaluates
+    # against, so the swap can alter the special objective.
+    targeted_instance_ids = {
+        item.special_target_instance_id
+        for item in request.artifacts
+        if item.special_priority and item.special_target_instance_id is not None
+    }
     artifact_groups: dict[tuple, list[int]] = {}
     for a, item in enumerate(request.artifacts):
-        if item.fixed_cell is not None:
+        if item.fixed_cell is not None or item.instance_id in targeted_instance_ids:
             continue
         key = (
-            item.type_id, item.weight, item.base_level, item.min_level,
-            item.exact_level, item.special_priority,
+            _artifact_signature(artifact_types[a]), item.weight, item.base_level,
+            item.min_level, item.exact_level, item.special_priority,
             item.special_target_instance_id,
         )
         artifact_groups.setdefault(key, []).append(a)

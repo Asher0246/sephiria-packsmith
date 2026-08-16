@@ -211,6 +211,56 @@ def test_interchangeable_tablets_remain_valid_after_symmetry_breaking():
     assert validate_result(request, {ARTIFACT.id: ARTIFACT}, {tablet.id: tablet}, result) == []
 
 
+def test_gold_needle_target_twin_keeps_special_effect_regardless_of_order():
+    needle_type = ArtifactType(
+        "artifact-needle", "北向的金色针", cap=2, rarity=0, special_condition="target_above",
+    )
+    artifacts = {ARTIFACT.id: ARTIFACT, needle_type.id: needle_type}
+
+    def build(target_first):
+        target = ArtifactInstance(
+            "a-target" if target_first else "a-other", ARTIFACT.id, weight=5)
+        other = ArtifactInstance(
+            "a-other" if target_first else "a-target", ARTIFACT.id, weight=5)
+        needle = ArtifactInstance(
+            "a-needle", needle_type.id, weight=10, special_priority=True,
+            special_target_instance_id="a-target", fixed_cell=2,
+        )
+        return SolveRequest(3, 1, (target, other, needle), (), 1000)
+
+    results = [(build(order), solve(build(order), artifacts, {}))
+               for order in (True, False)]
+
+    for request, result in results:
+        assert result["solutionStatus"] == "OPTIMAL"
+        detail = result["specialDetails"][0]
+        assert detail["rawScore"] == detail["maxScore"]
+        assert validate_result(request, artifacts, {}, result) == []
+    assert results[0][1]["primaryObjective"] == results[1][1]["primaryObjective"]
+    assert results[0][1]["specialObjective"] == results[1][1]["specialObjective"]
+
+
+def test_behaviorally_identical_types_share_symmetry_group():
+    twin = ArtifactType("artifact-twin", "同类不同名", cap=3, rarity=0)
+    artifacts = {ARTIFACT.id: ARTIFACT, twin.id: twin}
+
+    def build(type_ids):
+        return SolveRequest(
+            2, 3,
+            tuple(ArtifactInstance(f"a-{index}", type_id, weight=3)
+                  for index, type_id in enumerate(type_ids)),
+            (TabletInstance("t1", TABLET.id),),
+            2000,
+        )
+
+    mixed = solve(build([ARTIFACT.id, twin.id, ARTIFACT.id]), artifacts, {TABLET.id: TABLET})
+    uniform = solve(build([ARTIFACT.id] * 3), artifacts, {TABLET.id: TABLET})
+    reordered = solve(build([twin.id, ARTIFACT.id, twin.id]), artifacts, {TABLET.id: TABLET})
+
+    assert mixed["solutionStatus"] == uniform["solutionStatus"] == reordered["solutionStatus"] == "OPTIMAL"
+    assert mixed["primaryObjective"] == uniform["primaryObjective"] == reordered["primaryObjective"]
+    assert validate_result(build([ARTIFACT.id, twin.id, ARTIFACT.id]),
+                           artifacts, {TABLET.id: TABLET}, mixed) == []
 
 
 def test_curse_tablet_uses_game_checkerboard_range_on_partial_last_row():
