@@ -3,8 +3,10 @@ from __future__ import annotations
 import argparse
 import json
 import mimetypes
+import os
 import secrets
 import threading
+import time
 import uuid
 import webbrowser
 from dataclasses import dataclass, field
@@ -19,6 +21,7 @@ from .game_bridge import (
     GameApplyError,
     GameBridgeError,
     apply_game_arrangement,
+    inventory_to_solve_payload,
     prepare_apply_command,
     read_game_inventory,
 )
@@ -28,6 +31,10 @@ from .solver import StopController, solve
 
 STATIC = Path(__file__).resolve().parent / "static"
 MAX_BODY = 8_000_000
+RUNTIME_FILE_NAME = "runtime.json"
+DEFAULT_AUTO_ORGANIZE_TIME_LIMIT_MS = 30_000
+DEFAULT_AUTO_ORGANIZE_WAIT_GRACE_S = 5.0
+APPLICABLE_SOLUTION_STATUSES = frozenset({"OPTIMAL", "FEASIBLE", "STOPPED"})
 
 
 @dataclass
@@ -97,6 +104,122 @@ class AppState:
         threading.Thread(target=run, name=f"solve-{job.id[:8]}", daemon=True).start()
         return job
 
+    def wait_for_job(self, job: Job, timeout_s: float) -> Job:
+        deadline = time.monotonic() + max(0.001, timeout_s)
+        while time.monotonic() < deadline:
+            with self.lock:
+                if job.status in ("FINISHED", "FAILED"):
+                    return job
+            time.sleep(0.05)
+        job.controller.stop()
+        while time.monotonic() < deadline + DEFAULT_AUTO_ORGANIZE_WAIT_GRACE_S:
+            with self.lock:
+                if job.status in ("FINISHED", "FAILED"):
+                    return job
+            time.sleep(0.05)
+        return job
+
+
+def packsmith_data_dir() -> Path:
+    override = os.environ.get("SEPHIRIA_CACHE_DIR")
+    if override:
+        return Path(override)
+    if os.environ.get("LOCALAPPDATA"):
+        return Path(os.environ["LOCALAPPDATA"]) / "SephiriaPacksmith"
+    return Path.home() / ".sephiria-packsmith"
+
+
+def runtime_info_path() -> Path:
+    return packsmith_data_dir() / RUNTIME_FILE_NAME
+
+
+def write_runtime_info(port: int, token: str) -> None:
+    directory = packsmith_data_dir()
+    directory.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "port": port,
+        "token": token,
+        "url": f"http://127.0.0.1:{port}",
+    }
+    runtime_info_path().write_text(
+        json.dumps(payload, ensure_ascii=False, separators=(",", ":")),
+        encoding="utf-8",
+    )
+
+
+def remove_runtime_info() -> None:
+    try:
+        runtime_info_path().unlink(missing_ok=True)
+    except OSError:
+        pass
+
+
+def _auto_organize_options(body: dict) -> dict:
+    options = body.get("options") if isinstance(body.get("options"), dict) else body
+    if not isinstance(options, dict):
+        options = {}
+    time_limit_ms = options.get("timeLimitMs", DEFAULT_AUTO_ORGANIZE_TIME_LIMIT_MS)
+    if not isinstance(time_limit_ms, int) or isinstance(time_limit_ms, bool):
+        try:
+            time_limit_ms = int(time_limit_ms)
+        except (TypeError, ValueError):
+            time_limit_ms = DEFAULT_AUTO_ORGANIZE_TIME_LIMIT_MS
+    time_limit_ms = max(1000, min(600_000, time_limit_ms))
+    worker_count = options.get("workerCount", 0)
+    if not isinstance(worker_count, int) or isinstance(worker_count, bool):
+        try:
+            worker_count = int(worker_count)
+        except (TypeError, ValueError):
+            worker_count = 0
+    worker_count = max(0, min(64, worker_count))
+    fast_mode = options.get("fastMode", True)
+    if not isinstance(fast_mode, bool):
+        fast_mode = bool(fast_mode)
+    return {
+        "timeLimitMs": time_limit_ms,
+        "workerCount": worker_count,
+        "fastMode": fast_mode,
+    }
+
+
+def auto_organize(state: AppState, body: dict | None = None) -> dict:
+    body = body or {}
+    options = _auto_organize_options(body)
+    inventory = read_game_inventory()
+    payload = inventory_to_solve_payload(
+        inventory,
+        fast_mode=options["fastMode"],
+        time_limit_ms=options["timeLimitMs"],
+        worker_count=options["workerCount"],
+    )
+    job = state.create_job(payload)
+    wait_timeout_s = options["timeLimitMs"] / 1000 + DEFAULT_AUTO_ORGANIZE_WAIT_GRACE_S
+    job = state.wait_for_job(job, wait_timeout_s)
+    if job.status == "FAILED":
+        message = "求解失败"
+        if isinstance(job.error, dict):
+            message = str(job.error.get("message") or message)
+        raise RequestError(message)
+    result = job.result
+    if not isinstance(result, dict):
+        raise RequestError("求解未返回有效结果")
+    solution_status = result.get("solutionStatus")
+    if solution_status not in APPLICABLE_SOLUTION_STATUSES:
+        raise RequestError(str(result.get("message") or "没有满足全部约束的排布"))
+    command = prepare_apply_command(job.game_source, result)
+    applied = apply_game_arrangement(command)
+    return {
+        "ok": True,
+        "message": str(result.get("message") or "已应用到游戏"),
+        "solutionStatus": solution_status,
+        "solveId": job.id,
+        "solveMs": result.get("solveMs"),
+        "relativeGap": result.get("relativeGap"),
+        "moves": applied.get("moves"),
+        "rotations": applied.get("rotations"),
+        "inventoryFingerprint": applied.get("inventoryFingerprint"),
+    }
+
 
 def make_handler(state: AppState):
     class Handler(BaseHTTPRequestHandler):
@@ -128,15 +251,17 @@ def make_handler(state: AppState):
                 return False
             return True
 
-        def _read_json(self) -> dict | None:
+        def _read_json(self, *, optional: bool = False) -> dict | None:
+            try:
+                length = int(self.headers.get("Content-Length", "0"))
+            except ValueError:
+                length = -1 if not optional else 0
+            if optional and length <= 0:
+                return {}
             content_type = self.headers.get("Content-Type", "").split(";", 1)[0].strip().lower()
             if content_type != "application/json":
                 self._json(HTTPStatus.UNSUPPORTED_MEDIA_TYPE, {"error": {"code": "UNSUPPORTED_MEDIA_TYPE", "message": "请求必须使用 application/json"}})
                 return None
-            try:
-                length = int(self.headers.get("Content-Length", "0"))
-            except ValueError:
-                length = -1
             if not 0 < length <= MAX_BODY:
                 self._json(HTTPStatus.REQUEST_ENTITY_TOO_LARGE, {"error": {"code": "BODY_TOO_LARGE", "message": "请求体大小无效"}})
                 return None
@@ -212,13 +337,37 @@ def make_handler(state: AppState):
 
         def do_POST(self) -> None:
             path = urlparse(self.path).path
-            if path not in ("/api/solve", "/api/custom-tablet/compose", "/api/apply-arrangement"):
+            if path not in ("/api/solve", "/api/custom-tablet/compose", "/api/apply-arrangement", "/api/auto-organize"):
                 self._json(HTTPStatus.NOT_FOUND, {"error": {"code": "NOT_FOUND", "message": "接口不存在"}})
                 return
             if not self._require_api_auth():
                 return
-            payload = self._read_json()
+            payload = self._read_json(optional=(path == "/api/auto-organize"))
             if payload is None:
+                return
+            if path == "/api/auto-organize":
+                try:
+                    response = auto_organize(state, payload)
+                except GameBridgeError as exc:
+                    self._json(HTTPStatus.SERVICE_UNAVAILABLE, {
+                        "error": {"code": "GAME_BRIDGE_UNAVAILABLE", "message": str(exc)},
+                    })
+                    return
+                except GameApplyError as exc:
+                    conflict_codes = {
+                        "INVENTORY_CHANGED", "INVALID_APPLY_PLAN",
+                        "INVALID_GAME_SNAPSHOT", "NO_GAME_SNAPSHOT", "NO_FEASIBLE_RESULT",
+                        "GAME_VERSION_CHANGED",
+                    }
+                    status = HTTPStatus.CONFLICT if exc.code in conflict_codes else HTTPStatus.SERVICE_UNAVAILABLE
+                    self._json(status, {"error": {"code": exc.code, "message": str(exc)}})
+                    return
+                except RequestError as exc:
+                    self._json(HTTPStatus.CONFLICT, {
+                        "error": {"code": "AUTO_ORGANIZE_FAILED", "message": str(exc)},
+                    })
+                    return
+                self._json(HTTPStatus.OK, response)
                 return
             if path == "/api/apply-arrangement":
                 solve_id = payload.get("solveId")
@@ -303,7 +452,11 @@ def main() -> None:
     server, token = create_server(args.port, args.token)
     port = server.server_address[1]
     url = f"http://127.0.0.1:{port}/?token={token}"
-    print(json.dumps({"event": "READY", "url": url}, ensure_ascii=False), flush=True)
+    try:
+        write_runtime_info(port, token)
+    except OSError as exc:
+        print(f"runtime info skipped: {exc!r}")
+    print(json.dumps({"event": "READY", "url": url, "runtime": str(runtime_info_path())}, ensure_ascii=False), flush=True)
     if not args.no_browser:
         threading.Timer(0.25, lambda: webbrowser.open(url)).start()
     try:
@@ -311,6 +464,7 @@ def main() -> None:
     except KeyboardInterrupt:
         print("正在停止服务...")
     finally:
+        remove_runtime_info()
         server.server_close()
 
 

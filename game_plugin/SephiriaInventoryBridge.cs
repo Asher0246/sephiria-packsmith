@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.IO.Pipes;
+using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
@@ -12,17 +13,22 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace SephiriaInventoryBridge
 {
-    [BepInPlugin("local.sephiria.inventorybridge", "Sephiria Inventory Bridge", "1.3.0")]
+    [BepInPlugin("local.sephiria.inventorybridge", "Sephiria Inventory Bridge", "1.4.0")]
     public sealed class InventoryBridgePlugin : BaseUnityPlugin
     {
         private const string PipeName = "SephiriaInventoryBridge.v1";
         private const string ApplyPipeName = "SephiriaInventoryBridge.apply.v1";
         private const int MaxCommandBytes = 1000000;
+        private const int AutoOrganizeRequestTimeoutMs = 120000;
+        private const string AutoOrganizeRequestBody =
+            "{\"fastMode\":true,\"timeLimitMs\":30000,\"workerCount\":0}";
         private volatile string _snapshot = "{\"version\":1,\"ready\":false,\"error\":\"waiting for inventory\"}";
         private volatile bool _running;
+        private int _autoOrganizeRunning;
         private Thread _pipeThread;
         private Thread _commandThread;
         private readonly object _pipeSync = new object();
@@ -34,10 +40,26 @@ namespace SephiriaInventoryBridge
         private Type _gridInventoryType;
         private Type _itemPositionType;
         private Type _dungeonManagerType;
+        private Type _uiManagerType;
+        private Type _characterStatusPanelType;
+        private Type _itemBoxPanelType;
+        private PropertyInfo _uiManagerInstanceProperty;
+        private MethodInfo _uiManagerGetElementMethod;
+        private PropertyInfo _uiBaseIsOpenedProperty;
         private MethodInfo _swapMethod;
         private MethodInfo _clickMethod;
         private float _nextCapture;
+        private float _nextBackpackUiPoll;
+        private int _lastBackpackUiOpen = -1;
+        private volatile bool _autoOrganizeUiRestorePending;
         private string _assemblySha256 = "";
+        private Type _tmpTextType;
+        private PropertyInfo _tmpTextProperty;
+        private GameObject _organizeButtonObject;
+        private Button _organizeButton;
+        private Component _organizeButtonLabel;
+        private bool _organizeUiCreated;
+        private bool _backpackUiAnchorsLogged;
         private readonly Dictionary<string, string> _customCandidateCache = new Dictionary<string, string>();
 
         private void Awake()
@@ -45,6 +67,7 @@ namespace SephiriaInventoryBridge
             _gridInventoryType = Type.GetType("GridInventory, Assembly-CSharp", false);
             _itemPositionType = Type.GetType("ItemPosition, Assembly-CSharp", false);
             _dungeonManagerType = Type.GetType("DungeonManager, Assembly-CSharp", false);
+            ResolveUiReflection();
             if (_gridInventoryType != null && _itemPositionType != null)
             {
                 _swapMethod = _gridInventoryType.GetMethod(
@@ -66,11 +89,21 @@ namespace SephiriaInventoryBridge
             _commandThread.Start();
             Logger.LogInfo("Inventory bridge started; apply API available: " +
                 (_swapMethod != null && _clickMethod != null));
+            Logger.LogInfo("Backpack UI detection ready: UIManager="
+                + (_uiManagerType != null)
+                + ", CharacterStatusPanel="
+                + (_characterStatusPanelType != null)
+                + ", ItemBoxPanel="
+                + (_itemBoxPanelType != null));
+            Logger.LogInfo("Packsmith auto-organize button: parent=inventoryScrollParent, layout=inventoryZone 右缘");
         }
 
         private void Update()
         {
             ProcessNextCommand();
+            PollBackpackUiState();
+            UpdateOrganizeButtonUi();
+            ProcessAutoOrganizeUiRestore();
             if (Time.unscaledTime < _nextCapture)
                 return;
             _nextCapture = Time.unscaledTime + 0.5f;
@@ -98,6 +131,7 @@ namespace SephiriaInventoryBridge
         private void StopBridge()
         {
             _running = false;
+            DestroyOrganizeButtonUi();
             lock (_commandQueueSync)
             {
                 while (_commandQueue.Count > 0)
@@ -296,6 +330,682 @@ namespace SephiriaInventoryBridge
             {
                 work.Completed.Set();
             }
+        }
+
+        private void ResolveUiReflection()
+        {
+            _uiManagerType = Type.GetType("UIManager, Assembly-CSharp", false);
+            _characterStatusPanelType = Type.GetType("UI_CharacterStatusPanel, Assembly-CSharp", false);
+            _itemBoxPanelType = Type.GetType("UI_ItemBoxPanel, Assembly-CSharp", false);
+            if (_uiManagerType != null)
+            {
+                _uiManagerInstanceProperty = _uiManagerType.GetProperty(
+                    "Instance", BindingFlags.Public | BindingFlags.Static);
+                MethodInfo[] methods = _uiManagerType.GetMethods(BindingFlags.Public | BindingFlags.Instance);
+                for (int i = 0; i < methods.Length; i++)
+                {
+                    MethodInfo method = methods[i];
+                    if (method.Name == "GetElement" && method.IsGenericMethodDefinition)
+                    {
+                        _uiManagerGetElementMethod = method;
+                        break;
+                    }
+                }
+            }
+            Type uiBaseType = Type.GetType("UIBase, Assembly-CSharp", false);
+            if (uiBaseType != null)
+            {
+                _uiBaseIsOpenedProperty = uiBaseType.GetProperty(
+                    "IsOpened", BindingFlags.Public | BindingFlags.Instance);
+            }
+            _tmpTextType = Type.GetType("TMPro.TextMeshProUGUI, Unity.TextMeshPro", false);
+            if (_tmpTextType != null)
+                _tmpTextProperty = _tmpTextType.GetProperty("text", BindingFlags.Public | BindingFlags.Instance);
+        }
+
+        private object TryGetUiPanel(Type panelType)
+        {
+            if (panelType == null || _uiManagerType == null || _uiManagerInstanceProperty == null
+                    || _uiManagerGetElementMethod == null)
+                return null;
+            object uiManager = _uiManagerInstanceProperty.GetValue(null, null);
+            if (uiManager == null)
+                return null;
+            MethodInfo getElement = _uiManagerGetElementMethod.MakeGenericMethod(panelType);
+            return getElement.Invoke(uiManager, null);
+        }
+
+        private bool IsBackpackUiOpen()
+        {
+            bool statusPanelOpen;
+            if (TryGetUiPanelOpened(_characterStatusPanelType, out statusPanelOpen) && statusPanelOpen)
+                return true;
+            bool itemBoxOpen;
+            if (TryGetUiPanelOpened(_itemBoxPanelType, out itemBoxOpen) && itemBoxOpen)
+                return true;
+            return false;
+        }
+
+        private bool TryGetUiPanelOpened(Type panelType, out bool isOpened)
+        {
+            isOpened = false;
+            if (panelType == null || _uiManagerType == null || _uiManagerInstanceProperty == null
+                    || _uiManagerGetElementMethod == null || _uiBaseIsOpenedProperty == null)
+                return false;
+            object uiManager = _uiManagerInstanceProperty.GetValue(null, null);
+            if (uiManager == null)
+                return false;
+            MethodInfo getElement = _uiManagerGetElementMethod.MakeGenericMethod(panelType);
+            object panel = getElement.Invoke(uiManager, null);
+            if (panel == null)
+                return false;
+            object value = _uiBaseIsOpenedProperty.GetValue(panel, null);
+            if (!(value is bool))
+                return false;
+            isOpened = (bool)value;
+            return true;
+        }
+
+        private bool EvaluateInventoryHeuristic(out int matrixCount)
+        {
+            matrixCount = 0;
+            object inventory = FindLocalInventory();
+            if (inventory == null)
+                return false;
+            matrixCount = GetCollectionCount(GetMember(inventory, "inventoryMatrix"));
+            return matrixCount > 0;
+        }
+
+        private void PollBackpackUiState()
+        {
+            if (Time.unscaledTime < _nextBackpackUiPoll)
+                return;
+            _nextBackpackUiPoll = Time.unscaledTime + 0.25f;
+
+            bool uiOpen = IsBackpackUiOpen();
+            int matrixCount;
+            bool heuristicOpen = EvaluateInventoryHeuristic(out matrixCount);
+            int current = uiOpen ? 1 : 0;
+            if (_lastBackpackUiOpen == current)
+                return;
+
+            Logger.LogInfo(string.Format(CultureInfo.InvariantCulture,
+                "背包 UI: {0} → {1} | CharacterStatusPanel={2}, ItemBoxPanel={3}, heuristic(inventory+matrix>0)={4}, matrixCount={5}",
+                DescribeBackpackUiState(_lastBackpackUiOpen),
+                DescribeBackpackUiState(current),
+                DescribePanelState(_characterStatusPanelType),
+                DescribePanelState(_itemBoxPanelType),
+                heuristicOpen ? "yes" : "no",
+                matrixCount));
+            _lastBackpackUiOpen = current;
+        }
+
+        private static string DescribeBackpackUiState(int state)
+        {
+            if (state < 0)
+                return "unknown";
+            return state == 1 ? "open" : "closed";
+        }
+
+        private string DescribePanelState(Type panelType)
+        {
+            bool isOpened;
+            if (!TryGetUiPanelOpened(panelType, out isOpened))
+                return "?";
+            return isOpened ? "open" : "closed";
+        }
+
+        private bool TryStartAutoOrganize()
+        {
+            if (Interlocked.CompareExchange(ref _autoOrganizeRunning, 1, 0) != 0)
+            {
+                Logger.LogInfo("Packsmith 自动整理正在进行中，请稍候");
+                return false;
+            }
+            SetOrganizeButtonBusy(true);
+            Thread worker = new Thread(AutoOrganizeWorker);
+            worker.IsBackground = true;
+            worker.Name = "PacksmithAutoOrganize";
+            worker.Start();
+            return true;
+        }
+
+        private void AutoOrganizeWorker()
+        {
+            try
+            {
+                Logger.LogInfo("Packsmith 自动整理已开始");
+                string summary = RunAutoOrganizeRequest();
+                Logger.LogInfo(summary);
+            }
+            catch (Exception exception)
+            {
+                Logger.LogWarning("Packsmith 自动整理失败: " + exception.Message);
+            }
+            finally
+            {
+                Interlocked.Exchange(ref _autoOrganizeRunning, 0);
+                _autoOrganizeUiRestorePending = true;
+            }
+        }
+
+        private void ProcessAutoOrganizeUiRestore()
+        {
+            if (!_autoOrganizeUiRestorePending || _autoOrganizeRunning != 0)
+                return;
+            _autoOrganizeUiRestorePending = false;
+            SetOrganizeButtonBusy(false);
+        }
+
+        private void UpdateOrganizeButtonUi()
+        {
+            bool statusPanelOpen;
+            TryGetUiPanelOpened(_characterStatusPanelType, out statusPanelOpen);
+            if (!statusPanelOpen)
+            {
+                if (_organizeButtonObject != null)
+                    _organizeButtonObject.SetActive(false);
+                return;
+            }
+
+            if (_organizeButtonObject == null && !TryCreateOrganizeButtonUi())
+                return;
+            if (_organizeButtonObject == null)
+                return;
+
+            ApplyOrganizeButtonToBackpackSide();
+
+            if (!_organizeButtonObject.activeSelf)
+                _organizeButtonObject.SetActive(true);
+            if (_autoOrganizeRunning != 0)
+                SyncOrganizeButtonBusyState(true);
+        }
+
+        private bool TryGetCharacterStatusRectTransform(string fieldName, out RectTransform rectTransform)
+        {
+            rectTransform = null;
+            object panel = TryGetUiPanel(_characterStatusPanelType);
+            if (panel == null || _characterStatusPanelType == null)
+                return false;
+            FieldInfo field = _characterStatusPanelType.GetField(
+                fieldName, BindingFlags.Public | BindingFlags.Instance);
+            if (field == null)
+                return false;
+            rectTransform = field.GetValue(panel) as RectTransform;
+            return rectTransform != null;
+        }
+
+        private Image TryGetCharacterStatusCoverImage()
+        {
+            RectTransform cover;
+            if (!TryGetCharacterStatusRectTransform("inventoryCover", out cover) || cover == null)
+                return null;
+            return cover.GetComponent<Image>();
+        }
+
+        private bool TryGetOrganizeButtonAnchorTargets(
+            out RectTransform scrollParent, out RectTransform inventoryZone)
+        {
+            scrollParent = null;
+            inventoryZone = null;
+            if (!TryGetCharacterStatusRectTransform("inventoryScrollParent", out scrollParent))
+                return false;
+            return TryGetCharacterStatusRectTransform("inventoryZone", out inventoryZone);
+        }
+
+        private Image TryGetOrganizeButtonBackgroundImage(object panel)
+        {
+            Type setEffectElementType = Type.GetType("UI_SetEffectElement, Assembly-CSharp", false);
+            if (setEffectElementType != null && _characterStatusPanelType != null)
+            {
+                FieldInfo prefabField = _characterStatusPanelType.GetField(
+                    "setEffectElementPrefab", BindingFlags.Public | BindingFlags.Instance);
+                Component prefab = prefabField == null ? null : prefabField.GetValue(panel) as Component;
+                if (prefab != null)
+                {
+                    FieldInfo backgroundField = setEffectElementType.GetField(
+                        "iconBGImage", BindingFlags.Public | BindingFlags.Instance);
+                    if (backgroundField != null)
+                    {
+                        Image background = backgroundField.GetValue(prefab) as Image;
+                        if (background != null && background.sprite != null)
+                            return background;
+                    }
+                }
+            }
+
+            Image coverImage = TryGetCharacterStatusCoverImage();
+            if (coverImage != null && coverImage.sprite != null)
+                return coverImage;
+
+            RectTransform scrollParent;
+            RectTransform inventoryZone;
+            if (!TryGetOrganizeButtonAnchorTargets(out scrollParent, out inventoryZone) || scrollParent == null)
+                return null;
+
+            Image[] images = scrollParent.GetComponentsInChildren<Image>(true);
+            for (int i = 0; i < images.Length; i++)
+            {
+                Image candidate = images[i];
+                if (candidate == null || candidate.sprite == null)
+                    continue;
+                Transform candidateTransform = candidate.transform;
+                if (inventoryZone != null && candidateTransform.IsChildOf(inventoryZone))
+                    continue;
+                return candidate;
+            }
+            return null;
+        }
+
+        private void ApplyOrganizeButtonBackground(Image buttonImage, object panel)
+        {
+            if (buttonImage == null)
+                return;
+
+            Image sourceImage = TryGetOrganizeButtonBackgroundImage(panel);
+            if (sourceImage != null && sourceImage.sprite != null)
+            {
+                buttonImage.sprite = sourceImage.sprite;
+                buttonImage.type = sourceImage.type == Image.Type.Filled
+                    ? Image.Type.Simple
+                    : sourceImage.type;
+                buttonImage.pixelsPerUnitMultiplier = sourceImage.pixelsPerUnitMultiplier;
+                buttonImage.material = sourceImage.material;
+                buttonImage.color = Color.white;
+                return;
+            }
+
+            buttonImage.sprite = null;
+            buttonImage.type = Image.Type.Simple;
+            buttonImage.color = new Color(0.45f, 0.34f, 0.24f, 0.92f);
+        }
+
+        private void ApplyOrganizeButtonLayout(RectTransform buttonRect)
+        {
+            if (buttonRect == null)
+                return;
+
+            RectTransform scrollParent;
+            RectTransform inventoryZone;
+            if (!TryGetOrganizeButtonAnchorTargets(out scrollParent, out inventoryZone))
+                return;
+
+            if (buttonRect.parent != scrollParent)
+                buttonRect.SetParent(scrollParent, false);
+
+            buttonRect.anchorMin = inventoryZone.anchorMin;
+            buttonRect.anchorMax = inventoryZone.anchorMax;
+            buttonRect.pivot = new Vector2(0f, 0.5f);
+            buttonRect.sizeDelta = new Vector2(52f, 26f);
+            buttonRect.anchoredPosition = new Vector2(
+                inventoryZone.anchoredPosition.x + inventoryZone.sizeDelta.x * 0.5f + 18f,
+                inventoryZone.anchoredPosition.y - 8f);
+            buttonRect.SetAsLastSibling();
+        }
+
+        private void LogBackpackUiAnchorsOnce()
+        {
+            if (_backpackUiAnchorsLogged)
+                return;
+            object panel = TryGetUiPanel(_characterStatusPanelType);
+            if (panel == null)
+                return;
+            _backpackUiAnchorsLogged = true;
+
+            Logger.LogInfo("Packsmith 背包 UI 锚点确认（UI_CharacterStatusPanel 公开字段）");
+            LogCharacterStatusRectTransform(panel, "inventoryParent");
+            LogCharacterStatusRectTransform(panel, "inventoryScrollParent");
+            LogCharacterStatusRectTransform(panel, "inventoryZone");
+            LogCharacterStatusRectTransform(panel, "inventoryCover");
+            LogCharacterStatusRectTransform(panel, "itemDropPositionOnController");
+
+            RectTransform scrollParent;
+            RectTransform inventoryZone;
+            if (TryGetOrganizeButtonAnchorTargets(out scrollParent, out inventoryZone))
+            {
+                Logger.LogInfo(string.Format(CultureInfo.InvariantCulture,
+                    "Packsmith 整理按钮布局: parent={0}, zoneRight={1:F1}, zoneCenterY={2:F1}（inventoryParent 为零宽竖条，不可作定位父级）",
+                    GetTransformPath(scrollParent),
+                    inventoryZone.anchoredPosition.x + inventoryZone.sizeDelta.x * 0.5f,
+                    inventoryZone.anchoredPosition.y));
+            }
+
+            Image background = TryGetOrganizeButtonBackgroundImage(panel);
+            Logger.LogInfo("Packsmith 整理按钮背景: "
+                + (background != null && background.sprite != null
+                    ? GetTransformPath(background.transform) + "/" + background.sprite.name
+                    : "fallback"));
+
+            FieldInfo dropZoneField = _characterStatusPanelType.GetField(
+                "itemDropZone", BindingFlags.Public | BindingFlags.Instance);
+            if (dropZoneField == null)
+            {
+                Logger.LogInfo("背包 UI.itemDropZone=字段缺失");
+                return;
+            }
+            Component dropZone = dropZoneField.GetValue(panel) as Component;
+            if (dropZone == null)
+            {
+                Logger.LogInfo("背包 UI.itemDropZone=null（右侧丢弃区，非整理按钮挂载点）");
+                return;
+            }
+            Logger.LogInfo("背包 UI.itemDropZone: name="
+                + dropZone.name
+                + ", path="
+                + GetTransformPath(dropZone.transform)
+                + "（删除/丢弃区，勿复用其图标）");
+        }
+
+        private void LogCharacterStatusRectTransform(object panel, string fieldName)
+        {
+            FieldInfo field = _characterStatusPanelType.GetField(
+                fieldName, BindingFlags.Public | BindingFlags.Instance);
+            if (field == null)
+            {
+                Logger.LogInfo("背包 UI." + fieldName + "=字段缺失");
+                return;
+            }
+            RectTransform rectTransform = field.GetValue(panel) as RectTransform;
+            if (rectTransform == null)
+            {
+                Logger.LogInfo("背包 UI." + fieldName + "=null");
+                return;
+            }
+            Logger.LogInfo(string.Format(CultureInfo.InvariantCulture,
+                "背包 UI.{0}: name={1}, path={2}, anchor=({3:F3},{4:F3})-({5:F3},{6:F3}), pivot=({7:F3},{8:F3}), size=({9:F1},{10:F1}), pos=({11:F1},{12:F1}), active={13}",
+                fieldName,
+                rectTransform.name,
+                GetTransformPath(rectTransform),
+                rectTransform.anchorMin.x,
+                rectTransform.anchorMin.y,
+                rectTransform.anchorMax.x,
+                rectTransform.anchorMax.y,
+                rectTransform.pivot.x,
+                rectTransform.pivot.y,
+                rectTransform.sizeDelta.x,
+                rectTransform.sizeDelta.y,
+                rectTransform.anchoredPosition.x,
+                rectTransform.anchoredPosition.y,
+                rectTransform.gameObject.activeInHierarchy));
+        }
+
+        private static string GetTransformPath(Transform transform)
+        {
+            if (transform == null)
+                return "";
+            StringBuilder path = new StringBuilder(transform.name);
+            Transform current = transform.parent;
+            while (current != null)
+            {
+                path.Insert(0, current.name + "/");
+                current = current.parent;
+            }
+            return path.ToString();
+        }
+
+        private Component FindReferenceTmpText(object panel)
+        {
+            Component panelComponent = panel as Component;
+            if (panelComponent == null || _tmpTextType == null)
+                return null;
+            Component[] labels = panelComponent.GetComponentsInChildren(_tmpTextType, true);
+            for (int i = 0; i < labels.Length; i++)
+            {
+                if (labels[i] != null)
+                    return labels[i];
+            }
+            return null;
+        }
+
+        private void CopyTmpFontSettings(Component source, Component target)
+        {
+            if (source == null || target == null || _tmpTextType == null)
+                return;
+            string[] propertyNames = new string[] {
+                "font", "fontSharedMaterial", "fontSize", "fontStyle", "color",
+            };
+            for (int i = 0; i < propertyNames.Length; i++)
+            {
+                PropertyInfo property = _tmpTextType.GetProperty(
+                    propertyNames[i], BindingFlags.Public | BindingFlags.Instance);
+                if (property == null || !property.CanRead || !property.CanWrite)
+                    continue;
+                property.SetValue(target, property.GetValue(source, null), null);
+            }
+        }
+
+        private bool TryCreateOrganizeButtonUi()
+        {
+            if (_organizeUiCreated)
+                return _organizeButtonObject != null;
+
+            RectTransform scrollParent;
+            RectTransform inventoryZone;
+            if (!TryGetOrganizeButtonAnchorTargets(out scrollParent, out inventoryZone))
+                return false;
+
+            object panel = TryGetUiPanel(_characterStatusPanelType);
+            if (panel == null)
+                return false;
+
+            LogBackpackUiAnchorsOnce();
+            _organizeUiCreated = true;
+
+            _organizeButtonObject = new GameObject(
+                "PacksmithAutoOrganizeButton", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
+            _organizeButtonObject.transform.SetParent(scrollParent, false);
+
+            RectTransform buttonRect = _organizeButtonObject.transform as RectTransform;
+            ApplyOrganizeButtonLayout(buttonRect);
+
+            Image buttonImage = _organizeButtonObject.GetComponent<Image>();
+            ApplyOrganizeButtonBackground(buttonImage, panel);
+            buttonImage.raycastTarget = true;
+
+            _organizeButton = _organizeButtonObject.GetComponent<Button>();
+            _organizeButton.targetGraphic = buttonImage;
+            ColorBlock colors = _organizeButton.colors;
+            colors.normalColor = Color.white;
+            colors.highlightedColor = new Color(0.85f, 0.85f, 0.85f, 1f);
+            colors.pressedColor = new Color(0.70f, 0.70f, 0.70f, 1f);
+            colors.disabledColor = new Color(0.55f, 0.55f, 0.55f, 0.65f);
+            _organizeButton.colors = colors;
+            _organizeButton.onClick = new Button.ButtonClickedEvent();
+            _organizeButton.onClick.AddListener(OnOrganizeButtonClicked);
+
+            if (_tmpTextType != null && _tmpTextProperty != null)
+            {
+                GameObject labelObject = new GameObject("Label", typeof(RectTransform));
+                labelObject.transform.SetParent(_organizeButtonObject.transform, false);
+                RectTransform labelRect = labelObject.transform as RectTransform;
+                labelRect.anchorMin = Vector2.zero;
+                labelRect.anchorMax = Vector2.one;
+                labelRect.offsetMin = Vector2.zero;
+                labelRect.offsetMax = Vector2.zero;
+
+                _organizeButtonLabel = labelObject.AddComponent(_tmpTextType) as Component;
+                Component referenceLabel = FindReferenceTmpText(panel);
+                if (referenceLabel != null)
+                    CopyTmpFontSettings(referenceLabel, _organizeButtonLabel);
+                PropertyInfo fontSizeProperty = _tmpTextType.GetProperty(
+                    "fontSize", BindingFlags.Public | BindingFlags.Instance);
+                if (fontSizeProperty != null)
+                    fontSizeProperty.SetValue(_organizeButtonLabel, 15f, null);
+                PropertyInfo alignmentProperty = _tmpTextType.GetProperty(
+                    "alignment", BindingFlags.Public | BindingFlags.Instance);
+                if (alignmentProperty != null)
+                    alignmentProperty.SetValue(_organizeButtonLabel, 514, null); // TextAlignmentOptions.Center
+                PropertyInfo colorProperty = _tmpTextType.GetProperty(
+                    "color", BindingFlags.Public | BindingFlags.Instance);
+                if (colorProperty != null)
+                    colorProperty.SetValue(_organizeButtonLabel, new Color(0.95f, 0.90f, 0.78f, 1f), null);
+                PropertyInfo raycastProperty = _tmpTextType.GetProperty(
+                    "raycastTarget", BindingFlags.Public | BindingFlags.Instance);
+                if (raycastProperty != null)
+                    raycastProperty.SetValue(_organizeButtonLabel, false, null);
+            }
+
+            SetOrganizeButtonLabel("整理");
+            _organizeButtonObject.SetActive(false);
+            Logger.LogInfo("Packsmith 整理按钮已创建: parent="
+                + GetTransformPath(scrollParent)
+                + ", layout=inventoryZone 右缘 + (18,-8)");
+            return true;
+        }
+
+        private void ApplyOrganizeButtonToBackpackSide()
+        {
+            if (_organizeButtonObject == null)
+                return;
+
+            RectTransform buttonRect = _organizeButtonObject.transform as RectTransform;
+            if (buttonRect == null)
+                return;
+
+            ApplyOrganizeButtonLayout(buttonRect);
+        }
+
+        private void OnOrganizeButtonClicked()
+        {
+            TryStartAutoOrganize();
+        }
+
+        private void SyncOrganizeButtonBusyState(bool busy)
+        {
+            if (_organizeButtonObject == null || !_organizeButtonObject.activeSelf)
+                return;
+            SetOrganizeButtonBusy(busy);
+        }
+
+        private void SetOrganizeButtonLabel(string label)
+        {
+            if (_organizeButtonLabel == null || _tmpTextProperty == null)
+                return;
+            _tmpTextProperty.SetValue(_organizeButtonLabel, label, null);
+        }
+
+        private void SetOrganizeButtonBusy(bool busy)
+        {
+            if (_organizeButton == null)
+                return;
+            _organizeButton.interactable = !busy;
+            SetOrganizeButtonLabel(busy ? "…" : "整理");
+        }
+
+        private void DestroyOrganizeButtonUi()
+        {
+            if (_organizeButtonObject != null)
+            {
+                UnityEngine.Object.Destroy(_organizeButtonObject);
+                _organizeButtonObject = null;
+            }
+            _organizeButton = null;
+            _organizeButtonLabel = null;
+            _organizeUiCreated = false;
+        }
+
+        private static string RuntimeInfoPath()
+        {
+            string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            return Path.Combine(localAppData, "SephiriaPacksmith", "runtime.json");
+        }
+
+        private static RuntimeInfo ReadRuntimeInfo(string path)
+        {
+            byte[] bytes = File.ReadAllBytes(path);
+            using (MemoryStream stream = new MemoryStream(bytes))
+            {
+                DataContractJsonSerializer serializer =
+                    new DataContractJsonSerializer(typeof(RuntimeInfo));
+                object value = serializer.ReadObject(stream);
+                RuntimeInfo runtime = value as RuntimeInfo;
+                if (runtime == null)
+                    throw new InvalidDataException("runtime.json 格式无效");
+                return runtime;
+            }
+        }
+
+        private string RunAutoOrganizeRequest()
+        {
+            string path = RuntimeInfoPath();
+            if (!File.Exists(path))
+                throw new IOException("未找到 runtime.json；请先启动 Packsmith 求解器");
+            RuntimeInfo runtime = ReadRuntimeInfo(path);
+            if (runtime.port <= 0 || string.IsNullOrEmpty(runtime.token))
+                throw new InvalidDataException("runtime.json 缺少有效的 port 或 token");
+
+            string url = "http://127.0.0.1:" + runtime.port.ToString(CultureInfo.InvariantCulture)
+                + "/api/auto-organize";
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Headers["X-Sephiria-Token"] = runtime.token;
+            request.Timeout = AutoOrganizeRequestTimeoutMs;
+            request.ReadWriteTimeout = AutoOrganizeRequestTimeoutMs;
+            request.KeepAlive = false;
+
+            byte[] payload = Encoding.UTF8.GetBytes(AutoOrganizeRequestBody);
+            request.ContentLength = payload.Length;
+            using (Stream stream = request.GetRequestStream())
+                stream.Write(payload, 0, payload.Length);
+
+            try
+            {
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                    return FormatAutoOrganizeSuccess(reader.ReadToEnd());
+            }
+            catch (WebException exception)
+            {
+                throw new InvalidOperationException(ReadAutoOrganizeError(exception));
+            }
+        }
+
+        private static string FormatAutoOrganizeSuccess(string json)
+        {
+            using (MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(json)))
+            {
+                DataContractJsonSerializer serializer =
+                    new DataContractJsonSerializer(typeof(AutoOrganizeResponse));
+                AutoOrganizeResponse response = serializer.ReadObject(stream) as AutoOrganizeResponse;
+                if (response == null || !response.ok)
+                    return "Packsmith 自动整理已完成，但返回格式无效";
+                return string.Format(CultureInfo.InvariantCulture,
+                    "Packsmith 自动整理完成: {0} | {1} | {2} ms | 交换 {3} 次 | 旋转 {4} 次",
+                    response.solutionStatus ?? "?",
+                    response.message ?? "",
+                    response.solveMs ?? 0,
+                    response.moves ?? 0,
+                    response.rotations ?? 0);
+            }
+        }
+
+        private static string ReadAutoOrganizeError(WebException exception)
+        {
+            HttpWebResponse response = exception.Response as HttpWebResponse;
+            if (response != null)
+            {
+                try
+                {
+                    using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                    {
+                        string body = reader.ReadToEnd();
+                        using (MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(body)))
+                        {
+                            DataContractJsonSerializer serializer =
+                                new DataContractJsonSerializer(typeof(ApiErrorEnvelope));
+                            ApiErrorEnvelope envelope = serializer.ReadObject(stream) as ApiErrorEnvelope;
+                            if (envelope != null && envelope.error != null
+                                    && !string.IsNullOrEmpty(envelope.error.message))
+                                return envelope.error.message;
+                        }
+                    }
+                }
+                catch
+                {
+                }
+            }
+            return exception.Message;
         }
 
         private ApplyResponse ExecuteApply(ApplyCommand command)
@@ -1071,6 +1781,37 @@ namespace SephiriaInventoryBridge
                     rotations = rotations, rolledBack = false,
                 };
             }
+        }
+
+        [DataContract]
+        private sealed class RuntimeInfo
+        {
+            [DataMember] public int port;
+            [DataMember] public string token;
+        }
+
+        [DataContract]
+        private sealed class AutoOrganizeResponse
+        {
+            [DataMember] public bool ok;
+            [DataMember] public string message;
+            [DataMember] public string solutionStatus;
+            [DataMember] public int? solveMs;
+            [DataMember] public int? moves;
+            [DataMember] public int? rotations;
+        }
+
+        [DataContract]
+        private sealed class ApiErrorEnvelope
+        {
+            [DataMember] public ApiError error;
+        }
+
+        [DataContract]
+        private sealed class ApiError
+        {
+            [DataMember] public string code;
+            [DataMember] public string message;
         }
     }
 }

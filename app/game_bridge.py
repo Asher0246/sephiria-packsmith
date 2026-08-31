@@ -540,6 +540,110 @@ def _exchange_pipe_windows(payload: bytes, timeout_ms: int, pipe_path: str = APP
         kernel32.CloseHandle(handle)
 
 
+def inventory_to_solve_payload(
+    inventory: dict,
+    *,
+    fast_mode: bool = True,
+    time_limit_ms: int = 30_000,
+    worker_count: int = 0,
+) -> dict:
+    if not isinstance(inventory, dict):
+        raise GameBridgeError("游戏背包数据格式无效")
+    unmapped = inventory.get("unmapped")
+    if isinstance(unmapped, list) and unmapped:
+        names = "、".join(
+            str(item.get("name") or f"实体 {item.get('entityId')}")
+            for item in unmapped if isinstance(item, dict)
+        )
+        raise GameBridgeError(f"有 {len(unmapped)} 件物品无法识别：{names}。无法自动整理并应用。")
+    source = inventory.get("source")
+    if not isinstance(source, dict) or not source.get("complete"):
+        raise GameBridgeError("游戏背包快照不完整，无法自动整理")
+    grid = inventory.get("grid")
+    if not isinstance(grid, dict):
+        raise GameBridgeError("游戏返回的背包尺寸无效")
+    cell_count = _integer(grid.get("cellCount"), 0)
+    if not 1 <= cell_count <= 60:
+        raise GameBridgeError("游戏返回的背包尺寸无效")
+    artifacts_raw = inventory.get("artifacts")
+    tablets_raw = inventory.get("tablets")
+    if not isinstance(artifacts_raw, list) or not isinstance(tablets_raw, list):
+        raise GameBridgeError("游戏背包桥接数据格式无效")
+
+    artifacts = []
+    for item in artifacts_raw:
+        if not isinstance(item, dict):
+            continue
+        instance_id = str(item.get("instanceId") or "")
+        type_id = str(item.get("typeId") or "")
+        if not instance_id or not type_id:
+            raise GameBridgeError("游戏背包中的神器格式无效")
+        artifacts.append({
+            "instanceId": instance_id,
+            "typeId": type_id,
+            "weight": max(1, min(10, _integer(item.get("weight"), 5))),
+            "baseLevel": max(0, _integer(item.get("baseLevel"), 0)),
+            "minLevel": item.get("minLevel"),
+            "exactLevel": item.get("exactLevel"),
+            "fixedCell": item.get("fixedCell"),
+            "specialPriority": bool(item.get("specialPriority", False)),
+            "specialTargetInstanceId": item.get("specialTargetInstanceId"),
+        })
+
+    tablets = []
+    tablet_type_ids: set[str] = set()
+    for item in tablets_raw:
+        if not isinstance(item, dict):
+            continue
+        instance_id = str(item.get("instanceId") or "")
+        type_id = str(item.get("typeId") or "")
+        if not instance_id or not type_id:
+            raise GameBridgeError("游戏背包中的石板格式无效")
+        tablet_type_ids.add(type_id)
+        entry = {
+            "instanceId": instance_id,
+            "typeId": type_id,
+            "fixedCell": item.get("fixedCell"),
+            "fixedRotation": item.get("fixedRotation"),
+            "preferredRotation": item.get("preferredRotation"),
+        }
+        runtime_rule = item.get("runtimeRule")
+        if isinstance(runtime_rule, dict):
+            entry["runtimeRule"] = runtime_rule
+        tablets.append(entry)
+
+    if not artifacts and not tablets:
+        raise GameBridgeError("背包中没有可整理的神器或石板")
+
+    double_level_cells = grid.get("doubleLevelCells")
+    if not isinstance(double_level_cells, list):
+        double_level_cells = []
+    custom_tablet_types = inventory.get("customTabletTypes")
+    if not isinstance(custom_tablet_types, list):
+        custom_tablet_types = []
+
+    return {
+        "grid": {
+            "cellCount": cell_count,
+            "doubleLevelCells": sorted({
+                cell for cell in (_integer(value, -1) for value in double_level_cells) if 0 <= cell < cell_count
+            }),
+        },
+        "artifacts": artifacts,
+        "tablets": tablets,
+        "customTabletTypes": [
+            item for item in custom_tablet_types
+            if isinstance(item, dict) and str(item.get("id") or "") in tablet_type_ids
+        ],
+        "options": {
+            "timeLimitMs": time_limit_ms,
+            "workerCount": worker_count,
+            "fastMode": fast_mode,
+        },
+        "gameSource": source,
+    }
+
+
 def apply_game_arrangement(command: dict, timeout_ms: int = 20_000,
                            pipe_path: str = APPLY_PIPE_PATH) -> dict:
     if os.name != "nt":
