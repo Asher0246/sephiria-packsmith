@@ -6,6 +6,8 @@ const {
   SAME_RUN_THRESHOLD,
   captureGameRead,
   inventorySimilarity,
+  isSameRun,
+  mergeGameRead,
   inheritArtifactSettings,
 } = require("../app/static/game_read_state.js");
 
@@ -132,4 +134,82 @@ test("capture keeps only one of minimum or exact level", () => {
   assert.equal(first.exactLevel, 4);
   assert.equal(second.minLevel, null);
   assert.equal(second.exactLevel, null);
+});
+
+test("same run survives picking items up between reads", () => {
+  const previous = captureGameRead([artifact(1, { weight: 9 }), tablet(1), tablet(2)]);
+  const next = [artifact(1), tablet(1), tablet(2), artifact(5), artifact(6), tablet(7), tablet(8)];
+
+  const result = inheritArtifactSettings(previous, next);
+
+  assert.equal(inventorySimilarity(previous, next), 0.42857142857142855);
+  assert.equal(result.sameRun, true);
+  assert.equal(result.items.find((item) => item.instanceId === "game-a-1").weight, 9);
+});
+
+test("same run survives dropping items between reads", () => {
+  const previous = captureGameRead([
+    artifact(1, { weight: 9 }), artifact(2), artifact(3),
+    tablet(1), tablet(2), tablet(3), tablet(4), tablet(5), tablet(6), tablet(7),
+  ]);
+  const next = [artifact(1), tablet(1), tablet(2), tablet(3)];
+
+  const result = inheritArtifactSettings(previous, next);
+
+  assert.equal(inventorySimilarity(previous, next), 0.4);
+  assert.equal(result.sameRun, true);
+  assert.equal(result.items.find((item) => item.instanceId === "game-a-1").weight, 9);
+});
+
+test("single identical item still counts as the same run", () => {
+  const previous = captureGameRead([artifact(1, { weight: 7 })]);
+
+  const result = inheritArtifactSettings(previous, [artifact(1)]);
+
+  assert.equal(result.sameRun, true);
+  assert.equal(result.items[0].weight, 7);
+});
+
+test("one collision in larger inventories is not the same run", () => {
+  const previous = captureGameRead([artifact(1), tablet(1), tablet(2), tablet(3)]);
+  const next = [artifact(1), artifact(5), artifact(6), tablet(7), tablet(8), tablet(9)];
+
+  assert.equal(isSameRun(previous, next), false);
+});
+
+test("merge keeps edited settings and remembers absent items", () => {
+  const previous = captureGameRead([
+    artifact(1, { weight: 9 }), artifact(2, { weight: 8 }), tablet(1),
+  ]);
+  const current = captureGameRead([
+    artifact(1, { weight: 3, minLevel: 2 }), tablet(1),
+  ]);
+
+  const merged = mergeGameRead(previous, current);
+  const byId = new Map(merged.items.map((item) => [item.instanceId, item]));
+
+  assert.equal(byId.get("game-a-1").weight, 3);
+  assert.equal(byId.get("game-a-1").minLevel, 2);
+  assert.equal(byId.get("game-a-2").weight, 8);
+  assert.ok(byId.get("game-t-1"));
+});
+
+test("merge also remembers newly seen items", () => {
+  const previous = captureGameRead([artifact(1, { weight: 9 })]);
+  const current = captureGameRead([artifact(1), artifact(2, { weight: 7 })]);
+
+  const merged = mergeGameRead(previous, current);
+  const byId = new Map(merged.items.map((item) => [item.instanceId, item]));
+
+  assert.equal(byId.get("game-a-1").weight, 5);
+  assert.equal(byId.get("game-a-2").weight, 7);
+});
+
+test("instance settings survive a transient type resolution change", () => {
+  const previous = captureGameRead([artifact(1, { typeId: "artifact-old", weight: 9 }), artifact(2)]);
+  const result = inheritArtifactSettings(previous, [artifact(1, { typeId: "artifact-new" }), artifact(2)]);
+
+  assert.equal(result.sameRun, true);
+  assert.equal(result.inheritedCount, 2);
+  assert.equal(result.items[0].weight, 9);
 });

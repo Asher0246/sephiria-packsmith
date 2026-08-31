@@ -444,7 +444,13 @@ async function readGameInventory() {
     ];
     const inheritance = gameReadState.inheritArtifactSettings(state.lastGameRead, incomingItems);
     state.items = inheritance.items;
-    state.lastGameRead = gameReadState.captureGameRead(state.items);
+    const currentGameRead = gameReadState.captureGameRead(state.items);
+    // Keep a union of reads within the current page session. This preserves
+    // settings for items temporarily absent from the game snapshot, while a
+    // new run starts a fresh snapshot after the similarity check fails.
+    state.lastGameRead = inheritance.sameRun && state.lastGameRead
+      ? gameReadState.mergeGameRead(state.lastGameRead, currentGameRead)
+      : currentGameRead;
     state.serial = state.items.length + 1; state.result = null;
     persist(); renderCatalog(); renderOwned(); renderBoard(); updateStatusIdle();
     const skipped = inventory.unmapped?.length || 0;
@@ -647,11 +653,12 @@ function updateStatusIdle() {
 function showToast(message) { const toast = $("toast"); toast.textContent = message; toast.hidden = false; clearTimeout(showToast.timer); showToast.timer = setTimeout(() => { toast.hidden = true; }, 3200); }
 
 function persist() {
-  const currentGameRead = gameReadState.captureGameRead(state.items);
-  if (state.lastGameRead && currentGameRead
-      && gameReadState.inventorySimilarity(state.lastGameRead, currentGameRead.items) === 1
-      && state.lastGameRead.items.length === currentGameRead.items.length) {
-    state.lastGameRead = currentGameRead;
+  // Refresh remembered game-read settings with a merge: edited settings for
+  // items still present survive, and items removed from the list keep their
+  // settings in case a later read brings them back.
+  if (state.lastGameRead) {
+    state.lastGameRead = gameReadState.mergeGameRead(
+      state.lastGameRead, gameReadState.captureGameRead(state.items));
   }
   localStorage.setItem(STORAGE_KEY, JSON.stringify({ cellCount: gridCellCount(), items: state.items, customTabletTypes: state.customTabletTypes, doubleLevelCells: [...state.doubleLevelCells], serial: state.serial, fastMode: $("fastMode").checked }));
 }

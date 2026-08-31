@@ -15,7 +15,10 @@
   }
 
   function identityKey(item) {
-    return `${item.kind}\u0000${item.instanceId}\u0000${item.typeId}`;
+    // The game instance id is the stable identity.  Type resolution is a
+    // separate concern and can briefly differ while the bridge is reading a
+    // changing inventory (for example while an item is being created).
+    return `${item.kind}\u0000${item.instanceId}`;
   }
 
   function captureGameRead(items) {
@@ -50,10 +53,45 @@
     return intersection / Math.max(oldKeys.size, newKeys.size);
   }
 
-  function inheritArtifactSettings(previous, nextItems, threshold = SAME_RUN_THRESHOLD) {
+  // Same-run detection must tolerate in-run churn: picking items up or
+  // dropping them between two reads changes the key sets even though the
+  // run is the same.  Dividing by the smaller side keeps added or removed
+  // items from diluting the ratio, while the 0.7 bar (and a two-item
+  // minimum) still rejects a fresh run whose renumbered instances happen
+  // to collide with the previous read.
+  function isSameRun(previous, nextItems) {
+    const oldRead = captureGameRead(previous?.items);
+    const newRead = captureGameRead(nextItems);
+    if (!oldRead || !newRead) return false;
+    const oldKeys = new Set(oldRead.items.map(identityKey));
+    const newKeys = new Set(newRead.items.map(identityKey));
+    let intersection = 0;
+    oldKeys.forEach((key) => { if (newKeys.has(key)) intersection += 1; });
+    if (!intersection) return false;
+    if (intersection === oldKeys.size && intersection === newKeys.size) return true;
+    return intersection >= 2
+      && intersection / Math.min(oldKeys.size, newKeys.size) >= SAME_RUN_THRESHOLD;
+  }
+
+  // Refreshes stored settings after user edits: keys still present take the
+  // current (possibly edited) settings, keys whose items are temporarily
+  // absent keep their remembered settings so a later read can inherit them.
+  function mergeGameRead(previous, current) {
+    const oldRead = captureGameRead(previous?.items);
+    const currentRead = captureGameRead(current?.items);
+    if (!currentRead) return oldRead;
+    if (!oldRead) return currentRead;
+    const merged = new Map(oldRead.items.map((item) => [identityKey(item), item]));
+    currentRead.items.forEach((item) => merged.set(identityKey(item), item));
+    return {
+      items: [...merged.values()],
+    };
+  }
+
+  function inheritArtifactSettings(previous, nextItems) {
     const items = Array.isArray(nextItems) ? nextItems.map((item) => ({ ...item })) : [];
     const similarity = inventorySimilarity(previous, items);
-    if (similarity < threshold) {
+    if (!isSameRun(previous, items)) {
       return { items, similarity, sameRun: false, inheritedCount: 0 };
     }
     const oldRead = captureGameRead(previous?.items);
@@ -84,6 +122,8 @@
     SAME_RUN_THRESHOLD,
     captureGameRead,
     inventorySimilarity,
+    isSameRun,
+    mergeGameRead,
     inheritArtifactSettings,
   };
 }));
