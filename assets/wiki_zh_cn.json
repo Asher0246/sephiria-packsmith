@@ -1,9 +1,9 @@
 {
   "locale": "zh-CN",
-  "generatedAt": "2026-08-05T05:36:20.639750+00:00",
+  "generatedAt": "2026-09-11T02:55:17.254519+00:00",
   "source": {
     "kind": "Sephiria game localization",
-    "buildId": "24548451",
+    "buildId": "25234092",
     "ko": "Sephiria_Data/StreamingAssets/Localization/ko-KR.json",
     "zh": "Sephiria_Data/StreamingAssets/Localization/zh-CN.json"
   },
@@ -72,7 +72,6 @@
     "warrant": "权能",
     "disconnection": "断绝",
     "concurrency": "同时性",
-    "curse": "诅咒",
     "vow": "誓言",
     "rebellion": "反抗",
     "connection": "连接",
@@ -90,7 +89,10 @@
     "certitude": "信念",
     "hospitality": "款待",
     "courage": "勇气",
-    "peace": "和平"
+    "peace": "和平",
+    "wedge": "楔子",
+    "requital": "报恩",
+    "curse": "诅咒"
   },
   "artifacts": {
     "reinforced_potion_lid": {
@@ -254,7 +256,7 @@
       "name": "荆棘壳"
     },
     "viscosity": {
-      "sourceHash": "54cacc456dbce8070de219e3edc8683b8f80aa6ba0c282f586517f6f4e4758cd",
+      "sourceHash": "7ffed8d0f25eb410cd4430de92f03236cba61120aca97549a3f243a211a38a9b",
       "nameKey": "Item_ThornsCharm_Name",
       "name": "荆棘护符"
     },
@@ -313,7 +315,7 @@
       "nameKey": "Item_DoubleMagic_Name",
       "name": "雷伊星碎片"
     },
-    "lip": {
+    "lip_stick": {
       "sourceHash": "62b8b294b6f876710ec522f71e6d22659a6155264a6d659aba09797a217e8951",
       "nameKey": "Item_GuardCounterStaff_Name",
       "name": "还击法杖碎片"
@@ -466,7 +468,7 @@
     "single_tree_charcoal": {
       "sourceHash": "63b331c6e5dfea93eaa5f6d615979b8ea562fe3e01eee326cf0e2df19e5eba1f",
       "nameKey": "Item_FlameGround_Duration_Name",
-      "name": "栎木炭"
+      "name": "橡木炭"
     },
     "agbae_tree_fruit": {
       "sourceHash": "ba50ccfbff1f46fc8d9f3f7936d5ed75c07e0990ead533e9a27cfef87bb343f3",
@@ -759,7 +761,7 @@
       "name": "尖刺棍棒"
     },
     "touch_of_life": {
-      "sourceHash": "f896112f5be87e66ed0ea304508baabec7223c3516cdecc4a8cdd55b7277bf5e",
+      "sourceHash": "251ce680edfcbcd7ed43f3e710c6c32334957266b241292d94ff2f0c34d6d357",
       "nameKey": "Item_Exploitation_Name",
       "name": "生命之触"
     },
@@ -879,7 +881,7 @@
       "name": "心形胡萝卜"
     },
     "bloodstone_ring": {
-      "sourceHash": "7949fbdc0e45577a2029ab69ed62086ff4145f1a5ad3cbc0c9a7f4202e60591f",
+      "sourceHash": "f7bc9781df862e14dc5399864d58124b2b5b7c4c53efc9dec69f720443c42a85",
       "nameKey": "Item_KillHeal_Name",
       "name": "血石戒指"
     },
@@ -914,7 +916,7 @@
       "name": "谦逊的王冠"
     },
     "clay_tablet": {
-      "sourceHash": "1a95137746abacf1b4a8ad6078b8c933786a1d75d0385c6d6475dff582d8ef27",
+      "sourceHash": "9e618bcebd58e2206d9b904ab533a8fb969c81b3028066dff13b6f1045c42910",
       "nameKey": "Item_DarkCloud_Critical_Name",
       "name": "雷文泥板"
     },
@@ -1034,7 +1036,7 @@
       "name": "陨铁护肩"
     },
     "cloud_iron_earrings": {
-      "sourceHash": "bb4cc3c9ef7c5d6253f6fb6e3d0e139b3300bd983658d40074e6a100ac4b441a",
+      "sourceHash": "63661462f55218b5ea674a7912582c058c85687a9fa3f1b643f1cec0fd56e1cc",
       "nameKey": "Item_FlameSwordReturn_Name",
       "name": "陨铁耳环"
     },
@@ -1364,7 +1366,7 @@
       "name": "旅人的祝福"
     },
     "alchemist_flask": {
-      "sourceHash": "de812baf8d9285e71f6e796a9d0c7d9fe05de0a598c9ee0a9d6c1e601c080f74",
+      "sourceHash": "e9d63c45a68d903c95415d92ec0fe93afc71bed8b0903217bc802377ee682454",
       "nameKey": "Item_AlchemyFlask_Name",
       "name": "炼金术士的烧瓶"
     },
@@ -1374,7 +1376,7 @@
       "name": "勇气护身符"
     },
     "whirlwind_stone": {
-      "sourceHash": "e8f48f62ad7eb67fd6f2cdcda293f0e0f20ecd73843392aa2bca2f682073cef8",
+      "sourceHash": "ec49f9a4314f5dff9bf2affa676c8930f0298fb3fa84141b3dfb8811e82c54c9",
       "nameKey": "Item_HighSpeed_Name",
       "name": "旋风石"
     },
@@ -1399,7 +1401,7 @@
       "name": "钻石徽章"
     },
     "red_mushroom": {
-      "sourceHash": "82205b029eae32296396a81579bbb5cd3187a34cc94b3d43a8b77428692484be",
+      "sourceHash": "5c2aceebe19962ffddbbb428320b5ecc7824c019ef02b3d940e45cc9745576de",
       "nameKey": "Item_DebuffAttackSpeed_Name",
       "name": "红蘑菇"
     },
@@ -1419,14 +1421,79 @@
       "name": "转换之书·火"
     },
     "bento": {
-      "sourceHash": "6e2271e0c5ea56cb94a8b50073c818b886acb289dd2c46dfb20f86b76dc7fa43",
+      "sourceHash": "08f58e6afebca879b98402a8a6b98284c29b2bdc7ff17ba56d18e7296c98ba58",
       "nameKey": "Item_KongdolLunchbox_Name",
       "name": "便当盒"
     },
     "cursed_letter": {
-      "sourceHash": "88e459d0cda8b53a81c5edb9682bc128047c4e7761b13000da329e9e05721b03",
+      "sourceHash": "a272d53a5091bfd101f9471faf140a69bcf0c507670c911ce87def7db0863fad",
       "nameKey": "Item_MiniThorns_Name",
       "name": "被诅咒的信"
+    },
+    "riposte_sword_fragment": {
+      "sourceHash": "9e1c401729d36ecf7c85b0d168dd1d401111ae45ad562eda2f942c76e8f2e8ec",
+      "nameKey": "Item_GuardCounter_Name",
+      "name": "还击剑碎片"
+    },
+    "faded_shield_emblem": {
+      "sourceHash": "7dd0aad47f0f3d1a1c0172ea4759368fb1375e159d902acf8e1b3d5f814e5498",
+      "nameKey": "Item_SwordShieldGrowth_Name",
+      "name": "褪色的盾徽"
+    },
+    "rusted_tsuba": {
+      "sourceHash": "5f899e535a5794cee15c4217468e6f84660120f8b16b7242d933a14fdf3b45f3",
+      "nameKey": "Item_KatanaGrowth_Name",
+      "name": "生锈的刀格"
+    },
+    "apprentice_duelist_epaulet": {
+      "sourceHash": "01c664a0978302e6de03e2f53dd5ced321a07485df8d9b3dcc4256ce1c976fba",
+      "nameKey": "Item_DaggerGrowth_Name",
+      "name": "见习决斗家肩章"
+    },
+    "dull_resonance_stone": {
+      "sourceHash": "bc27665750872e4e4ccfbcf03efbe88712725710ddb3cae7f6d84f8d49b515ab",
+      "nameKey": "Item_ElementalGrowth_Name",
+      "name": "沉闷的共鸣石"
+    },
+    "stiff_crank": {
+      "sourceHash": "dd95c3fc9a5acb05b075b592ccd1b5f236523a6560ddf74fe24d9c4765152c73",
+      "nameKey": "Item_CrossbowGrowth_Name",
+      "name": "生涩的曲柄"
+    },
+    "midday_whetstone": {
+      "sourceHash": "93519ad0cfade3ef1e55d0edcdc50959266dcad2d1a037de73a2d9aedd186bd3",
+      "nameKey": "Item_FlameSwordWeapon_Name",
+      "name": "正午磨刀石"
+    },
+    "cloud_iron_mirror": {
+      "sourceHash": "cbd4df18b6bdb212311d5f3f9a49e3172bfd661021050a7b628e4fabdece0326",
+      "nameKey": "Item_FlameSwordPick_Name",
+      "name": "陨铁镜"
+    },
+    "blacksmith_tongs": {
+      "sourceHash": "08694306cbaadb4963ea4c4bda943a6cc1f59e91f06ead6d69b118235a8e31b5",
+      "nameKey": "Item_BurnTargetDamageBonus_Name",
+      "name": "铁匠钳"
+    },
+    "marksman_crank": {
+      "sourceHash": "81de2025092a6cee0cf90475e6399429a5eab28f44960dbb47b39cf42ce02c7c",
+      "nameKey": "Item_CrossbowGrowth_Enhanced_Name",
+      "name": "神射手的曲柄"
+    },
+    "duelist_epaulet": {
+      "sourceHash": "ed135e2eb022576f1b16c526012bb826d24bf17c3a0d39c755716d412760fd26",
+      "nameKey": "Item_DaggerGrowth_Enhanced_Name",
+      "name": "决斗家肩章"
+    },
+    "master_tsuba": {
+      "sourceHash": "be883cdb90e5c0eb7bdff750f3d0cc0b06744b98f41578642d085b4f0fae4a9e",
+      "nameKey": "Item_KatanaGrowth_Enhanced_Name",
+      "name": "名匠的刀格"
+    },
+    "ironwall_emblem": {
+      "sourceHash": "ab2d7d2aa7f8e11e853843675c2471f1598e4975c7fe3aff44d11aa9ce022ee5",
+      "nameKey": "Item_SwordShieldGrowth_Enhanced_Name",
+      "name": "铁壁盾徽"
     }
   }
 }

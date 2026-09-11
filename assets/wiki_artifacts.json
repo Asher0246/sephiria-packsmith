@@ -1,7 +1,7 @@
 {
   "source": "https://www.sephiria.wiki/artifact",
-  "generatedAt": "2026-08-05T04:26:33.454411+00:00",
-  "count": 267,
+  "generatedAt": "2026-09-11T02:54:48.633294+00:00",
+  "count": 280,
   "artifacts": [
     {
       "id": 1,
@@ -554,7 +554,7 @@
         "sets": [
           "firmness"
         ],
-        "content": "[고유] 치명타 확률 +2/4/6/10%\n물리 피해 +1/1/2/3"
+        "content": "[고유] 치명타 확률 +2/4/6/10%\n물리 피해 +1/2/3/5"
       },
       "image": "https://img.sephiria.wiki/artifacts/viscosity.png",
       "description": "가방에 넣어두면 가시가 삐져나올 것 같다.",
@@ -575,7 +575,7 @@
       },
       "image": "https://img.sephiria.wiki/artifacts/simple_contract.png",
       "description": "주로 소환 마법에 사용되는, 마법을 담아둘 수 있는 신비한 종이.",
-      "level": 5,
+      "level": 4,
       "created_at": "2025-08-05T11:03:20.013563+00:00"
     },
     {
@@ -750,9 +750,9 @@
     },
     {
       "id": 45,
-      "value": "lip",
+      "value": "lip_stick",
       "label_kor": "리포스테 봉 파편",
-      "label_eng": "lip",
+      "label_eng": "lip_stick",
       "tier": "advanced",
       "effect": {
         "sets": [
@@ -760,7 +760,7 @@
         ],
         "content": "[고유] 카운터: 가드 시 전방으로 짧은 근접 공격 생성함 (물리 피해의 100/200/310/440/580/720%)\n봉 전용"
       },
-      "image": "https://img.sephiria.wiki/artifacts/lip.png",
+      "image": "https://img.sephiria.wiki/artifacts/lip_stick.png",
       "description": "소유자의 움직임을 방해하지 않는 정교한 봉 파편.",
       "level": 5,
       "created_at": "2025-08-05T11:20:21.438951+00:00"
@@ -2261,11 +2261,11 @@
         "sets": [
           "firmness"
         ],
-        "content": "[고유] 직접 공격 시 HP 1만큼 회복\n재사용 대기시간: 1초\n최종 HP -55/48/40/33%"
+        "content": "[고유] 무기 공격 시 HP 1 회복 (재사용 대기시간 1초)\n방어력 수치가 50 이하라면 HP 0/1/1/2/2/3 추가 회복\n물리 피해 +1/2/3/4/5/6\n최종 HP -30/-26/-22/-18/-14/-10%"
       },
       "image": "https://img.sephiria.wiki/artifacts/touch_of_life.png",
       "description": "얻는 것은 곧 무언가를 잃는다는 뜻이기도 하지.",
-      "level": 3,
+      "level": 5,
       "created_at": "2025-08-13T10:41:48.43736+00:00"
     },
     {
@@ -2670,7 +2670,7 @@
         "sets": [
           "mystery"
         ],
-        "content": "[고유] 15/13/10회 처치 시 HP 5 회복"
+        "content": "[고유] 받은 피해 회복 +20/40/60\n(피해를 입으면 잃은 HP의 일정 비율이 10초에 걸쳐 서서히 회복\n회복 도중 피해를 입으면 남은 회복량 감소)"
       },
       "image": "https://img.sephiria.wiki/artifacts/bloodstone_ring.png",
       "description": "생명의 고동이 전해진다.",
@@ -2786,7 +2786,7 @@
         "sets": [
           "extrium"
         ],
-        "content": "[고유] 먹구름이 10/20/30/40/50% 확률로 소모되지 않음"
+        "content": "[고유] 먹구름이 20/30/40/55/70% 확률로 소모되지 않음"
       },
       "image": "https://img.sephiria.wiki/artifacts/clay_tablet.webp",
       "description": "만물의 연속을 담아서.",
@@ -3189,12 +3189,12 @@
       "value": "cloud_iron_earrings",
       "label_kor": "운철 귀걸이",
       "label_eng": "cloud_iron_earrings",
-      "tier": "legend",
+      "tier": "rare",
       "effect": {
         "sets": [
           "sun_sword"
         ],
-        "content": "[고유] 태양검 투척 시 자신과 가까운 곳에 떨어짐\n태양검 피해량 +5/10/15%\n화염속성 피해 +2/4/7"
+        "content": "[고유] 태양검 투척 시 자신과 가까운 곳에 떨어짐\n화염속성 피해 +2/4/7"
       },
       "image": "https://img.sephiria.wiki/artifacts/cloud_iron_earrings.png",
       "description": "운철에 끌어당기는 힘은 없지만, 그렇게 되도록 세공되었습니다.",
@@ -4213,7 +4213,7 @@
       },
       "image": "https://img.sephiria.wiki/artifacts/red_planet_observation_log.png",
       "description": "행성이 붉은빛으로 반짝였다는 내용 이후의 기록은 없습니다.",
-      "level": 4,
+      "level": 0,
       "created_at": "2026-02-12T14:57:12.574076+00:00"
     },
     {
@@ -4324,7 +4324,7 @@
     {
       "id": 260,
       "value": "alchemist_flask",
-      "label_kor": "나그네의 축복",
+      "label_kor": "연금술사의 플라스크",
       "label_eng": "alchemist_flask",
       "tier": "rare",
       "effect": {
@@ -4362,7 +4362,7 @@
       "label_eng": "whirlwind_stone",
       "tier": "advanced",
       "effect": {
-        "content": "[고유] 모든 피해 증폭 +2/?/?/?%\n이동 속도 +6/?/?/?%"
+        "content": "[고유] 모든 피해 증폭 +2/4/6/8%\n이동 속도 +6/12/18/24%"
       },
       "image": "https://img.sephiria.wiki/artifacts/whirlwind_stone.png",
       "description": "시간과 공간이 휘몰아치는 곳에서 왔다고 전해지는 돌",
@@ -4432,7 +4432,7 @@
       "label_eng": "red_mushroom",
       "tier": "advanced",
       "effect": {
-        "content": "[고유] 디버프로 주는 피해량 +4/?/?/?%당 공격 속도 1% 증가"
+        "content": "[고유] 디버프로 주는 피해량 +4/3/2/1%당 공격 속도 1% 증가"
       },
       "image": "https://img.sephiria.wiki/artifacts/red_mushroom.png",
       "description": "스튜로 만들기에는 수상한 색을 띠고 있습니다.",
@@ -4488,7 +4488,7 @@
       "label_eng": "bento",
       "tier": "advanced",
       "effect": {
-        "content": "HP 흡수 +?/?/?/?/2"
+        "content": "HP 흡수 +1/1/1/1/2"
       },
       "image": "https://img.sephiria.wiki/artifacts/bento.png",
       "description": "생당근, 삶은 당근, 구운 당근이 들어있는 것 같다.",
@@ -4502,12 +4502,233 @@
       "label_eng": "cursed_letter",
       "tier": "advanced",
       "effect": {
-        "content": "가시 +?/?/200%\n공격 속도 -?/?/4%"
+        "content": "가시 +50/100/200%\n공격 속도 -6/5/4%"
       },
       "image": "https://img.sephiria.wiki/artifacts/cursed_letter.png",
       "description": "나흘째 떠나지 못한 편지. 찌릿찌릿한 원한이 느껴집니다.",
       "level": 2,
       "created_at": "2026-07-31T00:00:00+00:00"
+    },
+    {
+      "id": 273,
+      "value": "riposte_sword_fragment",
+      "label_kor": "리포스테 검 조각",
+      "label_eng": "riposte_sword_fragment",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "[고유] 카운터: 가드 시 전방으로 짧은 근접 공격 생성함 (물리 피해의 50/100/170/260/380/550%)\n검과 방패 전용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/lip.png",
+      "description": "소유자의 움직임을 방해하지 않는 정교한 검날.",
+      "level": 5,
+      "created_at": "2026-08-31T00:00:00+00:00"
+    },
+    {
+      "id": 274,
+      "value": "faded_shield_emblem",
+      "label_kor": "빛바랜 방패 문장",
+      "label_eng": "faded_shield_emblem",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "guardian"
+        ],
+        "content": "[고유] 무기 피해량 +5/10/15\n퍼펙트 가드 50회 성공 시 철벽의 문장으로 변함\n검과 방패 전용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/faded_shield_emblem.png",
+      "description": "수많은 공격을 막아낸 문장. 아직 옛 주인의 실력에는 미치지 못한다.",
+      "level": 2,
+      "created_at": "2026-09-11T00:00:00+00:00"
+    },
+    {
+      "id": 275,
+      "value": "rusted_tsuba",
+      "label_kor": "녹슨 코등이",
+      "label_eng": "rusted_tsuba",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "[고유] 무기 피해량 +2/4/6\n발도나 납도로 적의 공격을 30회 막으면 명인의 코등이로 변함\n도 전용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/rusted_tsuba.png",
+      "description": "오래된 도의 코등이. 수련의 흔적이 남아 있다.",
+      "level": 2,
+      "created_at": "2026-09-11T00:00:00+00:00"
+    },
+    {
+      "id": 276,
+      "value": "apprentice_duelist_epaulet",
+      "label_kor": "수습 결투가의 견장",
+      "label_eng": "apprentice_duelist_epaulet",
+      "tier": "common",
+      "effect": {
+        "sets": [
+          "precision"
+        ],
+        "content": "[고유] 특수 공격: 패리 성공 시 가장 가까운 적에게 검 영혼 발사\n[피해량: 가장 높은 속성 피해의 250% 혼돈 피해]\n특수 공격: 패리 40회 성공 시 결투가의 견장으로 변함\n단검 전용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/apprentice_duelist_epaulet.png",
+      "description": "반격이 몸에 밸 때까지 주인을 지켜본다.",
+      "level": 0,
+      "created_at": "2026-09-11T00:00:00+00:00"
+    },
+    {
+      "id": 277,
+      "value": "dull_resonance_stone",
+      "label_kor": "무딘 공명석",
+      "label_eng": "dull_resonance_stone",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "element"
+        ],
+        "content": "[고유] 가장 높은 속성 피해 +2/4/6/8\n이동 속도가 140% 이상이 되면 공명석으로 변함\n공명석: 가장 높은 속성 피해 +8/10/12/14"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/dull_resonance_stone.png",
+      "description": "아직 울림이 무디다. 질주하는 심장 박동에 공명해 깨어난다고 한다.",
+      "level": 3,
+      "created_at": "2026-09-11T00:00:00+00:00"
+    },
+    {
+      "id": 278,
+      "value": "stiff_crank",
+      "label_kor": "뻑뻑한 크랭크",
+      "label_eng": "stiff_crank",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "precision"
+        ],
+        "content": "[고유] 석궁 재장전 속도 +5/10\n재장전 50회 완료 시 명사수의 크랭크로 변함\n석궁 전용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/stiff_crank.png",
+      "description": "기름칠한 지 오래됐다. 수없이 감다 보면 길이 든다.",
+      "level": 1,
+      "created_at": "2026-09-11T00:00:00+00:00"
+    },
+    {
+      "id": 279,
+      "value": "midday_whetstone",
+      "label_kor": "한낮의 숫돌",
+      "label_eng": "midday_whetstone",
+      "tier": "rare",
+      "effect": {
+        "sets": [
+          "sun_sword"
+        ],
+        "content": "[고유] 무기 피해를 입힐 시, 태양검 0/1/1/1/2회 추가 발동\n공격 속도 +3/6/9/12/15%\n고정 피해 +1/1/2/2/2"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/midday_whetstone.png",
+      "description": "햇볕이 가장 뜨거운 시각에 다듬어 만든 숫돌",
+      "level": 4,
+      "created_at": "2026-09-11T00:00:00+00:00"
+    },
+    {
+      "id": 280,
+      "value": "cloud_iron_mirror",
+      "label_kor": "운철 거울",
+      "label_eng": "cloud_iron_mirror",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "sun_sword"
+        ],
+        "content": "[고유] 태양검 회수 시 1개가 추가로 회수\n태양검 피해량 +3/6/9/12"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/cloud_iron_mirror.png",
+      "description": "흩어진 것을 도로 불러 모으는 제례에 쓰이던 거울.",
+      "level": 3,
+      "created_at": "2026-09-11T00:00:00+00:00"
+    },
+    {
+      "id": 281,
+      "value": "blacksmith_tongs",
+      "label_kor": "대장장이 집게",
+      "label_eng": "blacksmith_tongs",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "yinggalbul"
+        ],
+        "content": "[고유] 화상에 걸린 대상에게 주는 무기 공격 피해량이 5/10/15 증가"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/blacksmith_tongs.png",
+      "description": "달아오른 쇠는 집게로 붙잡아 두드려야 모양이 잡힌다.",
+      "level": 2,
+      "created_at": "2026-09-11T00:00:00+00:00"
+    },
+    {
+      "id": 282,
+      "value": "marksman_crank",
+      "label_kor": "명사수의 크랭크",
+      "label_eng": "marksman_crank",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "precision"
+        ],
+        "content": "[고유] 석궁 재장전 속도 +10/20\n재장전 완료 시 10초 동안 일반 공격 피해 30/40%, 특수 공격 피해 30/40% 증가\n석궁 전용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/marksman_crank.png",
+      "description": "천 번의 장전이 길들인 크랭크. 물 흐르듯 감긴다.",
+      "level": 1,
+      "created_at": "2026-09-11T00:00:00+00:00"
+    },
+    {
+      "id": 283,
+      "value": "duelist_epaulet",
+      "label_kor": "결투가의 견장",
+      "label_eng": "duelist_epaulet",
+      "tier": "advanced",
+      "effect": {
+        "sets": [
+          "precision"
+        ],
+        "content": "[고유] 다음 상황에서 가장 가까운 적에게 검 영혼 발사\n- 특수 공격: 패리 성공\n- 특수 공격: 퓨리 적중\n- 일반 공격 마지막 연격 적중\n[피해량: 가장 높은 속성 피해의 350% 혼돈 피해]\n단검 전용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/duelist_epaulet.png",
+      "description": "받은 것은 몇 배로 돌려주는 것이 결투가의 예의다.",
+      "level": 0,
+      "created_at": "2026-09-11T00:00:00+00:00"
+    },
+    {
+      "id": 284,
+      "value": "master_tsuba",
+      "label_kor": "명인의 코등이",
+      "label_eng": "master_tsuba",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "firmness"
+        ],
+        "content": "[고유] 무기 피해량 +5/10/15\n납도, 발도 무적 판정 시간 0.05/0.15/0.25초 증가\n도 전용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/master_tsuba.png",
+      "description": "천 번의 흘리기가 벼려낸 물건. 이 작은 코등이가 곧 방패다.",
+      "level": 2,
+      "created_at": "2026-09-11T00:00:00+00:00"
+    },
+    {
+      "id": 285,
+      "value": "ironwall_emblem",
+      "label_kor": "철벽의 문장",
+      "label_eng": "ironwall_emblem",
+      "tier": "legend",
+      "effect": {
+        "sets": [
+          "guardian"
+        ],
+        "content": "[고유] 무기 피해량 +15/20/25\n가드 비용 20/30/40% 감소\n가드 범위 30/40/60% 증가\n검과 방패 전용"
+      },
+      "image": "https://img.sephiria.wiki/artifacts/ironwall_emblem.png",
+      "description": "완벽한 방어를 증명한 자에게만 빛나는 문장.",
+      "level": 2,
+      "created_at": "2026-09-11T00:00:00+00:00"
     }
   ]
 }

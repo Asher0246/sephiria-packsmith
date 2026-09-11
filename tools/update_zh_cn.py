@@ -97,6 +97,7 @@ TABLET_NAMES = {
     "boundary": "边界", "sheen": "光辉", "miracle": "奇迹",
     "daydream": "白日梦", "compression": "压缩", "certitude": "信念",
     "hospitality": "款待", "courage": "勇气", "peace": "和平",
+    "wedge": "楔子", "requital": "报恩",
 }
 
 GAME_ONLY_TABLET_NAMES = {
