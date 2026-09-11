@@ -28,7 +28,7 @@ const criteriaLabels = {
   top: "最上行启用", bottom: "最下行启用", side_end: "左右两端启用",
   both_side_artifacts: "两侧均为神器启用",
 };
-const tierLabels = { common: "普通", advanced: "高级", rare: "稀有", legend: "传说", solid: "羁绊", special: "特殊", custom: "自定义" };
+const tierLabels = { common: "普通", advanced: "高级", rare: "稀有", legend: "传说", solid: "羁绊", eternity: "永恒", special: "特殊", custom: "自定义" };
 const specialConditionLabels = {
   nearby_levels: "优先周围神器等级",
   top_row_artifacts: "优先最上行神器",
