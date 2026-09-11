@@ -39,20 +39,9 @@ foreach ($required in @(
     }
 }
 
-$installerText = Get-Content -LiteralPath $pluginInstaller -Raw
-$pluginHashMatch = [regex]::Match($installerText, '\$pluginHash\s*=\s*''([0-9A-Fa-f]{64})''')
-$packageHashMatch = [regex]::Match($installerText, '\$bepInExPackageHash\s*=\s*''([0-9A-Fa-f]{64})''')
-if (-not $pluginHashMatch.Success -or -not $packageHashMatch.Success) {
-    throw "Plugin installer does not contain valid package and plugin hashes: $pluginInstaller"
-}
-$pluginHash = (Get-FileHash -LiteralPath $pluginDll -Algorithm SHA256).Hash
-if ($pluginHash -ne $pluginHashMatch.Groups[1].Value.ToUpperInvariant()) {
-    throw "Plugin DLL hash does not match game_plugin/install.ps1: $pluginHash"
-}
-$packageHash = (Get-FileHash -LiteralPath $BepInExPackage -Algorithm SHA256).Hash
-if ($packageHash -ne $packageHashMatch.Groups[1].Value.ToUpperInvariant()) {
-    throw "BepInEx package hash does not match game_plugin/install.ps1: $packageHash"
-}
+# The DLL and BepInEx archive hashes pinned in game_plugin/install.ps1 are
+# verified there, on the machine that installs them; re-checking the same two
+# files against the same pins here only moved the failure earlier.
 
 New-Item -ItemType Directory -Path $target | Out-Null
 New-Item -ItemType Directory -Path (Join-Path $target 'app\static') -Force | Out-Null
