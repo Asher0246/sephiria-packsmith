@@ -41,8 +41,8 @@ def test_static_catalog_auth_and_async_solve(live_server):
         request(base + "/api/catalog")
     assert denied.value.code == 403
     catalog = json.load(request(base + "/api/catalog", token))
-    assert len(catalog["artifacts"]) == 268
-    assert len(catalog["tablets"]) == 61
+    assert len(catalog["artifacts"]) == 281
+    assert len(catalog["tablets"]) == 63
 
     artifact = next(item for item in artifact_types() if item.cap >= 1)
     tablet = next(item for item in tablet_types() if item.id == "tablet-fate")

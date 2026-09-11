@@ -11,8 +11,8 @@ PLACEHOLDER_OR_TAG = re.compile(r"\{[^}]+}|<[^>]+>")
 def test_catalog_loads_current_wiki_data():
     artifacts = artifact_types()
     tablets = tablet_types()
-    assert len(artifacts) == 268
-    assert len(tablets) == 61
+    assert len(artifacts) == 281
+    assert len(tablets) == 63
     assert len({item.id for item in artifacts}) == len(artifacts)
     assert len({item.id for item in tablets}) == len(tablets)
     assert all(item.base_level == 0 for item in artifacts)
@@ -47,7 +47,7 @@ def test_catalog_loads_current_wiki_data():
     assert advance.rotatable
     assert advance.candidates
     assert set(advance.candidates) == {f"{rows}x{cols}" for rows in range(1, 11) for cols in range(1, 7)}
-    assert len(public_catalog()["tablets"]) == 61
+    assert len(public_catalog()["tablets"]) == 63
     defender = next(item for item in tablets if item.id == "tablet-defender")
     assert defender.name == "防御招式"
     assert defender.rotatable
@@ -69,6 +69,15 @@ def test_catalog_loads_current_wiki_data():
     assert shade.candidates is None
     assert shade.directions == (("BOTTOM", 1),)
 
+    # Game update 2026-09-11: 14 artifacts added and "lip" retired; two tablets added.
+    assert "artifact-lip" not in {item.id for item in artifacts}
+    assert next(item for item in artifacts if item.id == "artifact-lip_stick").cap == 5
+    assert next(item for item in artifacts if item.id == "artifact-midday_whetstone").cap == 4
+    for tablet_id, tier in (("tablet-wedge", "rare"), ("tablet-requital", "eternity")):
+        tablet = next(item for item in tablets if item.id == tablet_id)
+        assert tablet.rotatable and tablet.candidates
+        assert tablet.tier == tier
+
 
 def test_official_chinese_localization_covers_the_wiki_catalog():
     wiki = json.loads((ASSETS / "wiki_artifacts.json").read_text(encoding="utf-8"))
@@ -76,7 +85,7 @@ def test_official_chinese_localization_covers_the_wiki_catalog():
 
     wiki_ids = {str(item["value"]) for item in wiki["artifacts"]}
     assert set(localized["artifacts"]) == wiki_ids
-    assert len(localized["tablets"]) == 61
+    assert len(localized["tablets"]) == 63
     assert localized["source"]["kind"] == "Sephiria game localization"
 
     catalog = public_catalog()
