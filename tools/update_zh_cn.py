@@ -229,6 +229,18 @@ def item_stem(name_key: str | None) -> str | None:
     return re.sub(r"^(?:Item|Skill|Buff|EffectHUD)_", "", name_key[:-5])
 
 
+def enhanced_name_key(name_key: str | None) -> str | None:
+    """Localization key of the in-run transformed form of an artifact.
+
+    Some artifacts rename themselves when they transform during a run; the game
+    keeps a sibling "<stem>_Enhanced_Name" entry for the new form, for example
+    Item_ElementalGrowth_Name becomes Item_ElementalGrowth_Enhanced_Name.
+    """
+    if not name_key or not name_key.endswith("_Name"):
+        return None
+    return f"{name_key[:-len('_Name')]}_Enhanced_Name"
+
+
 def _old_record(name: str, stem: str | None, rows: list[dict[str, str]]) -> dict[str, str] | None:
     by_name = [row for row in rows if row["name"] == name and not "(X)" in row["internal_name"]]
     if len(by_name) == 1:
@@ -456,6 +468,19 @@ def build_localization(game_dir: Path) -> tuple[dict, dict]:
             "nameKey": name_key,
             "name": name,
         }
+
+    # An artifact can rename itself when it transforms during a run.  When the
+    # Wiki also lists that transformed form as its own artifact, the name above
+    # already resolves it; otherwise (for example the elemental growth stone
+    # becoming 共鸣石) the transformed name is exported as an alias so that
+    # reading the inventory still recognizes the item the player is holding.
+    claimed_names = {item["name"] for item in localized.values()}
+    for item in localized.values():
+        enhanced_key = enhanced_name_key(item["nameKey"])
+        enhanced_name = _clean_template(zh.get(enhanced_key, ""), zh) if enhanced_key else ""
+        if not enhanced_name or HANGUL.search(enhanced_name) or enhanced_name in claimed_names:
+            continue
+        item["aliases"] = [enhanced_name]
 
     payload = {
         "locale": "zh-CN",

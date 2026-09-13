@@ -1,9 +1,9 @@
 {
   "locale": "zh-CN",
-  "generatedAt": "2026-09-11T02:55:17.254519+00:00",
+  "generatedAt": "2026-09-13T10:57:12.560042+00:00",
   "source": {
     "kind": "Sephiria game localization",
-    "buildId": "25234092",
+    "buildId": "25253592",
     "ko": "Sephiria_Data/StreamingAssets/Localization/ko-KR.json",
     "zh": "Sephiria_Data/StreamingAssets/Localization/zh-CN.json"
   },
@@ -1453,7 +1453,10 @@
     "dull_resonance_stone": {
       "sourceHash": "bc27665750872e4e4ccfbcf03efbe88712725710ddb3cae7f6d84f8d49b515ab",
       "nameKey": "Item_ElementalGrowth_Name",
-      "name": "沉闷的共鸣石"
+      "name": "沉闷的共鸣石",
+      "aliases": [
+        "共鸣石"
+      ]
     },
     "stiff_crank": {
       "sourceHash": "dd95c3fc9a5acb05b075b592ccd1b5f236523a6560ddf74fe24d9c4765152c73",

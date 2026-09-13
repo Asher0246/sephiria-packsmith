@@ -78,6 +78,32 @@ def test_translate_snapshot_rejects_invalid_double_level_cells(cells):
         translate_snapshot(value)
 
 
+def test_translate_in_run_transformed_artifact_name():
+    """The elemental growth stone renames itself to 共鸣石 when it transforms.
+
+    The Wiki lists the transformed form of the other growth families as their
+    own artifacts, but not this one, so the catalog carries the transformed name
+    as an alias of the dull form.
+    """
+    value = snapshot()
+    value["artifacts"][0] = {
+        "entityId": 9002, "instanceId": 305, "name": "共鸣石", "temporaryLevel": 0,
+    }
+    result = translate_snapshot(value)
+    assert result["artifacts"][0]["typeId"] == "artifact-dull_resonance_stone"
+    assert result["unmapped"] == []
+
+
+def test_translate_wiki_listed_transformed_form_keeps_its_own_type():
+    value = snapshot()
+    value["artifacts"][0] = {
+        "entityId": 9003, "instanceId": 306, "name": "铁壁盾徽", "temporaryLevel": 0,
+    }
+    result = translate_snapshot(value)
+    assert result["artifacts"][0]["typeId"] == "artifact-ironwall_emblem"
+    assert result["unmapped"] == []
+
+
 def test_translate_hidden_heart_burden_from_game_entity_id():
     value = snapshot()
     value["artifacts"][0] = {

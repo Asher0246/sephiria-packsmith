@@ -50,11 +50,17 @@ def _catalog_mappings() -> tuple[
     for row in wiki["artifacts"]:
         type_id = f"artifact-{row['value']}"
         artifact_by_entity[int(row["id"])] = type_id
-        names = (row.get("value"), row.get("label_kor"), row.get("label_eng"),
-                 localized["artifacts"][str(row["value"])]["name"])
+        entry = localized["artifacts"][str(row["value"])]
+        names = (row.get("value"), row.get("label_kor"), row.get("label_eng"), entry["name"])
         for name in names:
             if _normalized(name):
                 artifact_by_name[_normalized(name)] = type_id
+        # Names an artifact takes on after transforming during a run, when the
+        # Wiki does not list that form as its own artifact (see 共鸣石).  Aliases
+        # never displace a name that belongs to an artifact of its own.
+        for alias in entry.get("aliases", ()):
+            if _normalized(alias):
+                artifact_by_name.setdefault(_normalized(alias), type_id)
 
     artifact_by_entity[1304] = "artifact-heart_burden"
     artifact_by_entity[1033] = "artifact-sword_earring"

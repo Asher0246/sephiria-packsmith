@@ -99,8 +99,18 @@ def test_official_chinese_localization_covers_the_wiki_catalog():
     assert not HANGUL.search(public_text)
     assert not PLACEHOLDER_OR_TAG.search(public_text)
     assert all(item["name"] for item in localized["artifacts"].values())
-    assert all(set(item) == {"sourceHash", "nameKey", "name"}
+    assert all({"sourceHash", "nameKey", "name"} <= set(item)
+               <= {"sourceHash", "nameKey", "name", "aliases"}
                for item in localized["artifacts"].values())
+    # Names an artifact only takes on after transforming during a run.  They are
+    # exported for the game bridge exactly when the Wiki does not list that form
+    # as an artifact of its own, so an alias must never shadow a real name.
+    aliases = {key: item["aliases"] for key, item in localized["artifacts"].items()
+               if item.get("aliases")}
+    assert aliases["dull_resonance_stone"] == ["共鸣石"]
+    artifact_names = {item["name"] for item in localized["artifacts"].values()}
+    assert all(name not in artifact_names
+               for names in aliases.values() for name in names)
     assert all("description" not in item and "effect" not in item
                for item in catalog["artifacts"])
 
