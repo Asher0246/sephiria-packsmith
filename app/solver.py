@@ -21,6 +21,15 @@ PLANET_ARTIFACT_IDS = frozenset({
     "artifact-ashen_planet",
 })
 SPECIAL_COMPLETION_SCALE = 1000
+# Phase 1 searches for the best score; the refinement layer (side-effect penalty
+# and empty-cell score) used to run only after phase 1 proved optimality, so a
+# run that hit the time limit never reached it and shipped a layout that ignored
+# negative-effect cells.  Phase 1 now keeps (1 - fraction) of the limit and the
+# refinement runs on any feasible result, which cannot lower the score phase 1
+# already reached because that value is pinned before refining.
+REFINEMENT_RESERVE_FRACTION = 0.15
+REFINEMENT_RESERVE_CAP_MS = 10_000
+FAST_MODE_REFINEMENT_RESERVE_CAP_MS = 5_000
 
 
 def _bounded_relative_gap(value: int, upper_bound: int) -> float:
@@ -983,13 +992,20 @@ def solve(
         for instance, artifact in zip(request.artifacts, artifact_types)
     )
     secondary_upper = sum(artifact.cap for artifact in artifact_types)
-    level_scale = secondary_upper + 1
+    # Activation sits directly below the secondary objective: a level-zero
+    # artifact that could still take effect in game is worth putting where it
+    # takes effect, and only after that do the cosmetic tie-breakers apply.
+    active_upper = len(request.artifacts)
+    active_scale = active_upper + 1
+    secondary_scale = secondary_upper + 1
+    level_scale = secondary_scale * active_scale
     primary_scale = (primary_upper + 1) * level_scale
     special_scale = (special_upper + 1) * primary_scale
     phase1_objective = (
         special * special_scale
         + primary * primary_scale
-        + secondary
+        + secondary * active_scale
+        + sum(active)
     )
 
     # These variables only break ties after the core objective is proven.
@@ -1089,8 +1105,12 @@ def solve(
     phase1_variable_count = len(model.Proto().variables)
     built = time.perf_counter()
     deadline = built + request.time_limit_ms / 1000
+    reserve_cap_ms = (FAST_MODE_REFINEMENT_RESERVE_CAP_MS if request.fast_mode
+                      else REFINEMENT_RESERVE_CAP_MS)
+    reserve_ms = min(request.time_limit_ms * REFINEMENT_RESERVE_FRACTION, reserve_cap_ms)
+    phase1_deadline = deadline - reserve_ms / 1000
     solver = cp_model.CpSolver()
-    solver.parameters.max_time_in_seconds = max(0.001, deadline - time.perf_counter())
+    solver.parameters.max_time_in_seconds = max(0.001, phase1_deadline - time.perf_counter())
     if request.worker_count:
         solver.parameters.num_search_workers = request.worker_count
     solver.parameters.random_seed = 1
@@ -1147,15 +1167,18 @@ def solve(
         next_solver.parameters.random_seed = 1
         model.clear_hints()
         # Reuse the complete phase-1 solution (all variables, not only
-        # placements) so refinement starts from the proven assignment instead
-        # of re-deriving every derived variable.
+        # placements) so refinement starts from the assignment already found
+        # instead of re-deriving every derived variable.
         solution = hint_solver.response_proto.solution
         hint = model.Proto().solution_hint
         hint.vars.extend(range(len(solution)))
         hint.values.extend(int(value) for value in solution)
         return run_search(next_solver), next_solver
 
-    if phase1_status == cp_model.OPTIMAL and not controller.stopped:
+    # Refinement runs on any feasible result, not only on a proven optimum: the
+    # phase-1 value is pinned first, so refining can never trade score for the
+    # tie-breakers, and a time-limited run still gets a polished layout.
+    if phase1_status in (cp_model.OPTIMAL, cp_model.FEASIBLE) and not controller.stopped:
         model.add(phase1_objective == solver.value(phase1_objective))
         refinement_status, refinement_solver = run_refinement(best_solver)
         if refinement_status is not None and refinement_solver is not None:

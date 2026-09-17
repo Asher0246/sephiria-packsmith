@@ -871,3 +871,42 @@ def test_pre_stopped_search_never_claims_optimality():
     assert result["solutionStatus"] == "STOPPED"
     if result["placements"]:
         assert validate_result(request, {ARTIFACT.id: ARTIFACT}, {}, result) == []
+
+
+def test_refinement_runs_even_when_phase_one_is_not_proven():
+    """A time-limited run must still polish the layout.
+
+    The side-effect penalty and empty-cell score used to be optimised only after
+    phase 1 proved optimality, so a build that never proves left artifacts on
+    negative-effect cells.
+    """
+    artifacts = {item.id: item for item in artifact_types()}
+    tablets = {item.id: item for item in tablet_types()}
+    pool = [item for item in artifacts.values() if item.cap >= 3 and not item.criteria]
+    tablet_ids = ("tablet-defender", "tablet-curse", "tablet-advance", "tablet-fate")
+    request = SolveRequest(
+        5, 6,
+        tuple(ArtifactInstance(f"a{i}", item.id, weight=5 + i % 5)
+              for i, item in enumerate(pool[:20])),
+        tuple(TabletInstance(f"t{i}", tid) for i, tid in enumerate(tablet_ids)),
+        2000,
+    )
+    result = solve(request, artifacts, tablets)
+    assert result["solutionStatus"] in ("FEASIBLE", "OPTIMAL")
+    assert result["tertiaryStatus"] != "NOT_RUN"
+    assert result["emptyCellStatus"] != "NOT_RUN"
+    assert validate_result(request, artifacts, tablets, result) == []
+
+
+def test_zero_level_artifact_is_placed_where_it_takes_effect():
+    """A level-zero artifact scores nothing, so activation used to be a free
+    variable: the solver could park it outside its required row."""
+    artifacts = {item.id: item for item in artifact_types()}
+    request = SolveRequest(
+        2, 6, (ArtifactInstance("a1", "artifact-magic_carrot", weight=5),), (), 3000,
+    )
+    result = solve(request, artifacts, {})
+    detail = result["artifacts"][0]
+    assert detail["level"] == 0
+    assert detail["cell"] < request.cols
+    assert detail["active"] is True
