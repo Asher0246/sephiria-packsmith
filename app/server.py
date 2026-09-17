@@ -26,6 +26,7 @@ from .game_bridge import (
     read_game_inventory,
 )
 from .models import RequestError, parse_request
+from .repair import repair_layout
 from .result_cache import ResultCache, default_cache
 from .solver import StopController, solve
 
@@ -88,7 +89,10 @@ class AppState:
         def run() -> None:
             job.status = "RUNNING"
             try:
-                job.result = solve(request, artifact_map, tablet_map, job.controller)
+                job.result = repair_layout(
+                    request, artifact_map, tablet_map,
+                    solve(request, artifact_map, tablet_map, job.controller),
+                )
                 job.status = "FINISHED"
                 if cache_key is not None:
                     try:

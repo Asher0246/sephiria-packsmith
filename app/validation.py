@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from dataclasses import dataclass, field
+
 from .models import ArtifactType, SolveRequest, TabletType
 from .solver import _rotation_invariant, build_candidates
 
@@ -49,6 +51,107 @@ def _artifact_criteria_met(
     return True
 
 
+@dataclass
+class LayoutFacts:
+    """Everything a set of placements implies, recomputed from scratch.
+
+    Shared by result validation and by the post-solve tie-break repair so both
+    agree on what a layout means.
+    """
+
+    effects: list[int]
+    multipliers: list[int]
+    disabled: set[int] = field(default_factory=set)
+    unlocks: set[int] = field(default_factory=set)
+    tablet_effects: list[list[dict]] = field(default_factory=list)
+    applied: dict[str, bool] = field(default_factory=dict)
+    problems: list[str] = field(default_factory=list)
+
+
+def layout_facts(
+    request: SolveRequest,
+    tablets_by_id: dict[str, TabletType],
+    placements: list[dict],
+) -> LayoutFacts:
+    by_instance = {item.get("instanceId"): item for item in placements}
+    occupied = {item["cell"] for item in placements if isinstance(item.get("cell"), int)}
+    artifact_cells = {
+        by_instance[item.instance_id]["cell"] for item in request.artifacts
+        if item.instance_id in by_instance and isinstance(by_instance[item.instance_id].get("cell"), int)
+    }
+    facts = LayoutFacts(
+        effects=[0] * request.cell_count,
+        multipliers=[
+            2 if cell in request.double_level_cells else 0
+            for cell in range(request.cell_count)
+        ],
+        tablet_effects=[[] for _ in range(request.cell_count)],
+    )
+    for instance in request.tablets:
+        placed = by_instance.get(instance.instance_id)
+        if not placed:
+            continue
+        tablet = tablets_by_id[instance.type_id]
+        matching = [candidate for candidate in build_candidates(
+                        tablet, request.rows, request.cols, request.cell_count)
+                    if candidate.cell == placed.get("cell")
+                    and (candidate.rotation == placed.get("rotation")
+                         or (tablet.rotatable and _rotation_invariant(tablet)))]
+        if len(matching) != 1:
+            facts.problems.append(f"石板 {instance.instance_id} 的位置或旋转非法")
+            continue
+        candidate = matching[0]
+        applied = _tablet_applies(candidate, occupied, artifact_cells)
+        facts.applied[instance.instance_id] = applied
+        if placed.get("applied", True) != applied:
+            facts.problems.append(f"石板 {instance.instance_id} 的限定条件状态错误")
+        if applied:
+            for cell, value in candidate.effects.items():
+                facts.effects[cell] += value
+            for cell, value in candidate.multipliers.items():
+                facts.multipliers[cell] += value
+            facts.unlocks.update(candidate.unlocks)
+            facts.disabled.update(candidate.disables)
+            for cell in set(candidate.effects) | set(candidate.multipliers):
+                additive = candidate.effects.get(cell, 0)
+                multiplier = candidate.multipliers.get(cell, 0)
+                if additive or multiplier:
+                    facts.tablet_effects[cell].append({
+                        "instanceId": instance.instance_id,
+                        "typeId": instance.type_id,
+                        "name": tablet.name,
+                        "cell": candidate.cell,
+                        "additive": additive,
+                        "multiplier": multiplier,
+                    })
+        if instance.fixed_cell is not None and candidate.cell != instance.fixed_cell:
+            facts.problems.append(f"石板 {instance.instance_id} 未遵守固定位置")
+        if instance.fixed_rotation is not None and placed.get("rotation") != instance.fixed_rotation:
+            facts.problems.append(f"石板 {instance.instance_id} 未遵守固定旋转")
+    return facts
+
+
+def artifact_state_at(
+    request: SolveRequest,
+    artifact: ArtifactType,
+    base_level: int,
+    cell: int,
+    facts: LayoutFacts,
+    occupied: set[int],
+    artifact_cells: set[int],
+) -> tuple[int, bool]:
+    """Level and activation of one artifact at one cell, per the model's rules."""
+    multiplier = max(1, facts.multipliers[cell])
+    level = min(artifact.cap, (base_level + facts.effects[cell]) * multiplier)
+    active = (
+        level >= 0
+        and cell not in facts.disabled
+        and (_artifact_criteria_met(artifact, cell, request, occupied, artifact_cells)
+             or cell in facts.unlocks)
+    )
+    return level, active
+
+
 def validate_result(
     request: SolveRequest,
     artifacts_by_id: dict[str, ArtifactType],
@@ -75,54 +178,13 @@ def validate_result(
         by_instance[item.instance_id]["cell"] for item in request.artifacts
         if item.instance_id in by_instance and isinstance(by_instance[item.instance_id].get("cell"), int)
     }
-    effects = [0] * request.cell_count
-    multipliers = [
-        2 if cell in request.double_level_cells else 0
-        for cell in range(request.cell_count)
-    ]
-    tablet_effects = [[] for _ in range(request.cell_count)]
-    unlocks: set[int] = set()
-    disabled: set[int] = set()
-    for instance in request.tablets:
-        placed = by_instance.get(instance.instance_id)
-        if not placed:
-            continue
-        tablet = tablets_by_id[instance.type_id]
-        matching = [candidate for candidate in build_candidates(
-                        tablet, request.rows, request.cols, request.cell_count)
-                    if candidate.cell == placed.get("cell")
-                    and (candidate.rotation == placed.get("rotation")
-                         or (tablet.rotatable and _rotation_invariant(tablet)))]
-        if len(matching) != 1:
-            problems.append(f"石板 {instance.instance_id} 的位置或旋转非法")
-            continue
-        candidate = matching[0]
-        applied = _tablet_applies(candidate, occupied, artifact_cells)
-        if placed.get("applied", True) != applied:
-            problems.append(f"石板 {instance.instance_id} 的限定条件状态错误")
-        if applied:
-            for cell, value in candidate.effects.items():
-                effects[cell] += value
-            for cell, value in candidate.multipliers.items():
-                multipliers[cell] += value
-            unlocks.update(candidate.unlocks)
-            disabled.update(candidate.disables)
-            for cell in set(candidate.effects) | set(candidate.multipliers):
-                additive = candidate.effects.get(cell, 0)
-                multiplier = candidate.multipliers.get(cell, 0)
-                if additive or multiplier:
-                    tablet_effects[cell].append({
-                        "instanceId": instance.instance_id,
-                        "typeId": instance.type_id,
-                        "name": tablet.name,
-                        "cell": candidate.cell,
-                        "additive": additive,
-                        "multiplier": multiplier,
-                    })
-        if instance.fixed_cell is not None and candidate.cell != instance.fixed_cell:
-            problems.append(f"石板 {instance.instance_id} 未遵守固定位置")
-        if instance.fixed_rotation is not None and placed.get("rotation") != instance.fixed_rotation:
-            problems.append(f"石板 {instance.instance_id} 未遵守固定旋转")
+    facts = layout_facts(request, tablets_by_id, placements)
+    problems.extend(facts.problems)
+    effects = facts.effects
+    multipliers = facts.multipliers
+    tablet_effects = facts.tablet_effects
+    unlocks = facts.unlocks
+    disabled = facts.disabled
 
     detail_by_instance = {item.get("instanceId"): item for item in result.get("artifacts", [])}
     for instance in request.artifacts:

@@ -29,7 +29,8 @@ CACHE_FILE_NAME = "solve-results.json"
 CACHEABLE_STATUSES = ("OPTIMAL", "INFEASIBLE")
 _ID_FIELDS = ("instanceId", "specialTargetInstanceId")
 
-_CODE_FILES = ("solver.py", "models.py", "validation.py", "custom_tablets.py", "catalog.py")
+_CODE_FILES = ("solver.py", "models.py", "validation.py", "custom_tablets.py", "catalog.py",
+               "repair.py")
 
 
 def _optional_int(value: int | None) -> tuple:
