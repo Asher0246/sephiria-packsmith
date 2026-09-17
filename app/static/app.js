@@ -601,17 +601,17 @@ async function composeSelectedTablets(event) {
   }
 }
 
-function relativeGapPercent(relativeGap) {
-  if (relativeGap == null) return null;
-  const value = Number(relativeGap);
-  return Number.isFinite(value) ? Math.max(0, Math.min(100, value * 100)) : null;
+function scoreAndBound(result) {
+  const score = result.primaryObjective ?? null;
+  const bound = result.primaryBestBound ?? null;
+  return { score, bound };
 }
 
 function showResult(result, solveId) {
   state.result = result; renderBoard();
-  const gapPercent = relativeGapPercent(result.relativeGap);
+  const { score, bound } = scoreAndBound(result);
   $("secondaryMetric").textContent = result.secondaryObjective ?? "—"; $("emptyCellMetric").textContent = result.emptyCellObjective ?? "—";
-  $("gapMetric").textContent = gapPercent == null ? "—" : `${gapPercent.toFixed(1)}%`; $("timeMetric").textContent = `${result.solveMs} ms`;
+  $("gapMetric").textContent = score == null ? "—" : (bound == null ? String(score) : `${score} / ${bound}`); $("timeMetric").textContent = `${result.solveMs} ms`;
   state.finishedSolveId = result.placements?.length && state.solveUsedGameSource ? solveId : null;
   updateApplyButton();
   if (!result.placements?.length) { $("resultSection").hidden = true; setStatus("error", result.solutionStatus === "INFEASIBLE" ? "没有可行排布" : "未找到排布", result.message); return; }
@@ -629,8 +629,10 @@ function showResult(result, solveId) {
   });
   specialWrap.replaceChildren(...specialLines);
   specialWrap.hidden = specialLines.length === 0;
-  const optimalDetail = result.specialStatus === "DISABLED" ? "等级与布局细化均已完成最优性证明" : "特殊效果、等级与布局细化均已完成最优性证明";
-  const feasibleDetail = gapPercent == null ? "当前解的最优差距暂不可用" : `当前解距目标上界 ${gapPercent.toFixed(1)}%`;
+  const optimalDetail = result.specialStatus === "DISABLED" ? "分数、起效数量与布局细化均已完成最优性证明" : "特殊效果、分数、起效数量与布局细化均已完成最优性证明";
+  const feasibleDetail = (score == null || bound == null)
+    ? "未能证明最优，已返回目前找到的最佳排布"
+    : `当前分数 ${score}，理论上界 ${bound}（上界按每件神器满级估算，通常远高于实际可达值）`;
   setStatus(result.solutionStatus === "OPTIMAL" ? "success" : "warning", result.solutionStatus === "OPTIMAL" ? "已证明最优" : "已找到可行排布", result.solutionStatus === "OPTIMAL" ? optimalDetail : feasibleDetail);
   const tbody = $("resultBody"); tbody.replaceChildren();
   result.artifacts.forEach((detail) => {
