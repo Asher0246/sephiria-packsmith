@@ -19,6 +19,7 @@ const state = {
   serial: 1,
   pollTimer: null,
   composeNameDirty: false,
+  gpuExperimentAcknowledged: false,
   doubleLevelCells: new Set(),
   cellMenuCell: null,
 };
@@ -383,7 +384,7 @@ function requestPayload() {
     artifacts: state.items.filter((i) => i.kind === "artifact").map((i) => ({ instanceId: i.instanceId, typeId: i.typeId, weight: i.weight, baseLevel: i.baseLevel ?? 0, minLevel: i.minLevel, exactLevel: i.exactLevel, fixedCell: i.fixedCell, specialPriority: Boolean(i.specialPriority), specialTargetInstanceId: i.specialTargetInstanceId || null })),
     tablets: state.items.filter((i) => i.kind === "tablet").map((i) => ({ instanceId: i.instanceId, typeId: i.typeId, fixedCell: i.fixedCell, fixedRotation: i.fixedRotation, preferredRotation: i.preferredRotation ?? null })),
     customTabletTypes: state.customTabletTypes.filter((type) => customIds.has(type.id)),
-    options: { timeLimitMs: Number($("timeLimit").value), workerCount: Number($("workerCount").value), fastMode: $("fastMode").checked },
+    options: { timeLimitMs: Number($("timeLimit").value), workerCount: Number($("workerCount").value), fastMode: $("fastMode").checked, gpuAcceleration: $("gpuAcceleration").checked },
   };
   if (gameSourceMatchesItems()) payload.gameSource = state.gameSource;
   return payload;
@@ -401,7 +402,7 @@ async function startSolve() {
   if (state.items.length > gridCellCount()) return showToast("物品数量超过背包容量。");
   const missingTarget = state.items.find((item) => item.kind === "artifact" && item.typeId === "artifact-unalloyed_gold_needle" && item.specialPriority && !item.specialTargetInstanceId);
   if (missingTarget) return showToast("请为北向的金色针选择上方目标神器。");
-  state.result = null; state.finishedSolveId = null; state.solveUsedGameSource = gameSourceMatchesItems(); updateApplyButton(); renderBoard(); setSolving(true); setStatus("solving", "正在构建精确模型", "求解器将放入全部已录入物品");
+  state.result = null; state.finishedSolveId = null; state.solveUsedGameSource = gameSourceMatchesItems(); updateApplyButton(); renderBoard(); setSolving(true); setStatus("solving", $("gpuAcceleration").checked ? "正在运行实验性 GPU 启发式" : "正在构建精确模型", $("gpuAcceleration").checked ? "GPU 生成候选布局后，将继续由 CPU CP-SAT 完整求解" : "求解器将放入全部已录入物品");
   try {
     const response = await api("/api/solve", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(requestPayload()) });
     state.solveId = response.solveId; pollSolve();
@@ -414,10 +415,18 @@ async function pollSolve() {
     const response = await api(`/api/solve/${state.solveId}`);
     if (response.jobStatus === "FINISHED" || response.jobStatus === "FAILED") {
       const finishedId = state.solveId; state.solveId = null; setSolving(false);
-      if (response.error) { setStatus("error", "求解失败", response.error.message); return; }
-      showResult(response.result, finishedId); persist(); return;
+      if (response.error) {
+        setStatus("error", "求解失败", response.error.message);
+        if (response.recordedBuild) showToast("本次构筑和失败信息已记录");
+        else if (response.recordingError) showToast(`构筑记录失败：${response.recordingError}`);
+        return;
+      }
+      showResult(response.result, finishedId); persist();
+      if (response.recordedBuild) showToast("本次构筑和求解结果已记录");
+      else if (response.recordingError) showToast(`构筑记录失败：${response.recordingError}`);
+      return;
     }
-    setStatus("solving", $("fastMode").checked ? "正在搜索优质排布" : "正在搜索最优排布", `任务 ${state.solveId.slice(0, 8)}${$("fastMode").checked ? " · 快速模式：找到优质排布即停止" : " · 可随时停止并保留已找到的解"}`);
+    setStatus("solving", $("fastMode").checked ? "正在搜索优质排布" : "正在搜索最优排布", `任务 ${state.solveId.slice(0, 8)}${$("gpuAcceleration").checked ? " · GPU 实验已请求" : ""}${$("fastMode").checked ? " · 快速模式：找到优质排布即停止" : " · 可随时停止并保留已找到的解"}`);
     state.pollTimer = setTimeout(pollSolve, 350);
   } catch (error) { state.solveId = null; setSolving(false); setStatus("error", "读取求解状态失败", error.message); }
 }
@@ -486,8 +495,10 @@ async function applyArrangement() {
       body: JSON.stringify({ solveId: state.finishedSolveId }),
     });
     state.finishedSolveId = null; state.solveUsedGameSource = false; updateApplyButton();
-    setStatus("success", "已应用到游戏", `完成 ${response.moves || 0} 次交换、${response.rotations || 0} 次旋转，并已验证排布`);
-    showToast("游戏背包已按求解结果排布");
+    const recorded = response.recordedBuild ? "，应用结果已记录" : "";
+    const recordingFailed = Boolean(response.recordingError);
+    setStatus(recordingFailed ? "warning" : "success", "已应用到游戏", `完成 ${response.moves || 0} 次交换、${response.rotations || 0} 次旋转，并已验证排布${recorded}`);
+    showToast(recordingFailed ? `游戏背包已排布，但构筑记录失败：${response.recordingError || "无法写入记录文件"}` : `游戏背包已按求解结果排布${recorded}`);
   } catch (error) {
     button.disabled = false;
     setStatus("error", "无法应用到游戏", error.message);
@@ -614,7 +625,14 @@ function showResult(result, solveId) {
   $("gapMetric").textContent = score == null ? "—" : (bound == null ? String(score) : `${score} / ${bound}`); $("timeMetric").textContent = `${result.solveMs} ms`;
   state.finishedSolveId = result.placements?.length && state.solveUsedGameSource ? solveId : null;
   updateApplyButton();
-  if (!result.placements?.length) { $("resultSection").hidden = true; setStatus("error", result.solutionStatus === "INFEASIBLE" ? "没有可行排布" : "未找到排布", result.message); return; }
+  const gpuDetail = result.diagnostics?.gpuCacheHit
+    ? " · 命中已有最优缓存，未启动 GPU"
+    : result.diagnostics?.gpuUsed
+      ? ` · GPU 启发式已使用（${result.diagnostics.gpuMs ?? "—"} ms）`
+      : result.diagnostics?.gpuRequested
+        ? " · GPU 不可用或不适用于此构筑，已自动使用 CPU"
+        : "";
+  if (!result.placements?.length) { $("resultSection").hidden = true; setStatus("error", result.solutionStatus === "INFEASIBLE" ? "没有可行排布" : "未找到排布", result.message + gpuDetail); return; }
   const specialWrap = $("specialSummary");
   const specialLines = (result.specialDetails || []).map((detail) => {
     const line = document.createElement("div"); line.className = "special-line";
@@ -629,11 +647,12 @@ function showResult(result, solveId) {
   });
   specialWrap.replaceChildren(...specialLines);
   specialWrap.hidden = specialLines.length === 0;
-  const optimalDetail = result.specialStatus === "DISABLED" ? "分数、起效数量与布局细化均已完成最优性证明" : "特殊效果、分数、起效数量与布局细化均已完成最优性证明";
+  const optimalDetail = (result.specialStatus === "DISABLED" ? "分数、起效数量与布局细化均已完成最优性证明" : "特殊效果、分数、起效数量与布局细化均已完成最优性证明") + gpuDetail;
   const feasibleDetail = (score == null || bound == null)
     ? "未能证明最优，已返回目前找到的最佳排布"
     : `当前分数 ${score}，理论上界 ${bound}（上界按每件神器满级估算，通常远高于实际可达值）`;
-  setStatus(result.solutionStatus === "OPTIMAL" ? "success" : "warning", result.solutionStatus === "OPTIMAL" ? "已证明最优" : "已找到可行排布", result.solutionStatus === "OPTIMAL" ? optimalDetail : feasibleDetail);
+  const feasibleWithGpu = feasibleDetail + gpuDetail;
+  setStatus(result.solutionStatus === "OPTIMAL" ? "success" : "warning", result.solutionStatus === "OPTIMAL" ? "已证明最优" : "已找到可行排布", result.solutionStatus === "OPTIMAL" ? optimalDetail : feasibleWithGpu);
   const tbody = $("resultBody"); tbody.replaceChildren();
   result.artifacts.forEach((detail) => {
     const tr = document.createElement("tr"); const values = [detail.name, `${Math.floor(detail.cell / cols()) + 1} 行 ${detail.cell % cols() + 1} 列`, detail.rawBonus > 0 ? `+${detail.rawBonus}` : detail.rawBonus, `${detail.level} / ${detail.cap}`];
@@ -662,7 +681,7 @@ function persist() {
     state.lastGameRead = gameReadState.mergeGameRead(
       state.lastGameRead, gameReadState.captureGameRead(state.items));
   }
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({ cellCount: gridCellCount(), items: state.items, customTabletTypes: state.customTabletTypes, doubleLevelCells: [...state.doubleLevelCells], serial: state.serial, fastMode: $("fastMode").checked }));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ cellCount: gridCellCount(), items: state.items, customTabletTypes: state.customTabletTypes, doubleLevelCells: [...state.doubleLevelCells], serial: state.serial, fastMode: $("fastMode").checked, gpuAcceleration: $("gpuAcceleration").checked, gpuExperimentAcknowledged: state.gpuExperimentAcknowledged }));
 }
 function restore() {
   try {
@@ -675,12 +694,21 @@ function restore() {
     state.doubleLevelCells = new Set((Array.isArray(raw.doubleLevelCells) ? raw.doubleLevelCells : []).filter((cell) => Number.isInteger(cell) && cell >= 0 && cell < gridCellCount()));
     state.serial = Number(raw.serial) || state.items.length + 1;
     $("fastMode").checked = raw.fastMode === true;
+    $("gpuAcceleration").checked = raw.gpuAcceleration === true;
+    state.gpuExperimentAcknowledged = raw.gpuExperimentAcknowledged === true;
   } catch { localStorage.removeItem(STORAGE_KEY); }
 }
 function bindEvents() {
   $("artifactTab").addEventListener("click", () => switchKind("artifact")); $("tabletTab").addEventListener("click", () => switchKind("tablet")); $("searchInput").addEventListener("input", renderCatalog);
   $("readGameBtn").addEventListener("click", readGameInventory);
   $("fastMode").addEventListener("change", persist);
+  $("gpuAcceleration").addEventListener("change", (event) => {
+    if (event.target.checked && !state.gpuExperimentAcknowledged) {
+      if (confirm("实验性功能，不保证更快或获得更高分。使用 GPU 搜索候选排布，再由 CPU 求解器继续优化；不支持或初始化失败时回退为 CPU 计算。\n\n仍要开启吗？")) state.gpuExperimentAcknowledged = true;
+      else event.target.checked = false;
+    }
+    persist();
+  });
   $("applyBtn").addEventListener("click", applyArrangement);
   $("combineTabletBtn").addEventListener("click", openComposeDialog);
   $("composeFirst").addEventListener("change", changeComposeSource);

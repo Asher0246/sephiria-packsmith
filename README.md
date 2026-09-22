@@ -60,6 +60,10 @@ powershell -ExecutionPolicy Bypass -File .\game_plugin\install.ps1
 
 进入一局游戏后启动求解器，点击顶部“读取游戏”。插件通过本机命名管道发送神器、石板、背包格数和局内临时等级。游戏内合成的自定义石板会同时读取名称、当前方向、可旋转性、效果范围与限定条件，并作为动态石板类型加入当前构筑。求解完成后可点击“应用到游戏”；即使读取后手动调整过物品位置或石板方向，插件也会以游戏中的当前排布为起点直接应用目标排布。应用时仍会校验游戏版本、背包格数和完整物品实例集合，在 Unity 主线程调用游戏自身的交换和点击接口，并在结束后复核排布。插件不会直接改写背包矩阵或物品坐标，失败时会尽量恢复应用前的排布。
 
+首次打开会询问是否自动分享构筑，用于改进求解与训练辅助排布模型。只有明确同意后，才会通过 HTTPS 向 `asher0627.site` 上传经过字段筛选的构筑、求解设置与结果；手工构筑、游戏读取和游戏内整理均遵循本机授权。可在“设置 → 数据分享”中关闭，关闭后清除待上传队列，已经上传的数据仍保留用于分析和训练。上传失败在后台重试，不影响求解。详见 [构筑收集说明](tools/BUILD_COLLECTION.md)。
+
+设置中的“同时在本机记录构筑”是独立选项，不代表同意上传。启用后会向 `%LOCALAPPDATA%\SephiriaPacksmith\recorded_builds.jsonl` 追加完整本地记录；已有记录不会自动补传。
+
 ### 游戏内一键整理
 
 求解器在后台运行时，插件还会在打开角色背包时显示 **整理** 按钮（地牢主背包右侧，无快捷键）。点击后会调用求解器的 `POST /api/auto-organize`：从命名管道读取当前背包，以**快速模式**（默认 30 秒上限）搜索排布并自动应用到游戏，通常几秒内完成。该流程不使用浏览器里保存的构筑约束，也不改 Web 界面；默认权重为 5、不固定格子、不启用特殊效果优先，只整理主背包格子（不含药水槽与副背包）。仍需单机或主机、求解器已启动（连接信息写在 `%LOCALAPPDATA%\SephiriaPacksmith\runtime.json`）。详细说明见 [`game_plugin/README.md`](game_plugin/README.md)。
@@ -71,6 +75,9 @@ powershell -ExecutionPolicy Bypass -File .\game_plugin\uninstall.ps1
 ```
 
 ## 数据与规则
+
+GPU 混合求解实验的实现范围、复现方法与实测结果见 [GPU 原型验证](tools/GPU_EXPERIMENT.md)。
+Web 界面可单独勾选“GPU 加速（实验）”。实验性功能，不保证更快或获得更高分。开启后使用 GPU 搜索候选排布，再由 CPU 求解器继续优化；不支持或初始化失败时回退为 CPU 计算。实验说明只在首次开启时提示，关闭时使用原 CPU 路径，游戏内一键整理仍使用 CPU。
 
 - 神器目录由 `tools/scrape_wiki.py` 从 `https://www.sephiria.wiki/artifact` 生成到 `assets/wiki_artifacts.json`，使用 Wiki 的英文稳定 ID、图片、效果档位上限、套装与排布约束。界面只展示求解所需的短信息，不提供背景描述或完整效果正文。
 - 石板目录从 `https://www.sephiria.wiki/large` 当前引用的 Next.js 数据模块生成到 `assets/wiki_tablets.json.gz`；更新器直接执行隔离后的官方规则模块，预计算所有支持背包尺寸的旋转、等级增减与解锁效果。

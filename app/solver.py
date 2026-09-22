@@ -588,6 +588,7 @@ def solve(
     tablets_by_id: dict[str, TabletType],
     controller: StopController | None = None,
     on_solver: Callable[[cp_model.CpSolver], None] | None = None,
+    initial_placements: list[dict] | None = None,
 ) -> dict:
     started = time.perf_counter()
     controller = controller or StopController()
@@ -1101,6 +1102,51 @@ def solve(
         )
         return len(model.Proto().variables) - before
 
+    initial_hint_variables = 0
+    if initial_placements:
+        hinted = {
+            entry.get("instanceId"): dict(entry)
+            for entry in initial_placements
+            if isinstance(entry, dict) and isinstance(entry.get("instanceId"), str)
+        }
+        # Canonicalize interchangeable instances to the model's symmetry order.
+        for groups, items in ((artifact_groups, request.artifacts), (tablet_groups, request.tablets)):
+            for indices in groups.values():
+                ids = [items[i].instance_id for i in indices]
+                if all(iid in hinted and type(hinted[iid].get("cell")) is int for iid in ids):
+                    ordered = sorted((hinted[iid] for iid in ids), key=lambda entry: entry["cell"])
+                    hinted.update(zip(ids, ordered))
+        for a, item in enumerate(request.artifacts):
+            entry = hinted.get(item.instance_id)
+            cell = entry.get("cell") if entry else None
+            if item.fixed_cell is None and type(cell) is int and 0 <= cell < request.cell_count:
+                for c in cells:
+                    if _fixed_bool_value(x[a, c]) is not None:
+                        continue
+                    model.add_hint(x[a, c], int(c == cell))
+                    initial_hint_variables += 1
+        for t, (item, possible) in enumerate(zip(request.tablets, candidates)):
+            entry = hinted.get(item.instance_id)
+            cell = entry.get("cell") if entry else None
+            rotation = entry.get("rotation") if entry else None
+            if len(possible) == 1 or type(cell) is not int:
+                continue
+            original = next((candidate for candidate in build_candidates_cached(
+                tablet_types[t], request.rows, request.cols, request.cell_count,
+            ) if candidate.cell == cell and candidate.rotation == rotation), None)
+            matching = [
+                k for k, candidate in enumerate(possible)
+                if candidate.cell == cell
+                and (rotation is None or candidate.rotation == rotation
+                     or (original is not None and _candidate_behavior(candidate) == _candidate_behavior(original)))
+            ]
+            if len(matching) != 1:
+                continue
+            selected = matching[0]
+            for k in range(len(possible)):
+                model.add_hint(y[t, k], int(k == selected))
+                initial_hint_variables += 1
+
     model.maximize(phase1_objective)
     phase1_variable_count = len(model.Proto().variables)
     built = time.perf_counter()
@@ -1310,6 +1356,7 @@ def solve(
             "finalVariables": len(model.Proto().variables),
             "levelTransformGroups": len(level_transforms),
             "optimizationPhases": optimization_phases,
+            "initialHintVariables": initial_hint_variables,
             "artifacts": len(request.artifacts),
             "tablets": len(request.tablets), "workerCount": request.worker_count,
         },

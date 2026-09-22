@@ -590,6 +590,57 @@ def test_fast_mode_still_proves_small_builds_optimal():
     assert result["diagnostics"]["optimizationPhases"] == 2
 
 
+def test_solver_accepts_a_previous_layout_as_an_initial_hint():
+    request = SolveRequest(
+        2, 2,
+        (ArtifactInstance("a1", ARTIFACT.id, weight=5),),
+        (TabletInstance("t1", TABLET.id),),
+        1000,
+    )
+    artifacts = {ARTIFACT.id: ARTIFACT}
+    tablets = {TABLET.id: TABLET}
+    baseline = solve(request, artifacts, tablets)
+
+    hinted = solve(request, artifacts, tablets, initial_placements=baseline["placements"])
+
+    assert hinted["solutionStatus"] == "OPTIMAL"
+    assert hinted["primaryObjective"] == baseline["primaryObjective"]
+    assert hinted["diagnostics"]["initialHintVariables"] > 0
+    assert validate_result(request, artifacts, tablets, hinted) == []
+
+
+
+def test_initial_hint_with_shared_constants_does_not_invalidate_model():
+    request = SolveRequest(
+        1, 5,
+        (ArtifactInstance("a1", ARTIFACT.id), ArtifactInstance("a2", ARTIFACT.id)),
+        (TabletInstance("t1", TABLET.id, fixed_cell=0),
+         TabletInstance("t2", TABLET.id, fixed_cell=4)),
+        1000,
+    )
+    artifacts, tablets = {ARTIFACT.id: ARTIFACT}, {TABLET.id: TABLET}
+    baseline = solve(request, artifacts, tablets)
+    hint = [dict(p) for p in baseline["placements"]]
+    # Reverse interchangeable artifacts: the game need not use our symmetry order.
+    a1, a2 = [p for p in hint if p["kind"] == "artifact"]
+    a1["cell"], a2["cell"] = a2["cell"], a1["cell"]
+    result = solve(request, artifacts, tablets, initial_placements=hint)
+    assert result["solutionStatus"] == "OPTIMAL"
+    assert result["primaryObjective"] == baseline["primaryObjective"]
+    assert validate_result(request, artifacts, tablets, result) == []
+
+
+def test_initial_hint_is_not_a_position_constraint():
+    request = SolveRequest(
+        1, 3, (ArtifactInstance("a1", ARTIFACT.id),),
+        (TabletInstance("t1", TABLET.id, fixed_cell=0, fixed_rotation=0),), 1000,
+    )
+    result = solve(request, {ARTIFACT.id: ARTIFACT}, {TABLET.id: TABLET},
+                   initial_placements=[{"instanceId": "a1", "cell": 2}])
+    assert result["solutionStatus"] == "OPTIMAL"
+    assert result["artifacts"][0]["cell"] == 1
+
+
 def test_nine_artifacts_fit_without_tablets_when_worker_count_is_keyword_only():
     plain = ArtifactType("artifact-plain", "Plain", cap=3, rarity=0)
     request = SolveRequest(

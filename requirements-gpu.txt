@@ -1,0 +1,2 @@
+# Optional experiment only; requires an NVIDIA GPU and CUDA 12 Toolkit.
+cupy-cuda12x==14.2.0

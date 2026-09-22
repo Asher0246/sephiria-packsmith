@@ -14,6 +14,7 @@
       <div><h1>Packsmith</h1><p>Sephiria 背包构筑求解器</p></div>
     </div>
     <div class="header-actions">
+      <button id="settingsBtn" class="button header-button" type="button">设置</button>
       <button id="readGameBtn" class="button header-button" type="button">读取游戏</button>
       <button id="resetBtn" class="icon-button" type="button" title="清空构筑" aria-label="清空构筑">×</button>
     </div>
@@ -48,6 +49,9 @@
           </label>
           <label class="fast-mode" for="fastMode" title="快速模式：找到优质排布后立刻停止，不再等待最优性证明。通常几秒内出结果，布局质量一般接近最优，但不保证理论最优；关闭后求解器会用满时限证明最优。">
             <input type="checkbox" id="fastMode"> 快速模式
+          </label>
+          <label class="fast-mode experimental-option" for="gpuAcceleration" title="实验性功能，不保证更快或获得更高分。使用 GPU 搜索候选排布，再由 CPU 求解器继续优化；不支持或初始化失败时回退为 CPU 计算。">
+            <input type="checkbox" id="gpuAcceleration"> GPU 加速 <span>实验</span>
           </label>
           <button id="stopBtn" class="button danger" type="button" hidden>停止</button>
           <button id="applyBtn" class="button secondary" type="button" hidden>应用到游戏</button>
@@ -115,7 +119,26 @@
   </div>
 
   <div id="toast" class="toast" role="alert" hidden></div>
+  <dialog id="sharingDialog" class="compose-dialog" aria-labelledby="sharingTitle">
+    <header><h2 id="sharingTitle">是否自动分享构筑？</h2></header>
+    <div class="compose-fields">
+      <p class="dialog-lead">开启后，每次求解结束会把本局构筑记录到本机并自动上传，用于改进求解速度并训练辅助排布模型。</p>
+      <details class="dialog-details">
+        <summary>详细说明</summary>
+        <p>上传物品、等级、约束、石板规则、初始排布、求解设置与结果；应用到游戏时补充应用结果。</p>
+        <p>不上传完整存档、Steam ID、本地文件路径、自定义名称或错误原文。服务器建立连接时会接触到网络 IP，但构筑数据库不保存 IP。</p>
+        <p>可随时在“设置 → 数据分享”中关闭，关闭会清除待上传队列；已上传的构筑仍会保留用于分析和训练。旧的本地记录不会自动补传。</p>
+      </details>
+      <strong id="sharingState" role="status"></strong>
+    </div>
+    <footer>
+      <button id="sharingClose" class="button secondary" type="button">返回</button>
+      <button id="sharingDecline" class="button secondary" type="button">暂不开启</button>
+      <button id="sharingAccept" class="button primary" type="button">同意并开启</button>
+    </footer>
+  </dialog>
   <script src="/game_read_state.js" defer></script>
   <script src="/app.js" defer></script>
+  <script src="/sharing.js" defer></script>
 </body>
 </html>

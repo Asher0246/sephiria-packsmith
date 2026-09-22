@@ -95,6 +95,7 @@ class SolveRequest:
     worker_count: int = 0
     double_level_cells: frozenset[int] = frozenset()
     fast_mode: bool = False
+    gpu_acceleration: bool = False
 
     @property
     def cell_count(self) -> int:
@@ -236,4 +237,7 @@ def parse_request(payload: Any, artifact_ids: set[str], tablet_ids: set[str]) ->
         worker_count=_integer(options.get("workerCount", 0), "options.workerCount", 0, 64),
         double_level_cells=frozenset(double_level_cells),
         fast_mode=_boolean(options.get("fastMode", False), "options.fastMode"),
+        gpu_acceleration=_boolean(
+            options.get("gpuAcceleration", False), "options.gpuAcceleration",
+        ),
     )

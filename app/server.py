@@ -9,7 +9,8 @@ import threading
 import time
 import uuid
 import webbrowser
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
+from datetime import datetime, timezone
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -29,13 +30,16 @@ from .models import RequestError, parse_request
 from .repair import repair_layout
 from .result_cache import ResultCache, default_cache
 from .solver import StopController, solve
+from .sharing import Sharing
 
 STATIC = Path(__file__).resolve().parent / "static"
 MAX_BODY = 8_000_000
 RUNTIME_FILE_NAME = "runtime.json"
+RECORDED_BUILDS_FILE_NAME = "recorded_builds.jsonl"
 DEFAULT_AUTO_ORGANIZE_TIME_LIMIT_MS = 30_000
 DEFAULT_AUTO_ORGANIZE_WAIT_GRACE_S = 5.0
 APPLICABLE_SOLUTION_STATUSES = frozenset({"OPTIMAL", "FEASIBLE", "STOPPED"})
+_RECORDED_BUILDS_LOCK = threading.Lock()
 
 
 @dataclass
@@ -45,6 +49,11 @@ class Job:
     result: dict | None = None
     error: dict | None = None
     game_source: dict | None = None
+    request_payload: dict | None = None
+    record_requested: bool = False
+    recording_succeeded: bool | None = None
+    recording_error: str | None = None
+    sharing_ticket: int | None = None
     controller: StopController = field(default_factory=StopController)
 
 
@@ -54,6 +63,89 @@ class AppState:
         self.jobs: dict[str, Job] = {}
         self.lock = threading.Lock()
         self.result_cache = result_cache or default_cache()
+        self.sharing = Sharing(packsmith_data_dir())
+        self.gpu_search = None
+        self.gpu_lock = threading.Lock()
+
+    def _gpu_seed(self, request, artifact_map, tablet_map):
+        # CuPy and CUDA stay fully optional and are imported only after the
+        # user enables the experimental option.
+        with self.gpu_lock:
+            if self.gpu_search is None:
+                from tools.gpu_search import GpuSearch
+                self.gpu_search = GpuSearch()
+            return self.gpu_search.search(
+                request, artifact_map, tablet_map, count=4096, steps=512, seed=1,
+            )
+
+    @staticmethod
+    def _quality(result: dict) -> tuple:
+        if not result.get("placements"):
+            return (-1, -1, -1, -1, -10**18, -10**18)
+        return (
+            result.get("specialObjective") or 0,
+            result.get("primaryObjective") or 0,
+            result.get("secondaryObjective") or 0,
+            sum(item.get("active") is True for item in result.get("artifacts", [])),
+            -(result.get("tertiaryObjective") or 0),
+            result.get("emptyCellObjective") or 0,
+        )
+
+    def _solve(self, request, artifact_map, tablet_map, controller):
+        controller = controller or StopController()
+        if not request.gpu_acceleration:
+            return repair_layout(
+                request, artifact_map, tablet_map,
+                solve(request, artifact_map, tablet_map, controller),
+            )
+
+        started = time.perf_counter()
+        try:
+            seed = self._gpu_seed(request, artifact_map, tablet_map)
+        except Exception as exc:
+            result = repair_layout(
+                request, artifact_map, tablet_map,
+                solve(request, artifact_map, tablet_map, controller),
+            )
+            result.setdefault("diagnostics", {}).update({
+                "gpuRequested": True, "gpuUsed": False,
+                "gpuFallbackReason": str(exc)[:300],
+            })
+            return result
+
+        seed_result = repair_layout(request, artifact_map, tablet_map, seed["result"])
+        elapsed_ms = (time.perf_counter() - started) * 1000
+        remaining_ms = request.time_limit_ms - elapsed_ms
+        if controller.stopped or remaining_ms < 1:
+            result = seed_result
+            if controller.stopped:
+                result["solutionStatus"] = "STOPPED"
+                result["message"] = "求解已停止，返回 GPU 已找到的排布"
+        else:
+            cpu_request = replace(request, time_limit_ms=max(1, int(remaining_ms)))
+            result = repair_layout(
+                cpu_request, artifact_map, tablet_map,
+                solve(
+                    cpu_request, artifact_map, tablet_map, controller,
+                    initial_placements=seed["placements"],
+                ),
+            )
+            if self._quality(seed_result) > self._quality(result):
+                cpu_diagnostics = result.get("diagnostics", {})
+                seed_result["buildMs"] = result.get("buildMs", 0)
+                seed_result["solveMs"] = result.get("solveMs", 0)
+                seed_result.setdefault("diagnostics", {}).update({
+                    "replacedCpuResult": True,
+                    "discardedCpuQuality": self._quality(result),
+                    "initialHintVariables": cpu_diagnostics.get("initialHintVariables", 0),
+                })
+                result = seed_result
+        result.setdefault("diagnostics", {}).update({
+            "gpuRequested": True, "gpuUsed": True,
+            "gpuMs": round(seed["elapsedMs"], 2),
+            "gpuEvaluations": seed["evaluations"],
+        })
+        return result
 
     def create_job(self, payload: dict) -> Job:
         artifact_map = {item.id: item for item in artifact_types()}
@@ -66,7 +158,19 @@ class AppState:
             if tablet.cell_count != request.cell_count or expected_size not in (tablet.candidates or {}):
                 raise RequestError(f"自定义石板 {tablet.name} 仅适用于创建时的背包格数")
         game_source = payload.get("gameSource")
-        job = Job(uuid.uuid4().hex, game_source=game_source if isinstance(game_source, dict) else None)
+        # Local build recording follows the sharing consent: without consent the
+        # tool records nothing at all, so the two can never drift apart.
+        sharing_ticket = self.sharing.ticket()
+        job = Job(
+            uuid.uuid4().hex,
+            game_source=game_source if isinstance(game_source, dict) else None,
+            request_payload={
+                key: value for key, value in payload.items()
+                if key not in ("gameSource", "recordBuild")
+            },
+            record_requested=sharing_ticket is not None,
+            sharing_ticket=sharing_ticket,
+        )
 
         cache_key = artifact_ids = tablet_ids = None
         try:
@@ -78,8 +182,15 @@ class AppState:
             print(f"result cache skipped: {exc!r}")
             cached = None
         if cached is not None:
-            job.status = "FINISHED"
             job.result = cached
+            if request.gpu_acceleration:
+                job.result.setdefault("diagnostics", {}).update({
+                    "gpuRequested": True, "gpuUsed": False, "gpuCacheHit": True,
+                })
+            self.sharing.enqueue(job, job.sharing_ticket)
+            if job.record_requested:
+                record_solve(job, "FINISHED")
+            job.status = "FINISHED"
             with self.lock:
                 self.jobs[job.id] = job
             return job
@@ -88,22 +199,23 @@ class AppState:
 
         def run() -> None:
             job.status = "RUNNING"
+            terminal_status = "FINISHED"
             try:
-                job.result = repair_layout(
-                    request, artifact_map, tablet_map,
-                    solve(request, artifact_map, tablet_map, job.controller),
-                )
-                job.status = "FINISHED"
+                job.result = self._solve(request, artifact_map, tablet_map, job.controller)
                 if cache_key is not None:
                     try:
                         self.result_cache.store(cache_key, artifact_ids, tablet_ids, job.result)
                     except Exception as exc:
                         print(f"result cache store skipped: {exc!r}")
             except Exception as exc:  # Boundary: return a stable API error, keep traceback in console.
-                job.status = "FAILED"
+                terminal_status = "FAILED"
                 job.error = {"code": "INTERNAL_SOLVE_FAILURE", "message": str(exc)}
                 import traceback
                 traceback.print_exc()
+            if job.record_requested:
+                record_solve(job, terminal_status)
+            self.sharing.enqueue(job, job.sharing_ticket)
+            job.status = terminal_status
 
         threading.Thread(target=run, name=f"solve-{job.id[:8]}", daemon=True).start()
         return job
@@ -135,6 +247,61 @@ def packsmith_data_dir() -> Path:
 
 def runtime_info_path() -> Path:
     return packsmith_data_dir() / RUNTIME_FILE_NAME
+
+
+def recorded_builds_path() -> Path:
+    return packsmith_data_dir() / RECORDED_BUILDS_FILE_NAME
+
+
+def _write_build_record(record: dict) -> tuple[bool, str | None]:
+    try:
+        path = recorded_builds_path()
+        with _RECORDED_BUILDS_LOCK:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with path.open("a", encoding="utf-8", newline="\n") as stream:
+                stream.write(json.dumps(record, ensure_ascii=False, separators=(",", ":")) + "\n")
+        return True, None
+    except Exception as exc:  # Recording is optional and must not block solving or applying.
+        print(f"build recording skipped: {exc!r}")
+        return False, str(exc)
+
+
+def record_solve(job: Job, job_status: str) -> None:
+    job.recording_succeeded, job.recording_error = _write_build_record({
+        "schemaVersion": 2,
+        "event": "solve",
+        "recordedAt": datetime.now(timezone.utc).isoformat(),
+        "solveId": job.id,
+        "request": job.request_payload,
+        "gameSourceAtSolve": job.game_source,
+        "jobStatus": job_status,
+        "solution": job.result,
+        "error": job.error,
+    })
+
+
+def record_apply_attempt(
+    job: Job,
+    *,
+    pre_apply_inventory: dict | None,
+    pre_apply_read_error: dict | None,
+    command: dict | None,
+    outcome: dict,
+) -> tuple[bool, str | None]:
+    record = {
+        "schemaVersion": 2,
+        "event": "apply",
+        "recordedAt": datetime.now(timezone.utc).isoformat(),
+        "solveId": job.id,
+        "request": job.request_payload,
+        "gameSourceAtSolve": job.game_source,
+        "preApplyInventory": pre_apply_inventory,
+        "preApplyReadError": pre_apply_read_error,
+        "solution": job.result,
+        "applyCommand": command,
+        "outcome": outcome,
+    }
+    return _write_build_record(record)
 
 
 def write_runtime_info(port: int, token: str) -> None:
@@ -211,7 +378,13 @@ def auto_organize(state: AppState, body: dict | None = None) -> dict:
     if solution_status not in APPLICABLE_SOLUTION_STATUSES:
         raise RequestError(str(result.get("message") or "没有满足全部约束的排布"))
     command = prepare_apply_command(job.game_source, result)
-    applied = apply_game_arrangement(command)
+    sharing_ticket = state.sharing.ticket()
+    try:
+        applied = apply_game_arrangement(command)
+    except GameApplyError:
+        state.sharing.enqueue(job, sharing_ticket, "apply", {"ok": False})
+        raise
+    state.sharing.enqueue(job, sharing_ticket, "apply", applied)
     return {
         "ok": True,
         "message": str(result.get("message") or "已应用到游戏"),
@@ -288,6 +461,9 @@ def make_handler(state: AppState):
                 if path == "/api/catalog":
                     self._json(HTTPStatus.OK, public_catalog())
                     return
+                if path == "/api/sharing":
+                    self._json(HTTPStatus.OK, state.sharing.status())
+                    return
                 if path == "/api/game-inventory":
                     try:
                         inventory = read_game_inventory()
@@ -305,7 +481,14 @@ def make_handler(state: AppState):
                     if not job:
                         self._json(HTTPStatus.NOT_FOUND, {"error": {"code": "NOT_FOUND", "message": "求解任务不存在"}})
                         return
-                    self._json(HTTPStatus.OK, {"solveId": job.id, "jobStatus": job.status, "result": job.result, "error": job.error})
+                    self._json(HTTPStatus.OK, {
+                        "solveId": job.id,
+                        "jobStatus": job.status,
+                        "result": job.result,
+                        "error": job.error,
+                        "recordedBuild": job.recording_succeeded,
+                        "recordingError": job.recording_error,
+                    })
                     return
                 self._json(HTTPStatus.NOT_FOUND, {"error": {"code": "NOT_FOUND", "message": "接口不存在"}})
                 return
@@ -341,13 +524,21 @@ def make_handler(state: AppState):
 
         def do_POST(self) -> None:
             path = urlparse(self.path).path
-            if path not in ("/api/solve", "/api/custom-tablet/compose", "/api/apply-arrangement", "/api/auto-organize"):
+            if path not in ("/api/solve", "/api/custom-tablet/compose", "/api/apply-arrangement", "/api/auto-organize", "/api/sharing"):
                 self._json(HTTPStatus.NOT_FOUND, {"error": {"code": "NOT_FOUND", "message": "接口不存在"}})
                 return
             if not self._require_api_auth():
                 return
             payload = self._read_json(optional=(path == "/api/auto-organize"))
             if payload is None:
+                return
+            if path == "/api/sharing":
+                try:
+                    response = state.sharing.configure(payload.get("enabled"))
+                except (ValueError, OSError):
+                    self._json(HTTPStatus.BAD_REQUEST, {"error": {"message": "无法保存数据分享设置"}})
+                    return
+                self._json(HTTPStatus.OK, response)
                 return
             if path == "/api/auto-organize":
                 try:
@@ -375,6 +566,8 @@ def make_handler(state: AppState):
                 return
             if path == "/api/apply-arrangement":
                 solve_id = payload.get("solveId")
+                sharing_ticket = state.sharing.ticket()
+                record_build = sharing_ticket is not None
                 with state.lock:
                     job = state.jobs.get(solve_id) if isinstance(solve_id, str) else None
                 if not job:
@@ -392,18 +585,59 @@ def make_handler(state: AppState):
                         "error": {"code": "NO_FEASIBLE_RESULT", "message": "求解任务没有可应用的排布"},
                     })
                     return
+                pre_apply_inventory = None
+                pre_apply_read_error = None
+                if record_build:
+                    try:
+                        pre_apply_inventory = read_game_inventory()
+                    except Exception as exc:  # Extra context is best-effort; applying should still proceed.
+                        pre_apply_read_error = {
+                            "type": type(exc).__name__,
+                            "message": str(exc),
+                        }
+                command = None
                 try:
                     command = prepare_apply_command(job.game_source, job.result)
                     applied = apply_game_arrangement(command)
                 except GameApplyError as exc:
+                    recorded = False
+                    state.sharing.enqueue(job, sharing_ticket, "apply", {"ok": False})
+                    recording_error = None
+                    if record_build:
+                        recorded, recording_error = record_apply_attempt(
+                            job,
+                            pre_apply_inventory=pre_apply_inventory,
+                            pre_apply_read_error=pre_apply_read_error,
+                            command=command,
+                            outcome={"ok": False, "error": {"code": exc.code, "message": str(exc)}},
+                        )
                     conflict_codes = {
                         "INVENTORY_CHANGED", "INVALID_APPLY_PLAN",
                         "INVALID_GAME_SNAPSHOT", "NO_GAME_SNAPSHOT", "NO_FEASIBLE_RESULT",
                     }
                     status = HTTPStatus.CONFLICT if exc.code in conflict_codes else HTTPStatus.SERVICE_UNAVAILABLE
-                    self._json(status, {"error": {"code": exc.code, "message": str(exc)}})
+                    error_message = str(exc)
+                    if recording_error:
+                        error_message += f"；实际构筑记录失败：{recording_error}"
+                    self._json(status, {
+                        "error": {"code": exc.code, "message": error_message},
+                        "recordedBuild": recorded,
+                    })
                     return
-                self._json(HTTPStatus.OK, applied)
+                response = dict(applied)
+                state.sharing.enqueue(job, sharing_ticket, "apply", applied)
+                if record_build:
+                    recorded, recording_error = record_apply_attempt(
+                        job,
+                        pre_apply_inventory=pre_apply_inventory,
+                        pre_apply_read_error=pre_apply_read_error,
+                        command=command,
+                        outcome={"ok": True, "response": applied},
+                    )
+                    response["recordedBuild"] = recorded
+                    if recording_error:
+                        response["recordingError"] = recording_error
+                self._json(HTTPStatus.OK, response)
                 return
             if path == "/api/custom-tablet/compose":
                 try:
@@ -444,6 +678,7 @@ def create_server(port: int = 0, token: str | None = None) -> tuple[ThreadingHTT
     state = AppState(token)
     server = ThreadingHTTPServer(("127.0.0.1", port), make_handler(state))
     server.daemon_threads = True
+    server.sharing = state.sharing
     return server, token
 
 
@@ -454,6 +689,7 @@ def main() -> None:
     parser.add_argument("--no-browser", action="store_true")
     args = parser.parse_args()
     server, token = create_server(args.port, args.token)
+    server.sharing.start()
     port = server.server_address[1]
     url = f"http://127.0.0.1:{port}/?token={token}"
     try:
@@ -468,6 +704,7 @@ def main() -> None:
     except KeyboardInterrupt:
         print("正在停止服务...")
     finally:
+        server.sharing.close()
         remove_runtime_info()
         server.server_close()
 

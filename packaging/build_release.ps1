@@ -1,5 +1,5 @@
 param(
-    [string]$ReleaseName = 'SephiriaPacksmith-v1.0.1-win-x64',
+    [string]$ReleaseName = 'SephiriaPacksmith-v1.4.0-win-x64',
     [string]$PortableBaseName = 'SephiriaPacksmith-portable-base-win-x64',
     [string]$BepInExPackage = '',
     [string]$BepInExLicense = ''
@@ -47,6 +47,7 @@ New-Item -ItemType Directory -Path $target | Out-Null
 New-Item -ItemType Directory -Path (Join-Path $target 'app\static') -Force | Out-Null
 New-Item -ItemType Directory -Path (Join-Path $target 'assets') -Force | Out-Null
 New-Item -ItemType Directory -Path (Join-Path $target 'game_plugin') -Force | Out-Null
+New-Item -ItemType Directory -Path (Join-Path $target 'tools') -Force | Out-Null
 New-Item -ItemType Directory -Path (Join-Path $target 'THIRD_PARTY_LICENSES') -Force | Out-Null
 
 # Copy every Python module: a fixed file list silently drops newly added
@@ -57,6 +58,10 @@ Copy-Item -LiteralPath (Join-Path $repoRoot 'assets\wiki_artifacts.json') -Desti
 Copy-Item -LiteralPath (Join-Path $repoRoot 'assets\wiki_tablets.json.gz') -Destination (Join-Path $target 'assets')
 Copy-Item -LiteralPath (Join-Path $repoRoot 'assets\wiki_zh_cn.json') -Destination (Join-Path $target 'assets')
 Copy-Item -LiteralPath (Join-Path $repoRoot 'assets\images') -Destination (Join-Path $target 'assets') -Recurse
+foreach ($file in @('gpu_search.py', 'gpu_search.cu', 'GPU_EXPERIMENT.md')) {
+    Copy-Item -LiteralPath (Join-Path $repoRoot "tools\$file") -Destination (Join-Path $target 'tools')
+}
+Copy-Item -LiteralPath (Join-Path $repoRoot 'requirements-gpu.txt') -Destination $target
 Copy-Item -LiteralPath (Join-Path $portableBase 'runtime') -Destination $target -Recurse
 
 $pluginFiles = @('find_game.ps1', 'install.ps1', 'README.md', 'uninstall.ps1')
