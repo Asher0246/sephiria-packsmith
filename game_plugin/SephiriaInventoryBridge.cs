@@ -1226,8 +1226,13 @@ namespace SephiriaInventoryBridge
                     .Append(item.InstanceId).Append(':').Append(item.EntityId).Append(':')
                     .Append(item.X).Append(':').Append(item.Y).Append(':').Append(item.Rotation);
             }
-            foreach (KeyValuePair<int, int> multiplier in CaptureFixedLevelMultipliers(
-                inventory, GetInt(inventory, "Width", 6), GetInt(inventory, "CurrentInventoryStorage", 0)))
+            foreach (KeyValuePair<int, int> bonus in CaptureFixedLevelEffects(
+                inventory, GetInt(inventory, "Width", 6), GetInt(inventory, "CurrentInventoryStorage", 0), "fixedLevel"))
+            {
+                canonical.Append("|L:").Append(bonus.Key).Append(':').Append(bonus.Value);
+            }
+            foreach (KeyValuePair<int, int> multiplier in CaptureFixedLevelEffects(
+                inventory, GetInt(inventory, "Width", 6), GetInt(inventory, "CurrentInventoryStorage", 0), "fixedMultiplyLevel"))
             {
                 canonical.Append("|M:").Append(multiplier.Key).Append(':').Append(multiplier.Value);
             }
@@ -1249,8 +1254,10 @@ namespace SephiriaInventoryBridge
             int cellCount = GetInt(inventory, "CurrentInventoryStorage", 0);
             if (cellCount <= 0)
                 cellCount = width * height;
-            SortedDictionary<int, int> fixedMultipliers = CaptureFixedLevelMultipliers(
-                inventory, width, cellCount);
+            SortedDictionary<int, int> fixedLevels = CaptureFixedLevelEffects(
+                inventory, width, cellCount, "fixedLevel");
+            SortedDictionary<int, int> fixedMultipliers = CaptureFixedLevelEffects(
+                inventory, width, cellCount, "fixedMultiplyLevel");
 
             StringBuilder artifacts = new StringBuilder();
             StringBuilder tablets = new StringBuilder();
@@ -1333,6 +1340,18 @@ namespace SephiriaInventoryBridge
             JsonString(json, "assemblySha256", _assemblySha256, false);
             JsonString(json, "capturedAt", DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture), false);
             JsonString(json, "inventoryFingerprint", ComputeInventoryFingerprint(inventory), false);
+            json.Append(",\"cellLevelBonuses\":[");
+            bool firstLevelCell = true;
+            foreach (KeyValuePair<int, int> bonus in fixedLevels)
+            {
+                if (!firstLevelCell) json.Append(',');
+                firstLevelCell = false;
+                json.Append('{');
+                JsonNumber(json, "cell", bonus.Key, true);
+                JsonNumber(json, "bonus", bonus.Value, false);
+                json.Append('}');
+            }
+            json.Append(']');
             json.Append(",\"doubleLevelCells\":[");
             bool firstDoubleCell = true;
             foreach (KeyValuePair<int, int> multiplier in fixedMultipliers)
@@ -1350,8 +1369,8 @@ namespace SephiriaInventoryBridge
             return json.ToString();
         }
 
-        private static SortedDictionary<int, int> CaptureFixedLevelMultipliers(
-            object inventory, int width, int cellCount)
+        private static SortedDictionary<int, int> CaptureFixedLevelEffects(
+            object inventory, int width, int cellCount, string fieldName)
         {
             SortedDictionary<int, int> result = new SortedDictionary<int, int>();
             IEnumerable engravings = GetMember(inventory, "fixedEngravingsOnServer") as IEnumerable;
@@ -1359,7 +1378,7 @@ namespace SephiriaInventoryBridge
                 return result;
             foreach (object engraving in engravings)
             {
-                IEnumerable entries = GetMember(engraving, "fixedMultiplyLevel") as IEnumerable;
+                IEnumerable entries = GetMember(engraving, fieldName) as IEnumerable;
                 if (entries == null)
                     continue;
                 foreach (object entry in entries)
@@ -1369,7 +1388,7 @@ namespace SephiriaInventoryBridge
                     int y = GetInt(position, "y", -1);
                     int cell = y * width + x;
                     int value = GetInt(entry, "Value", 0);
-                    if (x < 0 || y < 0 || cell < 0 || cell >= cellCount || value <= 0)
+                    if (x < 0 || y < 0 || cell < 0 || cell >= cellCount || value == 0)
                         continue;
                     int existing;
                     result.TryGetValue(cell, out existing);

@@ -5,7 +5,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $bepInExPackageHash = '82F9878551030F54657792C0740D9D51A09500EEAE1FBA21106B0C441E6732C4'
-$pluginHash = 'AEDB59BA8F51AFCB115F6C28BE46F0E78F820A4155F811FFC4C2E9D1E193E698'
+$pluginHash = '4B01638A15F3B602F92067154EA042B26274C73646AADB10CE53F6B44C4AA01D'
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $repoRoot = Split-Path -Parent $scriptDir
 $resolver = Join-Path $scriptDir 'find_game.ps1'

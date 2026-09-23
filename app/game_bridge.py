@@ -223,11 +223,26 @@ def translate_snapshot(snapshot: Any) -> dict:
         if not 0 <= cell < cell_count or cell in double_level_cells:
             raise GameBridgeError("游戏背包桥接的效率加倍格无效")
         double_level_cells.append(cell)
+    raw_cell_level_bonuses = snapshot.get("cellLevelBonuses", [])
+    if not isinstance(raw_cell_level_bonuses, list):
+        raise GameBridgeError("游戏背包桥接的格子等级加成格式无效")
+    cell_level_bonuses = []
+    for entry in raw_cell_level_bonuses:
+        if not isinstance(entry, dict):
+            raise GameBridgeError("游戏背包桥接的格子等级加成无效")
+        cell = _integer(entry.get("cell"), -1)
+        bonus = _integer(entry.get("bonus"), 0)
+        if not 0 <= cell < cell_count or not -999 <= bonus <= 999 or not bonus or any(
+            item["cell"] == cell for item in cell_level_bonuses
+        ):
+            raise GameBridgeError("游戏背包桥接的格子等级加成无效")
+        cell_level_bonuses.append({"cell": cell, "bonus": bonus})
 
     result = {
         "grid": {
             "cellCount": cell_count,
             "doubleLevelCells": sorted(double_level_cells),
+            "cellLevelBonuses": sorted(cell_level_bonuses, key=lambda item: item["cell"]),
         },
         "artifacts": [],
         "tablets": [],
@@ -624,6 +639,9 @@ def inventory_to_solve_payload(
     double_level_cells = grid.get("doubleLevelCells")
     if not isinstance(double_level_cells, list):
         double_level_cells = []
+    cell_level_bonuses = grid.get("cellLevelBonuses")
+    if not isinstance(cell_level_bonuses, list):
+        cell_level_bonuses = []
     custom_tablet_types = inventory.get("customTabletTypes")
     if not isinstance(custom_tablet_types, list):
         custom_tablet_types = []
@@ -634,6 +652,13 @@ def inventory_to_solve_payload(
             "doubleLevelCells": sorted({
                 cell for cell in (_integer(value, -1) for value in double_level_cells) if 0 <= cell < cell_count
             }),
+            "cellLevelBonuses": [
+                {"cell": entry["cell"], "bonus": entry["bonus"]}
+                for entry in cell_level_bonuses
+                if isinstance(entry, dict) and type(entry.get("cell")) is int
+                and 0 <= entry["cell"] < cell_count and type(entry.get("bonus")) is int
+                and entry["bonus"] != 0
+            ],
         },
         "artifacts": artifacts,
         "tablets": tablets,

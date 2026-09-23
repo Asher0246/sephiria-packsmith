@@ -773,8 +773,9 @@ def solve(
              for k, candidate in enumerate(possible)},
         )
 
-    effect_terms = [[] for _ in cells]
-    effect_bounds = [[0, 0] for _ in cells]
+    fixed_bonuses = dict(request.cell_level_bonuses)
+    effect_terms = [[fixed_bonuses[cell]] if cell in fixed_bonuses else [] for cell in cells]
+    effect_bounds = [[fixed_bonuses.get(cell, 0)] * 2 for cell in cells]
     unlock_terms_by_cell = [[] for _ in cells]
     disable_terms_by_cell = [[] for _ in cells]
     multiplier_terms_by_cell = [
@@ -1240,7 +1241,7 @@ def solve(
         selected_index = next(k for k in range(len(possible)) if best_solver.boolean_value(y[t, k]))
         selected_tablets[t] = possible[selected_index]
         selected_tablets_applied[t] = best_solver.boolean_value(candidate_applied[t, selected_index])
-    effects = [0] * request.cell_count
+    effects = [fixed_bonuses.get(cell, 0) for cell in cells]
     multipliers = [2 if cell in request.double_level_cells else 0 for cell in cells]
     unlock_cells: set[int] = set()
     disabled_cells: set[int] = set()

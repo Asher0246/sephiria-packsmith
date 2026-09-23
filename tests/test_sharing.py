@@ -11,7 +11,7 @@ def job():
     return SimpleNamespace(id=uuid.uuid4().hex, error=None, game_source={
         "items": [{"solverInstanceId": "secret-game-id", "cell": 2, "kind": "artifact", "instanceId": 12345}],
     }, request_payload={
-        "grid": {"cellCount": 30}, "token": "secret-token", "path": "private-path",
+        "grid": {"cellCount": 30, "cellLevelBonuses": [{"cell": 2, "bonus": 3, "secret": "private-path"}]}, "token": "secret-token", "path": "private-path",
         "artifacts": [{"instanceId": "secret-game-id", "typeId": "artifact-test", "baseLevel": 2}],
         "tablets": [], "customTabletTypes": [], "options": {"timeLimitMs": 15000},
     }, result={"solutionStatus": "FEASIBLE", "message": "private-error", "placements": [
@@ -35,6 +35,7 @@ def test_consent_queue_privacy_and_retry(tmp_path, monkeypatch):
     sample = json.loads(body)
     assert sample["initialLayout"][0]["instanceId"] == "i0"
     assert sample["request"]["grid"]["cellCount"] == 30
+    assert sample["request"]["grid"]["cellLevelBonuses"] == [{"cell": 2, "bonus": 3}]
     assert Sharing(tmp_path).status()["enabled"]
 
     def unavailable(*args, **kwargs):

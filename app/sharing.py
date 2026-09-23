@@ -54,6 +54,9 @@ def make_sample(job, event="solve", outcome=None):
             id=custom_ids[item["id"]], name="自定义石板",
         ) for item in custom],
     }
+    request["grid"]["cellLevelBonuses"] = [
+        pick(item, "cell bonus") for item in raw.get("grid", {}).get("cellLevelBonuses", [])
+    ]
     result = job.result or {}
     solution = pick(result, "solutionStatus secondaryStatus specialStatus tertiaryStatus emptyCellStatus primaryObjective secondaryObjective specialObjective tertiaryObjective emptyCellObjective primaryBestBound relativeGap cellEffects cellMultipliers disabledCells unlockedCells buildMs solveMs fromCache")
     solution["placements"] = [dict(

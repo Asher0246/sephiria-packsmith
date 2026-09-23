@@ -19,6 +19,7 @@ def valid_payload():
 def test_parse_full_constraint_request():
     payload = valid_payload()
     payload["grid"]["doubleLevelCells"] = [0, 10]
+    payload["grid"]["cellLevelBonuses"] = [{"cell": 10, "bonus": 2}, {"cell": 0, "bonus": -1}]
     request = parse_request(payload, ARTIFACT_IDS, TABLET_IDS)
     assert (request.rows, request.cols, request.cell_count, request.time_limit_ms) == (2, 6, 11, 3000)
     assert request.worker_count == 16
@@ -30,6 +31,7 @@ def test_parse_full_constraint_request():
     assert request.tablets[0].fixed_rotation == 2
     assert request.tablets[0].preferred_rotation == 3
     assert request.double_level_cells == frozenset({0, 10})
+    assert request.cell_level_bonuses == ((0, -1), (10, 2))
     assert request.fast_mode is False
 
 
@@ -101,6 +103,10 @@ def test_gold_needle_special_target_must_be_another_artifact(target):
     lambda p: p["grid"].update(doubleLevelCells=[True]),
     lambda p: p["grid"].update(doubleLevelCells=[11]),
     lambda p: p["grid"].update(doubleLevelCells=[1, 1]),
+    lambda p: p["grid"].update(cellLevelBonuses="1"),
+    lambda p: p["grid"].update(cellLevelBonuses=[{"cell": 11, "bonus": 1}]),
+    lambda p: p["grid"].update(cellLevelBonuses=[{"cell": 1, "bonus": 0}]),
+    lambda p: p["grid"].update(cellLevelBonuses=[{"cell": 1, "bonus": 1}, {"cell": 1, "bonus": 2}]),
     lambda p: p["options"].update(workerCount=65),
     lambda p: p["options"].update(workerCount=True),
     lambda p: p["artifacts"][0].update(weight=1.5),

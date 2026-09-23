@@ -79,8 +79,9 @@ def layout_facts(
         by_instance[item.instance_id]["cell"] for item in request.artifacts
         if item.instance_id in by_instance and isinstance(by_instance[item.instance_id].get("cell"), int)
     }
+    fixed_bonuses = dict(request.cell_level_bonuses)
     facts = LayoutFacts(
-        effects=[0] * request.cell_count,
+        effects=[fixed_bonuses.get(cell, 0) for cell in range(request.cell_count)],
         multipliers=[
             2 if cell in request.double_level_cells else 0
             for cell in range(request.cell_count)

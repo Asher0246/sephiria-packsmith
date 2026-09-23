@@ -441,6 +441,23 @@ def test_double_level_cell_multiplies_base_and_tablet_bonus():
     assert validate_result(request, {artifact.id: artifact}, {tablet.id: tablet}, result) == []
 
 
+def test_direct_cell_level_bonus_stacks_with_tablet_before_multiplier():
+    artifact = ArtifactType("artifact-fixed-cell", "Fixed cell", cap=10, rarity=0)
+    tablet = TabletType("tablet-plus-two", "Right +2", "common", False, None, None, ((1, 2),))
+    request = SolveRequest(
+        1, 2,
+        (ArtifactInstance("a1", artifact.id, fixed_cell=1, base_level=1),),
+        (TabletInstance("t1", tablet.id, fixed_cell=0),), 1000,
+        cell_level_bonuses=((1, 3),), double_level_cells=frozenset({1}),
+    )
+    result = solve(request, {artifact.id: artifact}, {tablet.id: tablet})
+    assert result["solutionStatus"] == "OPTIMAL"
+    assert result["artifacts"][0]["rawBonus"] == 5
+    assert result["artifacts"][0]["level"] == 10
+    assert result["cellEffects"] == [0, 5]
+    assert validate_result(request, {artifact.id: artifact}, {tablet.id: tablet}, result) == []
+
+
 def test_solver_prefers_native_double_level_cell():
     artifact = ArtifactType("artifact-base-double", "Base double", cap=10, rarity=0)
     request = SolveRequest(

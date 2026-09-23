@@ -143,6 +143,7 @@ class ResultCache:
                 "cols": request.cols,
                 "cellCount": request.cell_count,
                 "doubleLevelCells": sorted(request.double_level_cells),
+                "cellLevelBonuses": request.cell_level_bonuses,
             },
             "artifacts": [list(row) for row in artifact_rows],
             "tablets": [list(row) for row in tablet_rows],

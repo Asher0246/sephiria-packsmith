@@ -94,6 +94,7 @@ class SolveRequest:
     actual_cell_count: int | None = None
     worker_count: int = 0
     double_level_cells: frozenset[int] = frozenset()
+    cell_level_bonuses: tuple[tuple[int, int], ...] = ()
     fast_mode: bool = False
     gpu_acceleration: bool = False
 
@@ -137,6 +138,18 @@ def parse_request(payload: Any, artifact_ids: set[str], tablet_ids: set[str]) ->
     ]
     if len(double_level_cells) != len(set(double_level_cells)):
         raise RequestError("grid.doubleLevelCells 不能包含重复格子")
+    raw_cell_level_bonuses = grid.get("cellLevelBonuses", [])
+    if not isinstance(raw_cell_level_bonuses, list):
+        raise RequestError("grid.cellLevelBonuses 必须是数组")
+    cell_level_bonuses = []
+    for index, entry in enumerate(raw_cell_level_bonuses):
+        if not isinstance(entry, dict):
+            raise RequestError(f"grid.cellLevelBonuses[{index}] 必须是对象")
+        cell = _integer(entry.get("cell"), f"grid.cellLevelBonuses[{index}].cell", 0, cell_count - 1)
+        bonus = _integer(entry.get("bonus"), f"grid.cellLevelBonuses[{index}].bonus", -999, 999)
+        if not bonus or any(existing == cell for existing, _ in cell_level_bonuses):
+            raise RequestError("grid.cellLevelBonuses 不能包含零或重复格子")
+        cell_level_bonuses.append((cell, bonus))
     raw_artifacts = payload.get("artifacts", [])
     raw_tablets = payload.get("tablets", [])
     if not isinstance(raw_artifacts, list) or not isinstance(raw_tablets, list):
@@ -236,6 +249,7 @@ def parse_request(payload: Any, artifact_ids: set[str], tablet_ids: set[str]) ->
         actual_cell_count=cell_count,
         worker_count=_integer(options.get("workerCount", 0), "options.workerCount", 0, 64),
         double_level_cells=frozenset(double_level_cells),
+        cell_level_bonuses=tuple(sorted(cell_level_bonuses)),
         fast_mode=_boolean(options.get("fastMode", False), "options.fastMode"),
         gpu_acceleration=_boolean(
             options.get("gpuAcceleration", False), "options.gpuAcceleration",

@@ -24,6 +24,8 @@ class GpuSearch:
             raise ValueError("GPU experiment size outside supported bounds")
         if any(item.fixed_cell is not None for item in (*request.artifacts, *request.tablets)):
             raise ValueError("GPU experiment does not yet support fixed cells")
+        if request.cell_level_bonuses:
+            raise ValueError("GPU experiment does not yet support direct cell level bonuses")
         if any(item.special_priority or item.min_level is not None or item.exact_level is not None
                or artifacts[item.type_id].criteria for item in request.artifacts):
             raise ValueError("GPU experiment supports unconstrained ordinary artifacts only")

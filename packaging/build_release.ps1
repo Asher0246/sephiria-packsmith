@@ -1,5 +1,5 @@
 param(
-    [string]$ReleaseName = 'SephiriaPacksmith-v1.4.1-win-x64',
+    [string]$ReleaseName = 'SephiriaPacksmith-v1.4.2-win-x64',
     [string]$PortableBaseName = 'SephiriaPacksmith-portable-base-win-x64',
     [string]$BepInExPackage = '',
     [string]$BepInExLicense = ''

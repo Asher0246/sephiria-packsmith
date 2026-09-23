@@ -49,7 +49,7 @@ def _sample_inventory(*, complete: bool = True, unmapped=None):
 def test_inventory_to_solve_payload_builds_game_source_request():
     inventory, artifact, tablet = _sample_inventory()
     payload = inventory_to_solve_payload(inventory, fast_mode=True, time_limit_ms=15_000)
-    assert payload["grid"] == {"cellCount": 2, "doubleLevelCells": []}
+    assert payload["grid"] == {"cellCount": 2, "doubleLevelCells": [], "cellLevelBonuses": []}
     assert payload["artifacts"][0]["typeId"] == artifact.id
     assert payload["tablets"][0]["typeId"] == tablet.id
     assert payload["options"] == {"timeLimitMs": 15_000, "workerCount": 0, "fastMode": True}
