@@ -316,6 +316,17 @@ def test_shade_tablet_targets_last_six_actual_inventory_cells(cell_count):
     assert all(set(candidate.effects.values()) == {1} for candidate in candidates)
 
 
+@pytest.mark.parametrize("cell_count", [30, 32, 35, 36, 41])
+def test_boundary_tablet_targets_top_and_last_six_actual_inventory_cells(cell_count):
+    boundary = next(item for item in tablet_types() if item.id == "tablet-boundary")
+    rows = (cell_count + 5) // 6
+    candidates = build_candidates(boundary, rows, 6, cell_count)
+    expected = set(range(6)) | set(range(cell_count - 6, cell_count))
+    assert {candidate.cell for candidate in candidates} == set(range(cell_count))
+    assert all(set(candidate.effects) == expected for candidate in candidates)
+    assert all(set(candidate.effects.values()) == {1} for candidate in candidates)
+
+
 def test_partial_last_row_treats_missing_right_neighbor_as_empty():
     side_free = ArtifactType(
         "artifact-side-free", "左右留空", cap=1, rarity=0, criteria=("side_free",),

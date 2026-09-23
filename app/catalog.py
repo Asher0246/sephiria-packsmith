@@ -130,6 +130,14 @@ def tablet_types() -> tuple[TabletType, ...]:
                 directions=(("BOTTOM", 1),),
             ))
             continue
+        if value == "boundary":
+            result.append(TabletType(
+                id="tablet-boundary", name=str(localization["tablets"][value]),
+                tier=str(row["tier"]), rotatable=False, constraint=None,
+                image=f"https://img.sephiria.wiki{row['image']}",
+                directions=(("TOP", 1), ("BOTTOM", 1)),
+            ))
+            continue
         result.append(TabletType(
             id=f"tablet-{value}", name=str(localization["tablets"][value]), tier=str(row["tier"]),
             rotatable=bool(row.get("rotate")), constraint=None,
